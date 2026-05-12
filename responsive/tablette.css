@@ -1,0 +1,55 @@
+/* Styles pour Tablettes (min-width: 481px and max-width: 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .nav {
+    padding: 18px 40px;
+  }
+
+  .hero,
+  .section,
+  .full-section {
+    padding: 80px 40px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    text-align: center;
+  }
+
+  .hero-desc,
+  .hero-stats {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+  }
+
+  .hero-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .services-grid,
+  .projects-grid,
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tools-wrapper,
+  .apropos-grid,
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .apropos-visual {
+    order: -1;
+    /* Place l'image au-dessus du texte sur tablette */
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

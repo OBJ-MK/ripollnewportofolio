@@ -1,0 +1,832 @@
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ripoll Darcia — Développeur Full-stack &amp; Designer UI/UX</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="responsive/telephone.css">
+  <link rel="stylesheet" href="responsive/tablette.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+  <!-- ════════════ NAVBAR ════════════ -->
+  <nav class="nav">
+    <a href="#" class="logo">
+      <div>
+        <i class="fas fa-bars"></i>
+      </div>
+     <div class="logo-icon">
+       <div class="logo-icon-inner">R</div>
+        Ripoll<em>Darcia</em>
+     </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#outils">Outils</a></li>
+      <li><a href="#postes">Postes</a></li>
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#partenaires">Partenaires</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-ghost">Commencer une discussion</button>
+      <button class="btn-accent">Admin</button>
+    </div>
+  </nav>
+
+  <!-- ════════════ HERO ════════════ -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="glow glow-gold"></div>
+      <div class="glow glow-blue"></div>
+      <svg viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="780,0 1080,0 940,190" fill="rgba(245,197,24,0.03)"></polygon>
+        <polygon points="1080,0 1400,0 1400,280 1080,140" fill="rgba(245,197,24,0.04)"></polygon>
+        <polygon points="1180,180 1400,80 1400,380" fill="rgba(245,197,24,0.025)"></polygon>
+        <polygon points="940,190 1180,180 1080,380" fill="rgba(20,40,90,0.3)"></polygon>
+        <polygon points="1080,140 1280,240 1180,380" fill="rgba(245,197,24,0.03)"></polygon>
+        <polygon points="0,480 180,380 280,580" fill="rgba(20,40,90,0.2)"></polygon>
+        <line x1="780" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
+        <line x1="1080" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
+        <line x1="940" y1="190" x2="1180" y2="180" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
+        <line x1="1180" y1="180" x2="1080" y2="380" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          Disponible pour de nouveaux projets
+        </div>
+        <h1 class="hero-title">
+          Concevoir des Expériences
+          <span class="gold">Web Performantes</span>
+        </h1>
+        <p class="hero-desc">
+          Développeur Full-stack &amp; Designer UI/UX passionné.<br>
+          Je transforme vos idées en produits numériques intuitifs et durables.
+        </p>
+        <div class="hero-btns">
+          <button class="cta-main">
+            Explorer mes projets
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </button>
+          <button class="cta-outline">Me contacter</button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num">50+</div>
+            <div class="stat-lbl">Projets livrés</div>
+          </div>
+          <div>
+            <div class="stat-num">5 ans</div>
+            <div class="stat-lbl">D'expérience</div>
+          </div>
+          <div>
+            <div class="stat-num">100%</div>
+            <div class="stat-lbl">Clients satisfaits</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="card-head">Stack technique</div>
+        <div class="tech-grid">
+          <div class="tech-pill on">React</div>
+          <div class="tech-pill on">Node.js</div>
+          <div class="tech-pill">TypeScript</div>
+          <div class="tech-pill">Figma</div>
+          <div class="tech-pill">Next.js</div>
+          <div class="tech-pill">MongoDB</div>
+          <div class="tech-pill">PostgreSQL</div>
+          <div class="tech-pill">TailwindCSS</div>
+        </div>
+        <div class="avail">
+          <span class="avail-dot"></span>
+          Disponible dès maintenant
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ SERVICES ════════════ -->
+  <div class="divider"></div>
+  <div id="services" class="full-section" style="background: var(--bg2);">
+    <div class="section-inner section">
+
+      <div class="section-header fade-in visible">
+        <div>
+          <div class="section-tag">Ce que je fais</div>
+          <h2 class="section-title">Mes Services</h2>
+        </div>
+        <p class="section-subtitle">Des solutions numériques complètes, du design à la mise en production.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card fade-in visible">
+          <div class="service-icon">⚡</div>
+          <div class="service-name">Développement Web Full-stack</div>
+          <p class="service-desc">Applications web performantes et scalables, du back-end robuste aux interfaces
+            réactives. Je couvre l'ensemble du cycle de développement.</p>
+          <div class="service-tags">
+            <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">Next.js</span><span
+              class="tag">API REST</span>
+          </div>
+        </div>
+        <div class="service-card fade-in visible" style="transition-delay: 0.1s;">
+          <div class="service-icon">🎨</div>
+          <div class="service-name">Design UI/UX</div>
+          <p class="service-desc">Interfaces intuitives centrées sur l'utilisateur. Du wireframe au prototype
+            haute-fidélité, je conçois des expériences mémorables et cohérentes.</p>
+          <div class="service-tags">
+            <span class="tag">Figma</span><span class="tag">Prototypage</span><span class="tag">Design System</span>
+          </div>
+        </div>
+        <div class="service-card fade-in visible" style="transition-delay: 0.2s;">
+          <div class="service-icon">🚀</div>
+          <div class="service-name">Architecture &amp; DevOps</div>
+          <p class="service-desc">Mise en place d'infrastructures cloud, pipelines CI/CD, et optimisation des
+            performances. Votre produit toujours disponible et rapide.</p>
+          <div class="service-tags">
+            <span class="tag">Docker</span><span class="tag">AWS</span><span class="tag">CI/CD</span><span
+              class="tag">Vercel</span>
+          </div>
+        </div>
+        <div class="service-card fade-in visible" style="transition-delay: 0.05s;">
+          <div class="service-icon">📱</div>
+          <div class="service-name">Applications Mobile</div>
+          <p class="service-desc">Applications cross-platform avec React Native. Une seule base de code pour iOS et
+            Android, sans compromettre l'expérience native.</p>
+          <div class="service-tags">
+            <span class="tag">React Native</span><span class="tag">Expo</span><span class="tag">iOS</span><span
+              class="tag">Android</span>
+          </div>
+        </div>
+        <div class="service-card fade-in visible" style="transition-delay: 0.15s;">
+          <div class="service-icon">🔒</div>
+          <div class="service-name">Sécurité &amp; Performance</div>
+          <p class="service-desc">Audit de sécurité, optimisation du score Lighthouse, mise en cache avancée. Votre
+            application rapide et fiable à grande échelle.</p>
+          <div class="service-tags">
+            <span class="tag">Audit</span><span class="tag">HTTPS</span><span class="tag">SEO</span><span
+              class="tag">Core Web Vitals</span>
+          </div>
+        </div>
+        <div class="service-card fade-in visible" style="transition-delay: 0.25s;">
+          <div class="service-icon">🤝</div>
+          <div class="service-name">Consulting &amp; Formation</div>
+          <p class="service-desc">Accompagnement technique, revues de code, et formation de vos équipes. Je partage mon
+            expertise pour faire monter en compétences vos développeurs.</p>
+          <div class="service-tags">
+            <span class="tag">Consulting</span><span class="tag">Code Review</span><span class="tag">Formation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ PROJECTS ════════════ -->
+  <div class="divider"></div>
+  <div id="projects" class="full-section" style="background: var(--bg);">
+    <div class="section-inner section">
+
+      <div class="section-header fade-in visible">
+        <div>
+          <div class="section-tag">Portfolio</div>
+          <h2 class="section-title">Projets Récents</h2>
+        </div>
+        <p class="section-subtitle">Une sélection de réalisations concrètes et de leurs résultats.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1 -->
+        <div class="project-card fade-in visible">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #0f1a2e 0%, #1a2a4a 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <rect x="40" y="30" width="220" height="120" rx="8" fill="rgba(245,197,24,0.05)"
+                stroke="rgba(245,197,24,0.15)" stroke-width="0.5"></rect>
+              <rect x="60" y="50" width="80" height="8" rx="2" fill="rgba(245,197,24,0.4)"></rect>
+              <rect x="60" y="66" width="120" height="5" rx="2" fill="rgba(255,255,255,0.1)"></rect>
+              <rect x="60" y="78" width="100" height="5" rx="2" fill="rgba(255,255,255,0.07)"></rect>
+              <rect x="60" y="100" width="60" height="22" rx="4" fill="rgba(245,197,24,0.7)"></rect>
+              <circle cx="220" cy="90" r="30" fill="rgba(245,197,24,0.07)" stroke="rgba(245,197,24,0.2)"
+                stroke-width="0.5"></circle>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">SaaS / Dashboard</div>
+            <div class="project-name">AnalytiX Pro</div>
+            <p class="project-desc">Tableau de bord analytics en temps réel pour PME. Visualisation de données avancée
+              et rapports automatisés.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">React</span>
+                <span class="stack-badge">D3.js</span>
+                <span class="stack-badge">Node</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Project 2 -->
+        <div class="project-card fade-in visible" style="transition-delay: 0.1s;">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #0d1f14 0%, #122b1c 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="150" cy="90" r="55" fill="rgba(74,222,128,0.05)" stroke="rgba(74,222,128,0.15)"
+                stroke-width="0.5"></circle>
+              <circle cx="150" cy="90" r="35" fill="rgba(74,222,128,0.04)" stroke="rgba(74,222,128,0.12)"
+                stroke-width="0.5"></circle>
+              <circle cx="150" cy="90" r="16" fill="rgba(74,222,128,0.15)"></circle>
+              <line x1="90" y1="60" x2="120" y2="80" stroke="rgba(74,222,128,0.3)" stroke-width="1"></line>
+              <line x1="210" y1="60" x2="182" y2="80" stroke="rgba(74,222,128,0.3)" stroke-width="1"></line>
+              <line x1="90" y1="120" x2="120" y2="102" stroke="rgba(74,222,128,0.3)" stroke-width="1"></line>
+              <circle cx="88" cy="59" r="6" fill="rgba(74,222,128,0.4)"></circle>
+              <circle cx="212" cy="59" r="6" fill="rgba(74,222,128,0.4)"></circle>
+              <circle cx="88" cy="121" r="6" fill="rgba(74,222,128,0.4)"></circle>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">E-commerce</div>
+            <div class="project-name">GreenShop</div>
+            <p class="project-desc">Plateforme e-commerce éco-responsable avec gestion d'inventaire, paiement sécurisé
+              et expérience d'achat fluide.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">Next.js</span>
+                <span class="stack-badge">Stripe</span>
+                <span class="stack-badge">Mongo</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Project 3 -->
+        <div class="project-card fade-in visible" style="transition-delay: 0.2s;">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #1a0f2e 0%, #2a1a4a 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <rect x="80" y="40" width="140" height="100" rx="10" fill="rgba(180,150,255,0.05)"
+                stroke="rgba(180,150,255,0.15)" stroke-width="0.5"></rect>
+              <rect x="95" y="60" width="110" height="12" rx="3" fill="rgba(180,150,255,0.2)"></rect>
+              <rect x="95" y="80" width="80" height="6" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+              <rect x="95" y="93" width="95" height="6" rx="2" fill="rgba(255,255,255,0.06)"></rect>
+              <rect x="95" y="108" width="50" height="18" rx="5" fill="rgba(180,150,255,0.35)"></rect>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">Application Mobile</div>
+            <div class="project-name">MindFlow</div>
+            <p class="project-desc">App de bien-être et méditation guidée. Suivi de progression, sessions personnalisées
+              et communauté intégrée.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">React Native</span>
+                <span class="stack-badge">Firebase</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Project 4 -->
+        <div class="project-card fade-in visible" style="transition-delay: 0.05s;">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #1a1a0d 0%, #2a2a12 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <rect x="50" y="50" width="200" height="80" rx="8" fill="rgba(245,197,24,0.04)"
+                stroke="rgba(245,197,24,0.12)" stroke-width="0.5"></rect>
+              <rect x="65" y="65" width="40" height="40" rx="4" fill="rgba(245,197,24,0.1)"></rect>
+              <rect x="115" y="68" width="80" height="8" rx="2" fill="rgba(245,197,24,0.35)"></rect>
+              <rect x="115" y="82" width="60" height="5" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+              <rect x="115" y="93" width="70" height="5" rx="2" fill="rgba(255,255,255,0.06)"></rect>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">Plateforme RH</div>
+            <div class="project-name">TalentHub</div>
+            <p class="project-desc">Outil de recrutement et gestion des talents. ATS complet, onboarding digital et
+              évaluation des performances.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">Vue.js</span>
+                <span class="stack-badge">Laravel</span>
+                <span class="stack-badge">MySQL</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Project 5 -->
+        <div class="project-card fade-in visible" style="transition-delay: 0.15s;">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #0d1a1f 0%, #122838 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="60,130 100,90 140,110 180,60 220,80 260,50" fill="none" stroke="rgba(56,189,248,0.5)"
+                stroke-width="2"></polyline>
+              <circle cx="100" cy="90" r="4" fill="rgba(56,189,248,0.8)"></circle>
+              <circle cx="140" cy="110" r="4" fill="rgba(56,189,248,0.8)"></circle>
+              <circle cx="180" cy="60" r="4" fill="rgba(56,189,248,0.8)"></circle>
+              <circle cx="220" cy="80" r="4" fill="rgba(56,189,248,0.8)"></circle>
+              <line x1="60" y1="140" x2="260" y2="140" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"></line>
+              <line x1="60" y1="100" x2="260" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></line>
+              <line x1="60" y1="60" x2="260" y2="60" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"></line>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">FinTech</div>
+            <div class="project-name">CryptoVault</div>
+            <p class="project-desc">Interface de trading et gestion de portefeuille crypto. Graphiques temps réel,
+              alertes personnalisées et sécurité maximale.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">React</span>
+                <span class="stack-badge">WebSocket</span>
+                <span class="stack-badge">Python</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Project 6 -->
+        <div class="project-card fade-in visible" style="transition-delay: 0.25s;">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #1f0d0d 0%, #2e1515 100%);">
+            <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <rect x="100" y="35" width="100" height="110" rx="12" fill="rgba(239,68,68,0.05)"
+                stroke="rgba(239,68,68,0.15)" stroke-width="0.5"></rect>
+              <rect x="116" y="52" width="68" height="40" rx="4" fill="rgba(239,68,68,0.1)"></rect>
+              <rect x="116" y="100" width="50" height="6" rx="2" fill="rgba(255,255,255,0.08)"></rect>
+              <rect x="116" y="112" width="68" height="6" rx="2" fill="rgba(255,255,255,0.06)"></rect>
+              <rect x="116" y="124" width="40" height="12" rx="3" fill="rgba(239,68,68,0.4)"></rect>
+              <rect x="110" y="28" width="80" height="7" rx="3" fill="rgba(255,255,255,0.06)"></rect>
+            </svg>
+          </div>
+          <div class="project-body">
+            <div class="project-type">Design System</div>
+            <div class="project-name">UIKit Pro</div>
+            <p class="project-desc">Bibliothèque de composants réutilisables. 80+ composants documentés, thèmes
+              personnalisables et Storybook intégré.</p>
+            <div class="project-footer">
+              <div class="project-stack">
+                <span class="stack-badge">React</span>
+                <span class="stack-badge">Storybook</span>
+                <span class="stack-badge">TS</span>
+              </div>
+              <a href="#" class="project-link">Voir →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ OUTILS ════════════ -->
+  <div class="divider"></div>
+  <div id="outils" class="full-section" style="background: var(--bg2);">
+    <div class="section-inner section">
+
+      <div class="tools-wrapper">
+        <div class="tools-text fade-in visible">
+          <div class="section-tag">Arsenal</div>
+          <h2 class="section-title">Mes Outils</h2>
+          <p class="section-subtitle" style="margin-bottom: 36px;">Les technologies que je maîtrise pour livrer des
+            produits de qualité professionnelle.</p>
+
+          <div class="skill-bars">
+            <div class="skill-row">
+              <div class="skill-meta"><span>React / Next.js</span><span>95%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 95%;"></div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-meta"><span>Node.js / Express</span><span>90%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 90%;"></div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-meta"><span>TypeScript</span><span>88%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 88%;"></div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-meta"><span>UI/UX Design (Figma)</span><span>92%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 92%;"></div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-meta"><span>Bases de données (SQL/NoSQL)</span><span>85%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-meta"><span>DevOps / Cloud</span><span>78%</span></div>
+              <div class="skill-bar">
+                <div class="skill-fill" style="width: 78%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-in visible" style="transition-delay: 0.15s;">
+          <div class="tools-grid">
+            <div class="tool-item"><span class="tool-icon">⚛️</span>
+              <div class="tool-name">React</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">▲</span>
+              <div class="tool-name">Next.js</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🟢</span>
+              <div class="tool-name">Node.js</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🔷</span>
+              <div class="tool-name">TypeScript</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🎨</span>
+              <div class="tool-name">Figma</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🍃</span>
+              <div class="tool-name">MongoDB</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🐘</span>
+              <div class="tool-name">PostgreSQL</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🐋</span>
+              <div class="tool-name">Docker</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">☁️</span>
+              <div class="tool-name">AWS</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🔥</span>
+              <div class="tool-name">Firebase</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">💨</span>
+              <div class="tool-name">Tailwind</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🧪</span>
+              <div class="tool-name">Jest</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">📱</span>
+              <div class="tool-name">React Native</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🔴</span>
+              <div class="tool-name">Redis</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">⚙️</span>
+              <div class="tool-name">GraphQL</div>
+            </div>
+            <div class="tool-item"><span class="tool-icon">🐙</span>
+              <div class="tool-name">GitHub</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ POSTES ════════════ -->
+  <div class="divider"></div>
+  <div id="postes" class="full-section" style="background: var(--bg);">
+    <div class="section-inner section">
+
+      <div class="section-header fade-in visible">
+        <div>
+          <div class="section-tag">Opportunités</div>
+          <h2 class="section-title">Postes Ouverts</h2>
+        </div>
+        <p class="section-subtitle">Je suis ouvert à des collaborations et missions freelance sélectionnées.</p>
+      </div>
+
+      <div class="postes-grid">
+        <div class="poste-card fade-in visible">
+          <div class="poste-header">
+            <div>
+              <div class="poste-title">Développeur Full-stack Senior</div>
+              <div class="poste-company">Mission Freelance</div>
+            </div>
+            <span class="poste-badge badge-open">Ouvert</span>
+          </div>
+          <p class="poste-desc">Développement d'applications web complexes pour des startups et PME. Environnements
+            React/Node.js. Missions de 3 à 12 mois, 100% remote possible.</p>
+          <div class="poste-footer">
+            <div class="poste-meta">
+              <span class="poste-meta-item">📍 Remote</span>
+              <span class="poste-meta-item">⏱ Full-time</span>
+              <span class="poste-meta-item">💶 Sur devis</span>
+            </div>
+            <button class="apply-btn">Postuler</button>
+          </div>
+        </div>
+        <div class="poste-card fade-in visible" style="transition-delay: 0.1s;">
+          <div class="poste-header">
+            <div>
+              <div class="poste-title">Designer UI/UX</div>
+              <div class="poste-company">Collaboration Ponctuelle</div>
+            </div>
+            <span class="poste-badge badge-open">Ouvert</span>
+          </div>
+          <p class="poste-desc">Conception d'interfaces et systèmes de design pour des produits numériques. Livraisons
+            Figma + documentation complète + handoff développement.</p>
+          <div class="poste-footer">
+            <div class="poste-meta">
+              <span class="poste-meta-item">📍 Remote</span>
+              <span class="poste-meta-item">⏱ Part-time</span>
+              <span class="poste-meta-item">💶 Sur devis</span>
+            </div>
+            <button class="apply-btn">Postuler</button>
+          </div>
+        </div>
+        <div class="poste-card fade-in visible" style="transition-delay: 0.2s;">
+          <div class="poste-header">
+            <div>
+              <div class="poste-title">CTO / Lead Tech</div>
+              <div class="poste-company">Startup Early-stage</div>
+            </div>
+            <span class="poste-badge badge-closed">Bientôt</span>
+          </div>
+          <p class="poste-desc">Accompagnement de startups early-stage dans le choix technologique, recrutement
+            technique et mise en place des fondations produit.</p>
+          <div class="poste-footer">
+            <div class="poste-meta">
+              <span class="poste-meta-item">📍 Hybride</span>
+              <span class="poste-meta-item">⏱ Consulting</span>
+              <span class="poste-meta-item">💶 Equity + Cash</span>
+            </div>
+            <button class="apply-btn" style="opacity: 0.5; cursor: not-allowed;">Notifier</button>
+          </div>
+        </div>
+        <div class="poste-card fade-in visible" style="transition-delay: 0.05s;">
+          <div class="poste-header">
+            <div>
+              <div class="poste-title">Formateur Développement Web</div>
+              <div class="poste-company">Bootcamps &amp; Écoles</div>
+            </div>
+            <span class="poste-badge badge-open">Ouvert</span>
+          </div>
+          <p class="poste-desc">Animation d'ateliers et formations en développement web moderne. React, Node.js, bonnes
+            pratiques. Pour écoles, bootcamps ou équipes internes.</p>
+          <div class="poste-footer">
+            <div class="poste-meta">
+              <span class="poste-meta-item">📍 Sur site / Remote</span>
+              <span class="poste-meta-item">💶 Journée</span>
+            </div>
+            <button class="apply-btn">Postuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ À PROPOS ════════════ -->
+  <div class="divider"></div>
+  <div id="apropos" class="full-section" style="background: var(--bg2);">
+    <div class="section-inner section">
+
+      <div class="apropos-grid">
+        <div class="apropos-visual fade-in visible">
+          <div class="avatar-frame">
+            <div class="avatar-placeholder">RD</div>
+            <div class="frame-badge">
+              <div class="frame-badge-name">Ripoll Darcia</div>
+              <div class="frame-badge-role">Full-stack Dev &amp; UI/UX Designer</div>
+            </div>
+          </div>
+          <div class="float-chip chip1">
+            <span class="chip-dot"></span>
+            <span style="font-size: 12px; color: var(--muted);">50+ projets livrés</span>
+          </div>
+          <div class="float-chip chip2">
+            <span style="font-size: 14px;">⭐</span>
+            <span style="font-size: 12px; color: var(--muted);">5.0 / 5 satisfaction</span>
+          </div>
+        </div>
+
+        <div class="apropos-text fade-in visible" style="transition-delay: 0.15s;">
+          <div class="section-tag">Mon histoire</div>
+          <h2 class="section-title">À Propos de Moi</h2>
+          <p class="about-body">
+            Passionné par le <strong>web depuis plus de 5 ans</strong>, je me suis spécialisé dans la création de
+            produits numériques qui allient <strong>performance technique</strong> et <strong>expérience utilisateur
+              soignée</strong>.
+          </p>
+          <p class="about-body">
+            Je crois que le meilleur code est celui qu'on ne voit pas, et que le meilleur design est celui qu'on
+            ressent. Mon approche : <strong>comprendre profondément le problème</strong> avant d'écrire la première
+            ligne.
+          </p>
+
+          <div class="values-list">
+            <div class="value-item"><span class="value-check">✦</span>Livraisons dans les délais, sans compromis sur la
+              qualité</div>
+            <div class="value-item"><span class="value-check">✦</span>Communication transparente tout au long du projet
+            </div>
+            <div class="value-item"><span class="value-check">✦</span>Code documenté, maintenable et scalable</div>
+            <div class="value-item"><span class="value-check">✦</span>Design centré sur l'utilisateur final</div>
+          </div>
+
+          <div class="social-row">
+            <button class="social-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+              LinkedIn
+            </button>
+            <button class="social-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                </path>
+              </svg>
+              GitHub
+            </button>
+            <button class="social-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Me contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ PARTENAIRES ════════════ -->
+  <div class="divider"></div>
+  <div id="partenaires" class="full-section" style="background: var(--bg);">
+    <div class="section-inner section">
+
+      <div class="partners-intro fade-in visible">
+        <div class="section-tag">Confiance</div>
+        <h2 class="section-title">Ils m'ont fait confiance</h2>
+        <p class="section-subtitle">Des entreprises de toutes tailles qui ont choisi de collaborer avec moi.</p>
+      </div>
+
+      <div class="partners-track-wrap fade-in visible">
+        <div class="partners-track">
+          <div class="partner-logo">TechCorp</div>
+          <div class="partner-logo">StartupX</div>
+          <div class="partner-logo">MediaGroup</div>
+          <div class="partner-logo">FinanceHub</div>
+          <div class="partner-logo">EcoSolutions</div>
+          <div class="partner-logo">DataForge</div>
+          <div class="partner-logo">CreativeAG</div>
+          <div class="partner-logo">NovaTech</div>
+          <!-- Duplicate for loop -->
+          <div class="partner-logo">TechCorp</div>
+          <div class="partner-logo">StartupX</div>
+          <div class="partner-logo">MediaGroup</div>
+          <div class="partner-logo">FinanceHub</div>
+          <div class="partner-logo">EcoSolutions</div>
+          <div class="partner-logo">DataForge</div>
+          <div class="partner-logo">CreativeAG</div>
+          <div class="partner-logo">NovaTech</div>
+        </div>
+      </div>
+
+      <div class="testimonial-grid">
+        <div class="testimonial-card fade-in visible">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Ripoll a livré un produit exceptionnel, en avance sur le planning. Sa capacité à
+            comprendre nos besoins métier et à les traduire en code propre est rare."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SM</div>
+            <div>
+              <div class="testi-name">Sophie Martin</div>
+              <div class="testi-role">CEO, TechCorp</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card fade-in visible" style="transition-delay: 0.1s;">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Un designer et développeur dans la même personne, c'est rare. Notre app a été
+            complètement repensée et nos utilisateurs adorent la nouvelle expérience."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AK</div>
+            <div>
+              <div class="testi-name">Alexandre Koller</div>
+              <div class="testi-role">CTO, StartupX</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card fade-in visible" style="transition-delay: 0.2s;">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-quote">"Sérieux, réactif, créatif. Ripoll a su s'adapter à nos contraintes tout en proposant
+            des solutions innovantes. On retravailler ensemble sans hésitation."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">LB</div>
+            <div>
+              <div class="testi-name">Laura Benali</div>
+              <div class="testi-role">Product Manager, DataForge</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ CONTACT ════════════ -->
+  <div class="divider"></div>
+  <div id="contact" class="full-section" style="background: var(--bg2);">
+    <div class="section-inner section">
+
+      <div class="contact-inner">
+        <div class="contact-left fade-in visible">
+          <div class="section-tag">On commence ?</div>
+          <h2 class="section-title">Parlons de votre projet</h2>
+          <p class="contact-desc">
+            Vous avez une idée, un projet ou une question ? Je suis à votre écoute. Répondez généralement sous 24h.
+          </p>
+
+          <div class="contact-info">
+            <div class="contact-item">
+              <div class="contact-icon-wrap">📧</div>
+              <div class="contact-item-text">
+                <strong>Email</strong>
+                contact@ripolldarcia.dev
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon-wrap">📍</div>
+              <div class="contact-item-text">
+                <strong>Localisation</strong>
+                Paris, France — Remote possible
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon-wrap">⏰</div>
+              <div class="contact-item-text">
+                <strong>Disponibilité</strong>
+                Lun – Ven, 9h – 18h (CET)
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="background: var(--surface); border: 0.5px solid rgba(245,197,24,0.15); border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 14px;">
+            <span class="pulse-dot" style="flex-shrink: 0;"></span>
+            <div>
+              <div style="font-size: 13.5px; font-weight: 500; margin-bottom: 2px;">Actuellement disponible</div>
+              <div style="font-size: 12px; color: var(--muted);">Pour des missions démarrant en juin 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fade-in visible" style="transition-delay: 0.15s;">
+          <div class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Prénom</label>
+                <input type="text" class="form-input" placeholder="Jean">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nom</label>
+                <input type="text" class="form-input" placeholder="Dupont">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-input" placeholder="jean@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sujet</label>
+              <input type="text" class="form-input" placeholder="Développement d'une application web">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" rows="5"
+                placeholder="Décrivez votre projet, vos besoins, votre budget estimé..."></textarea>
+            </div>
+            <button class="form-submit">
+              Envoyer le message
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ FOOTER BAR ════════════ -->
+  <footer class="footer-bar">
+    <div class="footer-copy">© 2026 <em>Ripoll Darcia</em>. Tous droits réservés.</div>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </footer>
+
+<script src="script.js"></script>
+</body>
+
+</html>
