@@ -525,6 +525,14 @@
     scroll-snap-align: center;
   }
 
+  .load-more-btn{
+    margin-top: 10px;
+  }
+
+  .newsletter-band{
+    flex-direction: column;
+  }
+
   /* Reset pour la carte "À la une" en carrousel mobile */
   .article-card.featured {
     grid-column: auto;
