@@ -108,4 +108,21 @@
     grid-template-columns: 1fr;
     gap: 48px;
   }
+
+  /* ─── BLOG TABLETTE ─── */
+  .articles-featured,
+  .articles-row,
+  .social-wall {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .article-card.featured {
+    grid-column: span 2;
+  }
+
+  .filters-bar {
+    justify-content: center;
+  }
 }

@@ -9,6 +9,9 @@ const CAROUSEL_SELECTORS = [
   '.projects-grid',
   '.postes-grid',
   '.testimonial-grid',
+  '.articles-featured',
+  '.articles-row',
+  '.social-wall',
 ];
 
 function getCards(grid) {
@@ -16,12 +19,18 @@ function getCards(grid) {
 }
 
 function createDots(grid, cards) {
-  // Évite de créer des dots en double
-  const existing = grid.parentElement.querySelector('.carousel-dots');
-  if (existing) existing.remove();
+  // Vérifie si le prochain élément frère est un conteneur de points de navigation
+  let dotsEl = grid.nextElementSibling;
 
-  const dotsEl = document.createElement('div');
-  dotsEl.className = 'carousel-dots';
+  // Si ce n'est pas un conteneur de points de navigation, ou s'il n'existe pas, on en crée un nouveau
+  if (!dotsEl || !dotsEl.classList.contains('carousel-dots')) {
+    dotsEl = document.createElement('div');
+    dotsEl.className = 'carousel-dots';
+    grid.parentElement.insertBefore(dotsEl, grid.nextSibling);
+  } else {
+    // S'il existe et est un conteneur de points de navigation, on vide son contenu
+    dotsEl.innerHTML = '';
+  }
 
   cards.forEach((_, i) => {
     const dot = document.createElement('button');
@@ -33,7 +42,6 @@ function createDots(grid, cards) {
     dotsEl.appendChild(dot);
   });
 
-  grid.parentElement.insertBefore(dotsEl, grid.nextSibling);
   return dotsEl;
 }
 
@@ -68,22 +76,24 @@ function initCarousels() {
   if (!isMobile()) return;
 
   CAROUSEL_SELECTORS.forEach(selector => {
-    const grid = document.querySelector(selector);
-    if (!grid) return;
+    const grids = document.querySelectorAll(selector);
+    grids.forEach(grid => {
+      if (!grid) return;
 
-    const cards = getCards(grid);
-    if (cards.length < 2) return;
+      const cards = getCards(grid);
+      if (cards.length < 2) return;
 
-    const dotsEl = createDots(grid, cards);
+      const dotsEl = createDots(grid, cards);
 
-    // Scroll → update dots
-    let scrollTimer;
-    grid.addEventListener('scroll', () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        updateActiveDot(grid, cards, dotsEl);
-      }, 60);
-    }, { passive: true });
+      // Scroll → update dots
+      let scrollTimer;
+      grid.addEventListener('scroll', () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+          updateActiveDot(grid, cards, dotsEl);
+        }, 60);
+      }, { passive: true });
+    });
   });
 }
 
