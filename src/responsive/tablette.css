@@ -1,0 +1,111 @@
+/* Styles pour Tablettes (min-width: 481px and max-width: 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+
+  /* ─── NAVBAR ─── */
+  .nav {
+    padding: 16px 32px;
+  }
+
+  .nav-links {
+    gap: 18px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+  }
+
+  .nav-actions {
+    gap: 8px;
+  }
+
+  .btn-ghost {
+    display: none;
+  }
+
+  /* Sidebar cachée sur tablette (pas utilisée) */
+  .side {
+    display: none;
+  }
+
+  /* ─── HERO ─── */
+  .hero,
+  .section,
+  .full-section {
+    padding: 80px 40px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    margin: 0 auto 24px;
+  }
+
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .hero-card {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ─── SERVICES ─── */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── PROJECTS ─── */
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── OUTILS ─── */
+  .tools-wrapper {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* ─── POSTES ─── */
+  .postes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── À PROPOS ─── */
+  .apropos-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .apropos-visual {
+    order: -1;
+    justify-content: center;
+  }
+
+  /* ─── PARTENAIRES ─── */
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}

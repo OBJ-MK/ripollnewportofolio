@@ -1,0 +1,19 @@
+/* Styles pour Desktop (min-width: 769px) */
+@media (min-width: 769px) {
+
+  /* La sidebar est toujours cachée sur desktop */
+  .side {
+    display: none !important;
+  }
+
+  /* S'assurer que la nav classique est visible */
+  .nav-links,
+  .nav-actions {
+    display: flex;
+  }
+
+  /* Cacher le hamburger sur desktop */
+  .logo > div:first-child .fa-bars {
+    display: none;
+  }
+}

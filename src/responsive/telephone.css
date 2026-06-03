@@ -1,0 +1,483 @@
+/* Styles pour Téléphones (max-width: 480px) */
+@media screen and (max-width: 480px) {
+
+  /* ─── NAVBAR ─── */
+  .nav {
+    padding: 15px 20px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-links,
+  .nav-actions {
+    display: none;
+  }
+
+  /* Le lien logo prend toute la largeur restante */
+  .logo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  /* Hamburger : affiché AVANT le logo-icon */
+  .logo>div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 8px;
+    background: rgba(245, 197, 24, 0.08);
+    border: 0.5px solid rgba(245, 197, 24, 0.2);
+    order: 0;
+  }
+
+  .logo>div:first-child .fa-bars {
+    display: block;
+    font-size: 15px;
+    color: var(--accent);
+    pointer-events: none;
+  }
+
+  /* Logo texte : ne pas déborder */
+  .logo-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    white-space: nowrap;
+    order: 1;
+  }
+
+  .logo-icon-inner {
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .side {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 300;
+  }
+
+  /* Quand sidebar ouverte : cacher le hamburger de la nav */
+  body.sidebar-open .nav {
+    z-index: 0;
+  }
+
+  .side.open {
+    display: flex;
+  }
+
+  .sideGauche {
+    width: 75%;
+    height: 100%;
+    padding: 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    background: rgba(13, 15, 23, 0.98);
+    backdrop-filter: blur(40px);
+    border-right: 0.5px solid rgba(245, 197, 24, 0.12);
+    overflow-y: auto;
+  }
+
+  .sideDroite {
+    width: 25%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+
+  .sidelogo {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0;
+  }
+
+  .sidelogo-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .sidelogo-icon-inner {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #000;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  /* Bouton fermer (✕) dans la sidebar */
+  .sidelogo>div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: auto;
+    height: 34px;
+    /* padding-inline: 1rem; */
+    /* border-radius: 8px; */
+    /* background: rgba(255, 255, 255, 0.05); */
+    flex-shrink: 0;
+    /* border: 0.5px solid var(--border); */
+  }
+
+  .sidelogo-fabar {
+    background: rgba(245, 197, 24, 0.08);
+    border: 0.5px solid rgba(245, 197, 24, 0.2);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.4rem;
+  }
+
+  /* Icône dans le bouton fermer de la sidebar */
+  .sidelogo>div:last-child .fa-bars {
+    display: block;
+    font-size: 15px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .sidenav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sidenav-links li {
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .sidenav-links a {
+    display: block;
+    padding: 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+
+  .sidenav-links a:hover {
+    color: var(--accent);
+  }
+
+  .sidenav-links a:active {
+    color: var(--accent);
+    border-left: 4px solid rgba(245, 197, 24, 0.2);
+    padding-left: 1rem;
+  }
+
+  .sidenav-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .sidebtn-ghost,
+  .sidebtn-accent {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 60px 20px;
+    min-height: auto;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2.1rem;
+  }
+
+  .hero-badge {
+    margin: 0 auto 24px;
+  }
+
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stats>div {
+    text-align: center;
+  }
+
+  .hero-card {
+    max-width: 100%;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section,
+  .full-section {
+    padding: 30px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* ─── SERVICES ─── */
+  .services-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    padding: 4px 20px 12px;
+    grid-template-columns: unset;
+  }
+
+  .service-card {
+    flex: 0 0 78vw;
+    max-width: 300px;
+    scroll-snap-align: center;
+  }
+
+  .services-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  /* ─── PROJECTS ─── */
+  .projects-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    padding: 4px 20px 12px;
+    grid-template-columns: unset;
+  }
+
+  .projects-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-card {
+    flex: 0 0 78vw;
+    max-width: 300px;
+    scroll-snap-align: center;
+  }
+
+  /* ─── OUTILS ─── */
+  .tools-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 20px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* ─── POSTES ─── */
+  .postes-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    padding: 4px 20px 12px;
+    grid-template-columns: unset;
+  }
+
+  .postes-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .poste-card {
+    flex: 0 0 82vw;
+    max-width: 300px;
+    scroll-snap-align: center;
+  }
+
+  .poste-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .poste-meta {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .apply-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* ─── À PROPOS ─── */
+  .apropos-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 20px;
+  }
+
+  .apropos-visual {
+    order: -1;
+    justify-content: center;
+  }
+
+  .avatar-frame {
+    width: 260px;
+    height: 300px;
+  }
+
+  .chip1,
+  .chip2 {
+    display: none;
+  }
+
+  .social-row {
+    flex-wrap: wrap;
+  }
+
+  .social-btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+  }
+
+  /* ─── PARTENAIRES ─── */
+  .testimonial-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    padding: 4px 20px 12px;
+    grid-template-columns: unset;
+  }
+
+  .testimonial-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 82vw;
+    max-width: 300px;
+    scroll-snap-align: center;
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding: 0 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer-bar {
+    padding: 24px 20px;
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  /* ─── CAROUSEL DOTS ─── */
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    padding: 0 20px;
+  }
+
+  .carousel-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(245, 197, 24, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .carousel-dot.active {
+    width: 20px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+}
