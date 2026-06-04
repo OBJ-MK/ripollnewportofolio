@@ -1,5 +1,62 @@
- /* @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap'); */
- @import url('https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400..700;1,400..700&family=Lexend:wght@100..900&family=Macondo&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Share+Tech+Mono&display=swap');
+ /* Lexend 300 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v300.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v300.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lexend 400 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v400.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v400.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lexend 500 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v500.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v500.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lexend 600 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v600.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v600.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lexend 700 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v700.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lexend 800 */
+@font-face {
+  font-family: 'Lexend';
+  src: url('../assets/fonts/lexend/lexend-v800.woff2') format('woff2'),
+       url('../assets/fonts/lexend/lexend-v800.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
 
     *,
     *::before,
