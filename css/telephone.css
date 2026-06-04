@@ -514,6 +514,11 @@
     padding: 0 20px 20px;
     grid-template-columns: unset !important;
   }
+
+  .articles-row{
+    margin-bottom: -25px;
+  }
+  
   .articles-featured::-webkit-scrollbar, 
   .articles-row::-webkit-scrollbar, 
   .social-wall::-webkit-scrollbar { display: none; }
