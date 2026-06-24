@@ -1,5 +1,184 @@
-/* Styles pour Tablettes (min-width: 481px and max-width: 768px) */
-@media screen and (min-width: 481px) and (max-width: 768px) {
+/* ═══════════════════════════════════════════════════
+   TABLETTE / INTERMÉDIAIRE
+   Système de breakpoints :
+     481–600px  → phablet/petite tablette (hamburger étendu)
+     601–768px  → tablette (nav visible)
+     769–1023px → tablette large / petit desktop (hero 1 col)
+   ═══════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────
+   PHABLET 481–600px : hamburger étendu
+   La sidebar mobile fonctionne déjà (`.side.open` est
+   défini ici pour être actif dans cette plage aussi).
+   ───────────────────────────────────────────────────── */
+@media screen and (min-width: 481px) and (max-width: 600px) {
+
+  .nav {
+    padding: 15px 24px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Nav classique cachée à ce format */
+  .nav-links,
+  .nav-actions {
+    display: none;
+  }
+
+  /* Hamburger visible — tap target ≥ 44×44px */
+  .logo > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 8px;
+    background: rgba(245, 197, 24, 0.08);
+    border: 0.5px solid rgba(245, 197, 24, 0.2);
+  }
+
+  .logo > div:first-child .fa-bars {
+    display: block;
+    font-size: 15px;
+    color: var(--accent);
+    pointer-events: none;
+  }
+
+  /* Activer la sidebar dans cette plage */
+  .side {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 300;
+  }
+
+  .side.open {
+    display: flex;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    padding: 40px 32px;
+  }
+
+  .full-section {
+    padding: 40px 0;
+  }
+
+  .hero,
+  .hero {
+    padding: 60px 32px;
+    min-height: auto;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    margin: 0 auto 24px;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .hero-card {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* Chips masquées : positionnement négatif → overflow possible */
+  .chip1,
+  .chip2 {
+    display: none;
+  }
+
+  /* ─── SERVICES / PROJECTS / POSTES / TESTI ─── */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .postes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ─── OUTILS ─── */
+  .tools-wrapper {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* ─── À PROPOS ─── */
+  .apropos-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .apropos-visual {
+    order: -1;
+    justify-content: center;
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  /* ─── BLOG ─── */
+  .articles-featured,
+  .articles-row,
+  .social-wall {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .article-card.featured {
+    grid-column: span 2;
+  }
+
+  .filters-bar {
+    justify-content: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   TABLETTE 601–768px : nav visible
+   ───────────────────────────────────────────────────── */
+@media screen and (min-width: 601px) and (max-width: 768px) {
 
   /* ─── NAVBAR ─── */
   .nav {
@@ -7,7 +186,7 @@
   }
 
   .nav-links {
-    gap: 18px;
+    gap: 14px;
   }
 
   .nav-links a {
@@ -18,16 +197,17 @@
     gap: 8px;
   }
 
+  /* Bouton ghost caché (manque de place) */
   .btn-ghost {
     display: none;
   }
 
-  /* Sidebar cachée sur tablette (pas utilisée) */
+  /* Sidebar cachée sur tablette classique */
   .side {
     display: none;
   }
 
-  /* ─── HERO ─── */
+  /* ─── SECTIONS ─── */
   .hero,
   .section,
   .full-section {
@@ -60,6 +240,12 @@
   .hero-card {
     max-width: 420px;
     margin: 0 auto;
+  }
+
+  /* Chips masquées : positionnement négatif → overflow horizontal */
+  .chip1,
+  .chip2 {
+    display: none;
   }
 
   /* ─── SERVICES ─── */
@@ -124,5 +310,113 @@
 
   .filters-bar {
     justify-content: center;
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   TABLETTE LARGE / PETIT DESKTOP 769–1023px
+   La grille hero `1fr 300px` laisse ~270px au contenu
+   gauche à 769px — trop étroit. On garde 1 colonne.
+   ───────────────────────────────────────────────────── */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+
+  /* ─── SECTIONS ─── */
+  .section,
+  .full-section {
+    padding: 80px 40px;
+  }
+
+  /* ─── HERO : colonne unique centrée ─── */
+  .hero {
+    padding: 80px 40px;
+    min-height: auto;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    margin: 0 auto 24px;
+  }
+
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-btns {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    justify-content: center;
+  }
+
+  .hero-card {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* Chips masquées dans cette plage intermédiaire */
+  .chip1,
+  .chip2 {
+    display: none;
+  }
+
+  /* ─── SERVICES / PROJECTS / POSTES / TESTI ─── */
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .postes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── OUTILS ─── */
+  .tools-wrapper {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  /* ─── À PROPOS ─── */
+  .apropos-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .apropos-visual {
+    order: -1;
+    justify-content: center;
+  }
+
+  /* ─── CONTACT ─── */
+  .contact-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  /* ─── BLOG ─── */
+  .articles-featured,
+  .articles-row,
+  .social-wall {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .article-card.featured {
+    grid-column: span 2;
   }
 }

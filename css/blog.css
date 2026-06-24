@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
+/* Police Lexend chargée localement via style.css — pas besoin d'import CDN */
 
 * {
   margin: 0;

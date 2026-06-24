@@ -1,4 +1,7 @@
-/* Styles pour Téléphones (max-width: 480px) */
+/* ═══════════════════════════════════════════════════
+   TÉLÉPHONE — max-width: 480px
+   (mobile-first : ces règles écrasent style.css)
+   ═══════════════════════════════════════════════════ */
 @media screen and (max-width: 480px) {
 
   /* ─── NAVBAR ─── */
@@ -15,7 +18,6 @@
     display: none;
   }
 
-  /* Le lien logo prend toute la largeur restante */
   .logo {
     flex: 1;
     display: flex;
@@ -25,29 +27,28 @@
     overflow: hidden;
   }
 
-  /* Hamburger : affiché AVANT le logo-icon */
-  .logo>div:first-child {
+  /* Bouton hamburger — tap target ≥ 44×44px */
+  .logo > div:first-child {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     border-radius: 8px;
     background: rgba(245, 197, 24, 0.08);
     border: 0.5px solid rgba(245, 197, 24, 0.2);
     order: 0;
   }
 
-  .logo>div:first-child .fa-bars {
+  .logo > div:first-child .fa-bars {
     display: block;
     font-size: 15px;
     color: var(--accent);
     pointer-events: none;
   }
 
-  /* Logo texte : ne pas déborder */
   .logo-icon {
     display: flex;
     align-items: center;
@@ -75,7 +76,6 @@
     z-index: 300;
   }
 
-  /* Quand sidebar ouverte : cacher le hamburger de la nav */
   body.sidebar-open .nav {
     z-index: 0;
   }
@@ -137,19 +137,14 @@
     padding: 0;
   }
 
-  /* Bouton fermer (✕) dans la sidebar */
-  .sidelogo>div:last-child {
+  .sidelogo > div:last-child {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     width: auto;
     height: 34px;
-    /* padding-inline: 1rem; */
-    /* border-radius: 8px; */
-    /* background: rgba(255, 255, 255, 0.05); */
     flex-shrink: 0;
-    /* border: 0.5px solid var(--border); */
   }
 
   .sidelogo-fabar {
@@ -163,8 +158,7 @@
     border-radius: 0.4rem;
   }
 
-  /* Icône dans le bouton fermer de la sidebar */
-  .sidelogo>div:last-child .fa-bars {
+  .sidelogo > div:last-child .fa-bars {
     display: block;
     font-size: 15px;
     color: var(--muted);
@@ -181,13 +175,17 @@
     border-bottom: 0.5px solid var(--border);
   }
 
+  /* Tap target ≥ 44px pour les liens de nav */
   .sidenav-links a {
     display: block;
-    padding: 16px 0;
+    padding: 14px 0;
     font-size: 16px;
     font-weight: 500;
     color: var(--muted);
     letter-spacing: 0.01em;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .sidenav-links a:hover {
@@ -207,17 +205,19 @@
     margin-top: auto;
   }
 
+  /* Tap targets ≥ 44px pour les boutons de sidebar */
   .sidebtn-ghost,
   .sidebtn-accent {
     width: 100%;
     padding: 12px 16px;
     font-size: 14px;
     text-align: center;
+    min-height: 44px;
   }
 
   /* ─── HERO ─── */
   .hero {
-    padding: 60px 20px;
+    padding: 60px 24px;
     min-height: auto;
   }
 
@@ -227,22 +227,30 @@
     text-align: center;
   }
 
+  /* Corps hero : ≥ 16px sur mobile */
   .hero-title {
-    font-size: 2.1rem;
+    font-size: clamp(1.9rem, 8vw, 2.4rem);
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-badge {
     margin: 0 auto 24px;
   }
 
-  .hero-desc {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
+  /* Tap targets ≥ 44px pour CTA */
   .hero-btns {
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .cta-main,
+  .cta-outline {
+    min-height: 44px;
   }
 
   .hero-stats {
@@ -252,7 +260,7 @@
     flex-wrap: wrap;
   }
 
-  .hero-stats>div {
+  .hero-stats > div {
     text-align: center;
   }
 
@@ -260,21 +268,27 @@
     max-width: 100%;
   }
 
-  /* ─── SECTIONS ─── */
-  .section,
-  .full-section {
-    padding: 30px;
+  /* ─── SECTIONS — padding unifié 24px horizontal ─── */
+  /* Suppression du double-padding : full-section fournit le vertical,
+     section fournit l'horizontal — les sous-éléments n'ajoutent plus de padding propre */
+  .section {
+    padding: 40px 24px;
   }
 
+  .full-section {
+    padding: 40px 0;
+  }
+
+  /* Section header : plus de padding-left/right redondant */
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-bottom: 32px;
   }
 
   /* ─── SERVICES ─── */
+  /* Carousel : margin négatif pour bord-à-bord dans le padding de section */
   .services-grid {
     display: flex;
     overflow-x: auto;
@@ -282,7 +296,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 14px;
-    padding: 4px 20px 12px;
+    margin: 0 -24px;
+    padding: 4px 24px 12px;
     grid-template-columns: unset;
   }
 
@@ -296,7 +311,6 @@
     display: none;
   }
 
-
   /* ─── PROJECTS ─── */
   .projects-grid {
     display: flex;
@@ -305,7 +319,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 14px;
-    padding: 4px 20px 12px;
+    margin: 0 -24px;
+    padding: 4px 24px 12px;
     grid-template-columns: unset;
   }
 
@@ -320,10 +335,10 @@
   }
 
   /* ─── OUTILS ─── */
+  /* Suppression du padding: 0 20px redondant */
   .tools-wrapper {
     grid-template-columns: 1fr;
     gap: 40px;
-    padding: 0 20px;
   }
 
   .tools-grid {
@@ -338,7 +353,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 14px;
-    padding: 4px 20px 12px;
+    margin: 0 -24px;
+    padding: 4px 24px 12px;
     grid-template-columns: unset;
   }
 
@@ -363,17 +379,21 @@
     gap: 8px;
   }
 
+  /* Tap target ≥ 44px */
   .apply-btn {
     width: 100%;
     text-align: center;
     justify-content: center;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   /* ─── À PROPOS ─── */
+  /* Suppression du padding: 0 20px redondant */
   .apropos-grid {
     grid-template-columns: 1fr;
     gap: 40px;
-    padding: 0 20px;
   }
 
   .apropos-visual {
@@ -386,6 +406,7 @@
     height: 300px;
   }
 
+  /* Chips masquées : positionnées en négatif, hors flux sur mobile */
   .chip1,
   .chip2 {
     display: none;
@@ -395,10 +416,17 @@
     flex-wrap: wrap;
   }
 
+  /* Corps À propos : ≥ 16px */
+  .about-body {
+    font-size: 16px;
+  }
+
+  /* Tap target ≥ 44px pour les boutons sociaux */
   .social-btn {
     flex: 1;
     justify-content: center;
     min-width: 120px;
+    min-height: 44px;
   }
 
   /* ─── PARTENAIRES ─── */
@@ -409,7 +437,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     gap: 14px;
-    padding: 4px 20px 12px;
+    margin: 0 -24px;
+    padding: 4px 24px 12px;
     grid-template-columns: unset;
   }
 
@@ -424,10 +453,15 @@
   }
 
   /* ─── CONTACT ─── */
+  /* Suppression du padding: 0 20px redondant */
   .contact-inner {
     grid-template-columns: 1fr;
     gap: 48px;
-    padding: 0 20px;
+  }
+
+  /* Corps contact : ≥ 16px */
+  .contact-desc {
+    font-size: 16px;
   }
 
   .form-row {
@@ -437,6 +471,7 @@
   .form-submit {
     width: 100%;
     justify-content: center;
+    min-height: 44px;
   }
 
   /* ─── FOOTER ─── */
@@ -460,7 +495,6 @@
     align-items: center;
     gap: 6px;
     margin-top: 20px;
-    padding: 0 20px;
   }
 
   .carousel-dot {
@@ -483,59 +517,88 @@
 
   /* ─── BLOG RESPONSIVE ─── */
   .blog-hero {
-    padding: 50px 20px;
+    padding: 50px 24px;
     text-align: center;
   }
-  .blog-hero h1 { font-size: 2.2rem; line-height: 1.2; }
-  .blog-stats { justify-content: center; gap: 20px; margin-top: 30px; }
+
+  .blog-hero h1 {
+    font-size: clamp(1.8rem, 7vw, 2.2rem);
+    line-height: 1.2;
+  }
+
+  .blog-stats {
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+  }
 
   .filters-bar {
     display: flex;
     overflow-x: auto;
     margin-top: 20px;
-    padding: 0 20px 20px;
+    padding: 0 24px 20px;
     gap: 12px;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
-  .filters-bar::-webkit-scrollbar { display: none; }
-  .filter-btn { white-space: nowrap; flex-shrink: 0; }
 
-  .section-label { padding: 0 20px; margin: 30px 0 15px; }
+  .filters-bar::-webkit-scrollbar {
+    display: none;
+  }
 
-  .articles-featured, 
-  .articles-row, 
+  .filter-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-height: 44px;
+  }
+
+  .section-label {
+    padding: 0;
+    margin: 30px 0 15px;
+  }
+
+  .articles-featured,
+  .articles-row,
   .social-wall {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 16px;
-    padding: 0 20px 20px;
+    padding: 0 24px 20px;
+    margin: 0 -24px;
     grid-template-columns: unset !important;
   }
 
-  .articles-row{
+  .articles-row {
     margin-bottom: -25px;
   }
-  
-  .articles-featured::-webkit-scrollbar, 
-  .articles-row::-webkit-scrollbar, 
-  .social-wall::-webkit-scrollbar { display: none; }
 
-  .article-card, 
+  .articles-featured::-webkit-scrollbar,
+  .articles-row::-webkit-scrollbar,
+  .social-wall::-webkit-scrollbar {
+    display: none;
+  }
+
+  .article-card,
   .social-card {
     flex: 0 0 85vw;
     max-width: 320px;
     scroll-snap-align: center;
   }
 
-  .load-more-btn{
+  .load-more-btn {
     margin-top: 10px;
   }
 
-  .newsletter-band{
+  .newsletter-band {
     flex-direction: column;
+  }
+
+  /* Input newsletter : largeur fixe 240px supprimée */
+  .newsletter-input {
+    width: 100%;
+    max-width: 100%;
   }
 
   /* Reset pour la carte "À la une" en carrousel mobile */

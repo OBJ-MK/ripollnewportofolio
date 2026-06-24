@@ -1601,3 +1601,38 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ─── ACCESSIBILITÉ : prefers-reduced-motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      /* Le carrousel marquee s'arrête immédiatement */
+      .partners-track {
+        animation: none;
+      }
+
+      /* Les chips flottantes ne bougent pas */
+      .float-chip {
+        animation: none;
+      }
+
+      /* Les points de pulsation restent visibles en statique */
+      .pulse-dot,
+      .avail-dot {
+        animation: none;
+        opacity: 1;
+      }
+
+      /* Les fade-in s'affichent directement sans transition */
+      .fade-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }

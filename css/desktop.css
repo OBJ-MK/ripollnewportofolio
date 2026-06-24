@@ -1,19 +1,28 @@
-/* Styles pour Desktop (min-width: 769px) */
+/* ═══════════════════════════════════════════════════
+   DESKTOP / TABLETTE LARGE — min-width: 769px
+   La grille hero passe en 2 colonnes à 1024px via
+   tablette.css (769–1023 reste en 1 col centrée).
+   ═══════════════════════════════════════════════════ */
 @media (min-width: 769px) {
 
-  /* La sidebar est toujours cachée sur desktop */
+  /* La sidebar est toujours cachée : plus de hamburger visible */
   .side {
     display: none !important;
   }
 
-  /* S'assurer que la nav classique est visible */
+  /* Nav classique visible */
   .nav-links,
   .nav-actions {
     display: flex;
   }
 
-  /* Cacher le hamburger sur desktop */
+  /* Hamburger caché */
   .logo > div:first-child .fa-bars {
     display: none;
+  }
+
+  /* Rétablir le z-index nav (sidebar-open ne doit plus masquer la nav) */
+  body.sidebar-open .nav {
+    z-index: 100;
   }
 }
