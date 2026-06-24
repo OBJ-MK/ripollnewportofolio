@@ -1,4 +1,4 @@
-/* cms.js — Hydratation Strapi → DOM
+/* cms.js — Hydratation Strapi v5 → DOM
  * Fallback : si l'API échoue, le contenu HTML par défaut reste affiché.
  * Ne jamais vider le DOM avant d'avoir une réponse valide.
  */
@@ -95,6 +95,14 @@ function blocksToHTML(blocks) {
   }).join('');
 }
 
+/* Résout l'URL d'un champ media Strapi v5 (format plat : { url, ... }) */
+function mediaUrl(field) {
+  if (!field) return null;
+  const url = field.url || null;
+  if (!url) return null;
+  return url.startsWith('http') ? url : CONFIG.STRAPI_URL + url;
+}
+
 /* Hydrate un seul élément DOM via son attribut data-cms */
 function hydrate(selector, value) {
   const el = document.querySelector(`[data-cms="${selector}"]`);
@@ -111,10 +119,27 @@ function hydrate(selector, value) {
   }
 }
 
+/* Hydrate avec innerHTML — remplace <p> par <div> si nécessaire (évite <p> dans <p>) */
 function hydrateHTML(selector, html) {
   const el = document.querySelector(`[data-cms="${selector}"]`);
   if (!el || !html) return;
-  el.innerHTML = html;
+  if (el.tagName === 'P') {
+    const div = document.createElement('div');
+    div.className = el.className;
+    div.setAttribute('data-cms', selector);
+    div.innerHTML = html;
+    el.replaceWith(div);
+  } else {
+    el.innerHTML = html;
+  }
+}
+
+/* Hydrate un champ textuel dans le scope d'une carte (évite les sélecteurs ambigus) */
+function hydrateField(card, selector, value) {
+  if (value == null) return;
+  const el = card.querySelector(`[data-cms="${selector}"]`);
+  if (!el) return;
+  el.textContent = value;
 }
 
 /* ── Fetch & hydratation : Hero ───────────────────────────── */
@@ -122,14 +147,15 @@ function hydrateHTML(selector, html) {
 async function loadHero() {
   try {
     const { data } = await fetchJSON('/api/hero');
+    // Strapi v5 : champs plats directement sur data (pas data.attributes)
+    const attrs = data || {};
     const f = CONFIG.FIELDS.hero;
-    const attrs = data?.attributes || data || {};
     if (attrs[f.Titre]) hydrate('hero.Titre', attrs[f.Titre]);
     if (attrs[f.sousTitre]) hydrate('hero.sousTitre', attrs[f.sousTitre]);
     if (attrs[f.badgeTexte]) hydrate('hero.badgeTexte', attrs[f.badgeTexte]);
     if (attrs[f.statProjets] != null) hydrate('hero.statProjets', attrs[f.statProjets] + '+');
     if (attrs[f.statExperience] != null) hydrate('hero.statExperience', attrs[f.statExperience] + ' ans');
-    if (attrs[f.statSatisfaction] != null) hydrate('hero.statSatisfaction', attrs[f.statSatisfaction] + '%');
+    if (attrs[f.statSatisfaction] != null) hydrate('hero.statSatisfaction', String(attrs[f.statSatisfaction]) + '%');
   } catch (e) {
     console.error('[CMS] hero:', e.message);
   }
@@ -140,8 +166,9 @@ async function loadHero() {
 async function loadApropo() {
   try {
     const { data } = await fetchJSON('/api/apropo?populate=*');
+    // Strapi v5 : champs plats directement sur data
+    const attrs = data || {};
     const f = CONFIG.FIELDS.apropo;
-    const attrs = data?.attributes || data || {};
     if (attrs[f.Titre]) hydrate('apropo.Titre', attrs[f.Titre]);
     if (attrs[f.Contenu]) hydrateHTML('apropo.Contenu', blocksToHTML(attrs[f.Contenu]));
     if (attrs[f.Email]) {
@@ -153,17 +180,16 @@ async function loadApropo() {
       const el = document.querySelector('[data-cms="apropo.LinkedIn"]');
       if (el) el.href = attrs[f.LinkedIn];
     }
-    if (attrs[f.Photo]?.data) {
-      const photoUrl = attrs[f.Photo].data.attributes?.url;
-      if (photoUrl) {
-        const avatar = document.querySelector('.avatar-placeholder');
-        if (avatar) {
-          const img = document.createElement('img');
-          img.src = photoUrl.startsWith('http') ? photoUrl : CONFIG.STRAPI_URL + photoUrl;
-          img.alt = attrs[f.Titre] || 'Photo de profil';
-          img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
-          avatar.replaceWith(img);
-        }
+    // Strapi v5 : media plat { url, ... } (plus data.attributes.url)
+    const photoUrl = mediaUrl(attrs[f.Photo]);
+    if (photoUrl) {
+      const avatar = document.querySelector('.avatar-placeholder');
+      if (avatar) {
+        const img = document.createElement('img');
+        img.src = photoUrl;
+        img.alt = attrs[f.Titre] || 'Photo de profil';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
+        avatar.replaceWith(img);
       }
     }
   } catch (e) {
@@ -173,17 +199,21 @@ async function loadApropo() {
 
 /* ── Fetch & hydratation : Projets ───────────────────────── */
 
+/* Construit une carte projet complète (utilisé pour les index sans carte en dur) */
 function buildProjetCard(proj, index) {
   const f = CONFIG.FIELDS.projet;
-  const attrs = proj.attributes || proj;
+  // Strapi v5 : champs plats
+  const attrs = proj;
   const titre = attrs[f.Titre] || '';
   const type = attrs[f.Type] || '';
   const desc = attrs[f.Description] || '';
   const lien = attrs[f.Lien] || '#';
-  const stackItems = (attrs[f.stack] || []).map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
-  const imageUrl = attrs[f.Image]?.data?.attributes?.url;
-  const thumbContent = imageUrl
-    ? `<img src="${imageUrl.startsWith('http') ? imageUrl : CONFIG.STRAPI_URL + imageUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
+  const stackItems = (Array.isArray(attrs[f.stack]) ? attrs[f.stack] : [])
+    .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
+  // Strapi v5 : media plat { url, ... }
+  const imgUrl = mediaUrl(attrs[f.Image]);
+  const thumbContent = imgUrl
+    ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
 
   return `<div class="project-card fade-in visible" style="transition-delay:${index * 0.1}s">
@@ -203,10 +233,50 @@ function buildProjetCard(proj, index) {
 async function loadProjets() {
   try {
     const { data } = await fetchJSON('/api/projets?populate=*');
+    console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('projets-container');
     if (!container) return;
-    container.innerHTML = data.map((p, i) => buildProjetCard(p, i)).join('');
+    const f = CONFIG.FIELDS.projet;
+
+    data.forEach((proj, i) => {
+      // Strapi v5 : champs plats
+      const attrs = proj;
+      const card = container.querySelector(`[data-cms-project="${i}"]`);
+
+      if (!card) {
+        // Pas de carte en dur pour cet index : on l'ajoute
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildProjetCard(proj, i);
+        container.appendChild(tmp.firstElementChild);
+        return;
+      }
+
+      // Hydratation champ par champ dans la carte existante
+      if (attrs[f.Titre]) hydrateField(card, 'projet.Titre', attrs[f.Titre]);
+      if (attrs[f.Type]) hydrateField(card, 'projet.Type', attrs[f.Type]);
+      if (attrs[f.Description]) hydrateField(card, 'projet.Description', attrs[f.Description]);
+
+      // Lien : ne jamais écrire "null"
+      if (attrs[f.Lien]) {
+        const lienEl = card.querySelector('[data-cms="projet.Lien"]');
+        if (lienEl) lienEl.href = attrs[f.Lien];
+      }
+
+      // Stack badges : régénérer si l'API renvoie un tableau non vide
+      const stackEl = card.querySelector('[data-cms="projet.stack"]');
+      if (stackEl && Array.isArray(attrs[f.stack]) && attrs[f.stack].length) {
+        stackEl.innerHTML = attrs[f.stack]
+          .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
+      }
+
+      // Image : Strapi v5 media plat { url, ... }
+      const imgUrl = mediaUrl(attrs[f.Image]);
+      if (imgUrl) {
+        const thumbEl = card.querySelector('.project-thumb');
+        if (thumbEl) thumbEl.innerHTML = `<img src="${imgUrl}" alt="${attrs[f.Titre] || ''}" style="width:100%;height:100%;object-fit:cover;">`;
+      }
+    });
   } catch (e) {
     console.error('[CMS] projets:', e.message);
   }
@@ -214,9 +284,11 @@ async function loadProjets() {
 
 /* ── Fetch & hydratation : Postes ────────────────────────── */
 
+/* Construit une carte poste complète (utilisé pour les index sans carte en dur) */
 function buildPosteCard(poste, index) {
   const f = CONFIG.FIELDS.poste;
-  const attrs = poste.attributes || poste;
+  // Strapi v5 : champs plats
+  const attrs = poste;
   const titre = attrs[f.Titre] || '';
   const desc = attrs[f.Description] || '';
   const entreprise = attrs[f.Entreprise] || '';
@@ -249,10 +321,44 @@ function buildPosteCard(poste, index) {
 async function loadPostes() {
   try {
     const { data } = await fetchJSON('/api/postes');
+    console.log('[CMS] postes reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('postes-container');
     if (!container) return;
-    container.innerHTML = data.map((p, i) => buildPosteCard(p, i)).join('');
+    const f = CONFIG.FIELDS.poste;
+
+    data.forEach((poste, i) => {
+      // Strapi v5 : champs plats
+      const attrs = poste;
+      const card = container.querySelector(`[data-cms-poste="${i}"]`);
+
+      if (!card) {
+        // Pas de carte en dur pour cet index : on l'ajoute
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildPosteCard(poste, i);
+        container.appendChild(tmp.firstElementChild);
+        return;
+      }
+
+      // Hydratation champ par champ dans la carte existante
+      if (attrs[f.Titre]) hydrateField(card, 'poste.Titre', attrs[f.Titre]);
+      if (attrs[f.Description]) hydrateField(card, 'poste.Description', attrs[f.Description]);
+      if (attrs[f.Entreprise]) hydrateField(card, 'poste.Entreprise', attrs[f.Entreprise]);
+
+      // Préfixes emoji conservés
+      if (attrs[f.Localisation]) hydrateField(card, 'poste.Localisation', `📍 ${attrs[f.Localisation]}`);
+      if (attrs[f.Temps]) hydrateField(card, 'poste.Temps', `⏱ ${attrs[f.Temps]}`);
+      if (attrs[f.Salaire]) hydrateField(card, 'poste.Salaire', `💶 ${attrs[f.Salaire]}`);
+
+      // Statut : texte + classe badge
+      if (attrs[f.Statut]) {
+        const statutEl = card.querySelector('[data-cms="poste.Statut"]');
+        if (statutEl) {
+          statutEl.textContent = attrs[f.Statut];
+          statutEl.className = `poste-badge ${attrs[f.Statut] === 'Disponible' ? 'badge-open' : 'badge-closed'}`;
+        }
+      }
+    });
   } catch (e) {
     console.error('[CMS] postes:', e.message);
   }
@@ -262,14 +368,15 @@ async function loadPostes() {
 
 function buildArticleCard(article, index) {
   const f = CONFIG.FIELDS.article;
-  const attrs = article.attributes || article;
+  // Strapi v5 : champs plats
+  const attrs = article;
   const titre = attrs[f.Titre] || '';
   const resume = attrs[f.Resume] || '';
   const categorie = attrs[f.Categorie] || '';
-  const slug = attrs[f.slug] || '#';
-  const imageUrl = attrs[f.Image]?.data?.attributes?.url;
-  const thumbContent = imageUrl
-    ? `<img src="${imageUrl.startsWith('http') ? imageUrl : CONFIG.STRAPI_URL + imageUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
+  // Strapi v5 : media plat { url, ... }
+  const imgUrl = mediaUrl(attrs[f.Image]);
+  const thumbContent = imgUrl
+    ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
     : `<div class="article-thumb-bg" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a)"><i class="fa-solid fa-newspaper"></i></div>`;
 
   return `<div class="article-card fade-in visible" style="transition-delay:${index * 0.1}s" data-type="article">
@@ -291,10 +398,24 @@ function buildArticleCard(article, index) {
 async function loadArticles() {
   try {
     const { data } = await fetchJSON('/api/articles?populate=*');
+    console.log('[CMS] articles reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const featured = document.getElementById('section-articles');
     if (!featured) return;
-    featured.innerHTML = data.map((a, i) => buildArticleCard(a, i)).join('');
+    const cards = featured.querySelectorAll('.article-card');
+
+    data.forEach((article, i) => {
+      const newCardHtml = buildArticleCard(article, i);
+      const tmp = document.createElement('div');
+      tmp.innerHTML = newCardHtml;
+      const newCard = tmp.firstElementChild;
+      if (cards[i]) {
+        // Remplace la carte existante, les cartes suivantes restent intactes
+        cards[i].replaceWith(newCard);
+      } else {
+        featured.appendChild(newCard);
+      }
+    });
   } catch (e) {
     console.error('[CMS] articles:', e.message);
   }
