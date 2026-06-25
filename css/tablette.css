@@ -151,6 +151,11 @@
     justify-content: center;
   }
 
+  /* ─── PARTENAIRES EXPERTS ─── */
+  .partenaires-grid {
+    grid-template-columns: 1fr;
+  }
+
   /* ─── CONTACT ─── */
   .contact-inner {
     grid-template-columns: 1fr;
@@ -284,7 +289,12 @@
     justify-content: center;
   }
 
-  /* ─── PARTENAIRES ─── */
+  /* ─── PARTENAIRES EXPERTS ─── */
+  .partenaires-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ─── TEMOIGNAGES ─── */
   .testimonial-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -400,6 +410,11 @@
   .apropos-visual {
     order: -1;
     justify-content: center;
+  }
+
+  /* ─── PARTENAIRES EXPERTS ─── */
+  .partenaires-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   /* ─── CONTACT ─── */

@@ -429,7 +429,34 @@
     min-height: 44px;
   }
 
-  /* ─── PARTENAIRES ─── */
+  /* ─── PARTENAIRES EXPERTS ─── */
+  .partenaires-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 14px;
+    margin: 0 -24px;
+    padding: 4px 24px 12px;
+    grid-template-columns: unset;
+  }
+
+  .partenaires-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .partenaires-grid .service-card {
+    flex: 0 0 82vw;
+    max-width: 300px;
+    scroll-snap-align: center;
+  }
+
+  .partenaires-card--featured {
+    max-width: 100%;
+  }
+
+  /* ─── TEMOIGNAGES ─── */
   .testimonial-grid {
     display: flex;
     overflow-x: auto;
