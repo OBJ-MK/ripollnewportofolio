@@ -31,15 +31,13 @@ const CONFIG = {
       Titre: 'Titre',
       Type: 'Type',
       Categorie: 'Categorie',
-      descriptionCourte: 'descriptionCourte', // remappé : était Description
-      descriptionLongue: 'descriptionLongue', // rich-text blocks → modal
+      descriptionCourte: 'descriptionCourte',
+      descriptionLongue: 'descriptionLongue', // rich text Markdown (string)
       Lien: 'Lien',
-      Image: 'Image',        // multiple:true → tableau; on prend [0] pour la carte
-      galerie: 'galerie',    // répétable : { image: { url }, legende }
-      badges: 'badges',      // répétable : { label }
-      liens: 'liens',        // répétable : { label, url }
-      accentColor: 'accentColor',
-      stack: 'stack',
+      Image: 'Image',   // Multiple Media → tableau de { url, ... }
+      badges: 'badges', // répétable : { label, Type }
+      liens: 'liens',   // répétable : { Label, URL }
+      stack: 'stack',   // répétable : { nom }
     },
     article: {
       Titre: 'Titre',
@@ -260,10 +258,9 @@ function buildProjetCard(proj, index) {
   const lien = attrs[f.Lien] || '#';
   const stackItems = (Array.isArray(attrs[f.stack]) ? attrs[f.stack] : [])
     .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
-  // Couverture : 1re image de galerie (initCardCarousel remplacera ensuite pour l'auto-play)
-  const galerieItems = Array.isArray(attrs[f.galerie]) ? attrs[f.galerie] : [];
-  const firstGalerieImg = galerieItems[0] ? (galerieItems[0].Image || galerieItems[0].image) : null;
-  const firstImgUrl = mediaUrl(firstGalerieImg);
+  // Couverture : 1re image de Image[] (Multiple Media)
+  const imageArr = Array.isArray(attrs[f.Image]) ? attrs[f.Image] : [];
+  const firstImgUrl = mediaUrl(imageArr[0] || null);
   const thumbContent = firstImgUrl
     ? `<img src="${firstImgUrl}" alt="${titre}" loading="eager" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
@@ -299,7 +296,7 @@ function initCardCarousel(thumbEl, slides) {
   // Empiler les images (opacity crossfade)
   thumbEl.style.position = 'relative';
   thumbEl.innerHTML = slides.map((s, i) =>
-    `<img src="${s.url}" alt="${s.legende || ''}" loading="${i === 0 ? 'eager' : 'lazy'}" ` +
+    `<img src="${s.url}" alt="" loading="${i === 0 ? 'eager' : 'lazy'}" ` +
     `style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;` +
     `opacity:${i === 0 ? 1 : 0};transition:opacity 0.7s ease;">`
   ).join('');
@@ -337,8 +334,8 @@ async function loadProjets() {
   try {
     const { data } = await fetchJSON(
       '/api/projets' +
-      '?populate[stack]=true' +
-      '&populate[galerie][populate][Image]=true' +
+      '?populate[Image]=true' +
+      '&populate[stack]=true' +
       '&populate[badges]=true' +
       '&populate[liens]=true'
     );
@@ -383,7 +380,7 @@ async function loadProjets() {
           .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
       }
 
-      // Carousel galerie sur la carte
+      // Carousel sur la carte
       initCardCarousel(card.querySelector('.project-thumb'), buildImageSlides(proj));
 
       // Clic / clavier → ouvrir le modal
@@ -539,20 +536,12 @@ let _modalTrigger = null;
 let _modalKeyHandler = null;
 let _sliderCleanup = null;
 
-/* Construit les slides depuis galerie uniquement (source unique).
-   Champ média dans galerie : "Image" (majuscule, Strapi v5). */
+/* Construit les slides depuis Image (Multiple Media, Strapi v5). */
 function buildImageSlides(proj) {
-  const f = CONFIG.FIELDS.projet;
-  const galerie = Array.isArray(proj[f.galerie]) ? proj[f.galerie] : [];
-  const slides = [];
-  galerie.forEach(item => {
-    const imgObj = item && (item.Image || item.image);
-    if (!imgObj) return;
-    const url = mediaUrl(imgObj);
-    if (!url) return;
-    slides.push({ url, legende: item.legende || null });
-  });
-  return slides;
+  const images = Array.isArray(proj[CONFIG.FIELDS.projet.Image]) ? proj[CONFIG.FIELDS.projet.Image] : [];
+  return images
+    .map(img => ({ url: mediaUrl(img) }))
+    .filter(s => s.url);
 }
 
 function getFocusables(container) {
@@ -572,9 +561,11 @@ function initModalSlider(sliderEl, slides) {
 
   let current = 0;
 
+  captionEl.hidden = true;
+
   track.innerHTML = slides.map((s, idx) => {
     const loading = idx === 0 ? 'eager' : 'lazy';
-    return `<div class="slider-slide"><img src="${s.url}" alt="${s.legende || ''}" loading="${loading}"></div>`;
+    return `<div class="slider-slide"><img src="${s.url}" alt="" loading="${loading}"></div>`;
   }).join('');
 
   dotsEl.innerHTML = slides.map((_, idx) =>
@@ -587,7 +578,7 @@ function initModalSlider(sliderEl, slides) {
     current = (idx + slides.length) % slides.length;
     track.style.transform = `translateX(-${current * 100}%)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    captionEl.textContent = slides[current].legende || '';
+    // Pas de légende dans le schéma — captionEl masqué en permanence
   }
 
   goTo(0);
@@ -659,10 +650,6 @@ function openProjetModal(proj) {
   const modal = document.getElementById('projet-modal');
   if (!modal) return;
 
-  const accentColor = proj[f.accentColor] || '#f5c518';
-  modal.querySelector('.modal-panel').style.setProperty('--modal-accent', accentColor);
-  modal.querySelector('.modal-categorie').style.color = accentColor;
-
   // Titre
   const titre = proj[f.Titre] || '';
   modal.querySelector('#modal-titre').textContent = titre;
@@ -671,21 +658,17 @@ function openProjetModal(proj) {
   const categorie = proj[f.Categorie] || proj[f.Type] || '';
   modal.querySelector('#modal-categorie').textContent = categorie;
 
-  // Description : descriptionLongue (rich-text blocks) → fallback descriptionCourte (texte)
+  // Description : descriptionLongue (Markdown string) → fallback descriptionCourte
   const descEl = modal.querySelector('#modal-desc');
-  const descHtml = blocksToHTML(proj[f.descriptionLongue]);
-  if (descHtml) {
-    descEl.innerHTML = descHtml;
+  const descLongue = (proj[f.descriptionLongue] || '').trim();
+  const descCourte = (proj[f.descriptionCourte] || '').trim();
+  const descText = descLongue || descCourte;
+  if (descText) {
+    descEl.innerHTML = `<p>${descText}</p>`;
     descEl.hidden = false;
   } else {
-    const descCourte = proj[f.descriptionCourte] || '';
-    if (descCourte) {
-      descEl.innerHTML = `<p>${descCourte}</p>`;
-      descEl.hidden = false;
-    } else {
-      descEl.innerHTML = '';
-      descEl.hidden = true;
-    }
+    descEl.innerHTML = '';
+    descEl.hidden = true;
   }
 
   // Tags : stack (même source que la carte) + badges Strapi, dédoublonnés par label
@@ -713,9 +696,10 @@ function openProjetModal(proj) {
   // Liens : collection liens (label+url) → fallback champ Lien simple
   const liensEl = modal.querySelector('#modal-liens');
   const liensArr = Array.isArray(proj[f.liens]) ? proj[f.liens] : [];
-  const liensValides = liensArr.filter(l => l && l.url && l.label);
+  // Schéma : liens.Label (majuscule) et liens.URL (majuscule)
+  const liensValides = liensArr.filter(l => l && (l.URL || l.url) && (l.Label || l.label));
   if (!liensValides.length && proj[f.Lien]) {
-    liensValides.push({ label: 'Voir le projet', url: proj[f.Lien] });
+    liensValides.push({ Label: 'Voir le projet', URL: proj[f.Lien] });
   }
   const extIcon =
     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">` +
@@ -724,7 +708,11 @@ function openProjetModal(proj) {
     `</svg>`;
   if (liensValides.length) {
     liensEl.innerHTML = liensValides
-      .map(l => `<a href="${l.url}" class="modal-lien-btn" target="_blank" rel="noopener">${extIcon}${l.label}</a>`)
+      .map(l => {
+        const href = l.URL || l.url;
+        const label = l.Label || l.label;
+        return `<a href="${href}" class="modal-lien-btn" target="_blank" rel="noopener">${extIcon}${label}</a>`;
+      })
       .join('');
     liensEl.hidden = false;
   } else {

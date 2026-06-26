@@ -1735,7 +1735,7 @@
 }
 
 .projet-modal:not([hidden]) .modal-overlay {
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .modal-panel {
@@ -1890,6 +1890,7 @@
   align-items: flex-end;
   justify-content: center;
 }
+.slider-caption[hidden] { display: none !important; }
 
 /* ── Contenu ── */
 .modal-content {
