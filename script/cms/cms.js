@@ -7,7 +7,7 @@ const CONFIG = {
   STRAPI_URL: 'https://ripolldarcia-backend.up.railway.app',
   FIELDS: {
     hero: {
-      Titre: 'Titre',
+      Entete: 'Entete',           // remappé : était Titre — le schéma l'appelle Entete (richtext)
       sousTitre: 'sousTitre',
       badgeTexte: 'badgeTexte',
       statProjets: 'statProjets',
@@ -15,9 +15,12 @@ const CONFIG = {
       statSatisfaction: 'statSatisfaction',
     },
     apropo: {
-      Titre: 'Titre',
-      Contenu: 'Contenu',
-      Photo: 'Photo',
+      // Titre supprimé  : n'existe pas dans le schéma
+      // Contenu supprimé : n'existe pas — remplacé par Paragraphe1 + Paragraphe2
+      Paragraphe1: 'Paragraphe1', // remappé : était Contenu — texte richtext (string)
+      Paragraphe2: 'Paragraphe2', // nouveau : second paragraphe (string)
+      points_forts: 'points_forts', // nouveau : rich-text blocks → liste .value-item
+      Photo: 'Photo',             // inchangé : media plat { url, ... }
       Email: 'Email',
       LinkedIn: 'LinkedIn',
       Facebook: 'Facebook',
@@ -27,9 +30,9 @@ const CONFIG = {
     projet: {
       Titre: 'Titre',
       Type: 'Type',
-      Description: 'Description',
+      descriptionCourte: 'descriptionCourte', // remappé : était Description
       Lien: 'Lien',
-      Image: 'Image',
+      Image: 'Image',   // multiple:true → l'API renvoie un tableau; on prend [0]
       stack: 'stack',
     },
     article: {
@@ -95,6 +98,21 @@ function blocksToHTML(blocks) {
   }).join('');
 }
 
+/* Convertit points_forts (blocks Strapi v5) en <div class="value-item"> */
+function buildPointsForts(blocks) {
+  if (!Array.isArray(blocks)) return '';
+  return blocks
+    .filter(b => b.type === 'list')
+    .flatMap(b => b.children || [])
+    .filter(item => item.type === 'list-item')
+    .map(item => {
+      const text = (item.children || []).map(n => n.text || '').join('');
+      return text ? `<div class="value-item"><span class="value-check">✦</span>${text}</div>` : '';
+    })
+    .filter(Boolean)
+    .join('');
+}
+
 /* Résout l'URL d'un champ media Strapi v5 (format plat : { url, ... }) */
 function mediaUrl(field) {
   if (!field) return null;
@@ -150,7 +168,8 @@ async function loadHero() {
     // Strapi v5 : champs plats directement sur data (pas data.attributes)
     const attrs = data || {};
     const f = CONFIG.FIELDS.hero;
-    if (attrs[f.Titre]) hydrate('hero.Titre', attrs[f.Titre]);
+    // Entete (richtext) → sélecteur hero.Entete dans le DOM
+    if (attrs[f.Entete]) hydrate('hero.Entete', attrs[f.Entete]);
     if (attrs[f.sousTitre]) hydrate('hero.sousTitre', attrs[f.sousTitre]);
     if (attrs[f.badgeTexte]) hydrate('hero.badgeTexte', attrs[f.badgeTexte]);
     if (attrs[f.statProjets] != null) hydrate('hero.statProjets', attrs[f.statProjets] + '+');
@@ -169,25 +188,50 @@ async function loadApropo() {
     // Strapi v5 : champs plats directement sur data
     const attrs = data || {};
     const f = CONFIG.FIELDS.apropo;
-    if (attrs[f.Titre]) hydrate('apropo.Titre', attrs[f.Titre]);
-    if (attrs[f.Contenu]) hydrateHTML('apropo.Contenu', blocksToHTML(attrs[f.Contenu]));
+
+    // Paragraphe1 / Paragraphe2 : richtext Strapi → string simple
+    if (attrs[f.Paragraphe1]) hydrate('apropo.Paragraphe1', attrs[f.Paragraphe1]);
+    if (attrs[f.Paragraphe2]) hydrate('apropo.Paragraphe2', attrs[f.Paragraphe2]);
+
+    // points_forts : blocks Strapi v5 → <div class="value-item"> avec ✦
+    const pointsHtml = buildPointsForts(attrs[f.points_forts]);
+    if (pointsHtml) hydrateHTML('apropo.points_forts', pointsHtml);
+
+    // Email : texte affiché + href mailto (jamais "null")
     if (attrs[f.Email]) {
-      hydrate('apropo.Email', attrs[f.Email]);
       const emailLink = document.querySelector('[data-cms="apropo.Email"]');
-      if (emailLink) emailLink.href = `mailto:${attrs[f.Email]}`;
+      if (emailLink) {
+        emailLink.textContent = attrs[f.Email];
+        emailLink.href = `mailto:${attrs[f.Email]}`;
+      }
     }
+
+    // Réseaux sociaux : ne toucher au href que si la valeur n'est pas null
     if (attrs[f.LinkedIn]) {
       const el = document.querySelector('[data-cms="apropo.LinkedIn"]');
       if (el) el.href = attrs[f.LinkedIn];
     }
-    // Strapi v5 : media plat { url, ... } (plus data.attributes.url)
+    if (attrs[f.Facebook]) {
+      const el = document.querySelector('[data-cms="apropo.Facebook"]');
+      if (el) el.href = attrs[f.Facebook];
+    }
+    if (attrs[f.Twitter]) {
+      const el = document.querySelector('[data-cms="apropo.Twitter"]');
+      if (el) el.href = attrs[f.Twitter];
+    }
+    if (attrs[f.Instagram]) {
+      const el = document.querySelector('[data-cms="apropo.Instagram"]');
+      if (el) el.href = attrs[f.Instagram];
+    }
+
+    // Photo : Strapi v5 media plat { url, ... }
     const photoUrl = mediaUrl(attrs[f.Photo]);
     if (photoUrl) {
       const avatar = document.querySelector('.avatar-placeholder');
       if (avatar) {
         const img = document.createElement('img');
         img.src = photoUrl;
-        img.alt = attrs[f.Titre] || 'Photo de profil';
+        img.alt = 'Photo de profil';
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
         avatar.replaceWith(img);
       }
@@ -206,12 +250,13 @@ function buildProjetCard(proj, index) {
   const attrs = proj;
   const titre = attrs[f.Titre] || '';
   const type = attrs[f.Type] || '';
-  const desc = attrs[f.Description] || '';
+  const desc = attrs[f.descriptionCourte] || ''; // remappé : était Description
   const lien = attrs[f.Lien] || '#';
   const stackItems = (Array.isArray(attrs[f.stack]) ? attrs[f.stack] : [])
     .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
-  // Strapi v5 : media plat { url, ... }
-  const imgUrl = mediaUrl(attrs[f.Image]);
+  // Image multiple:true → tableau; on prend le premier élément
+  const imageField = Array.isArray(attrs[f.Image]) ? attrs[f.Image][0] : attrs[f.Image];
+  const imgUrl = mediaUrl(imageField);
   const thumbContent = imgUrl
     ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
@@ -255,7 +300,8 @@ async function loadProjets() {
       // Hydratation champ par champ dans la carte existante
       if (attrs[f.Titre]) hydrateField(card, 'projet.Titre', attrs[f.Titre]);
       if (attrs[f.Type]) hydrateField(card, 'projet.Type', attrs[f.Type]);
-      if (attrs[f.Description]) hydrateField(card, 'projet.Description', attrs[f.Description]);
+      // descriptionCourte remplacé Description dans le schéma
+      if (attrs[f.descriptionCourte]) hydrateField(card, 'projet.Description', attrs[f.descriptionCourte]);
 
       // Lien : ne jamais écrire "null"
       if (attrs[f.Lien]) {
@@ -270,8 +316,9 @@ async function loadProjets() {
           .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
       }
 
-      // Image : Strapi v5 media plat { url, ... }
-      const imgUrl = mediaUrl(attrs[f.Image]);
+      // Image multiple:true → tableau; on prend le premier élément
+      const imageField = Array.isArray(attrs[f.Image]) ? attrs[f.Image][0] : attrs[f.Image];
+      const imgUrl = mediaUrl(imageField);
       if (imgUrl) {
         const thumbEl = card.querySelector('.project-thumb');
         if (thumbEl) thumbEl.innerHTML = `<img src="${imgUrl}" alt="${attrs[f.Titre] || ''}" style="width:100%;height:100%;object-fit:cover;">`;
