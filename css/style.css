@@ -1686,6 +1686,18 @@
       .slider-track {
         transition: none;
       }
+
+      /* Drawer : apparition directe, sans glissement */
+      .modal-panel,
+      .modal-overlay {
+        transition: none;
+      }
+      .projet-modal[hidden] {
+        transition: none;
+      }
+      .projet-modal:not([hidden]) .modal-panel {
+        transform: translateX(0);
+      }
     }
 
 /* ─── MODAL PROJET ──────────────────────────────────────── */
@@ -1695,13 +1707,21 @@
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  visibility: visible;
 }
 
+/* Override display:none pour permettre l'animation de fermeture.
+   visibility:hidden (retardé 0.3s) masque visuellement et pour les AT. */
 .projet-modal[hidden] {
-  display: none;
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 0.3s;
+}
+
+.projet-modal:not([hidden]) {
+  pointer-events: auto;
+  transition: none;
 }
 
 .modal-overlay {
@@ -1710,20 +1730,34 @@
   background: rgba(0, 0, 0, 0.78);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.projet-modal:not([hidden]) .modal-overlay {
+  opacity: 1;
 }
 
 .modal-panel {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(520px, 100%);
+  height: 100%;
   background: var(--bg);
-  border: 0.5px solid rgba(245, 197, 24, 0.18);
-  border-radius: 20px;
-  width: 100%;
-  max-width: 900px;
-  max-height: 90vh;
+  border-left: 0.5px solid rgba(245, 197, 24, 0.18);
+  border-radius: 16px 0 0 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.65);
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.55);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.projet-modal:not([hidden]) .modal-panel {
+  transform: translateX(0);
 }
 
 .modal-close {
@@ -1964,15 +1998,11 @@
 }
 
 /* ── Responsive mobile ── */
-@media (max-width: 480px) {
-  .projet-modal {
-    padding: 0;
-    align-items: flex-end;
-  }
-
+@media (max-width: 768px) {
   .modal-panel {
-    border-radius: 18px 18px 0 0;
-    max-height: 95vh;
+    width: 100%;
+    border-radius: 0;
+    border-left: none;
   }
 
   .modal-slider {
