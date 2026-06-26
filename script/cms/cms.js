@@ -30,9 +30,15 @@ const CONFIG = {
     projet: {
       Titre: 'Titre',
       Type: 'Type',
+      Categorie: 'Categorie',
       descriptionCourte: 'descriptionCourte', // remappé : était Description
+      descriptionLongue: 'descriptionLongue', // rich-text blocks → modal
       Lien: 'Lien',
-      Image: 'Image',   // multiple:true → l'API renvoie un tableau; on prend [0]
+      Image: 'Image',        // multiple:true → tableau; on prend [0] pour la carte
+      galerie: 'galerie',    // répétable : { image: { url }, legende }
+      badges: 'badges',      // répétable : { label }
+      liens: 'liens',        // répétable : { label, url }
+      accentColor: 'accentColor',
       stack: 'stack',
     },
     article: {
@@ -261,7 +267,7 @@ function buildProjetCard(proj, index) {
     ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
 
-  return `<div class="project-card fade-in visible" style="transition-delay:${index * 0.1}s">
+  return `<div class="project-card fade-in visible" style="transition-delay:${index * 0.1}s" tabindex="0" role="button" aria-label="Voir le projet ${titre}">
     <div class="project-thumb" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a);">${thumbContent}</div>
     <div class="project-body">
       <div class="project-type">${type}</div>
@@ -275,9 +281,23 @@ function buildProjetCard(proj, index) {
   </div>`;
 }
 
+function attachCardModal(card, proj) {
+  card.addEventListener('click', () => openProjetModal(proj));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProjetModal(proj); }
+  });
+}
+
 async function loadProjets() {
   try {
-    const { data } = await fetchJSON('/api/projets?populate=*');
+    const { data } = await fetchJSON(
+      '/api/projets' +
+      '?populate[Image]=true' +
+      '&populate[stack]=true' +
+      '&populate[galerie][populate][Image]=true' +
+      '&populate[badges]=true' +
+      '&populate[liens]=true'
+    );
     console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('projets-container');
@@ -293,7 +313,9 @@ async function loadProjets() {
         // Pas de carte en dur pour cet index : on l'ajoute
         const tmp = document.createElement('div');
         tmp.innerHTML = buildProjetCard(proj, i);
-        container.appendChild(tmp.firstElementChild);
+        const newCard = tmp.firstElementChild;
+        container.appendChild(newCard);
+        attachCardModal(newCard, proj);
         return;
       }
 
@@ -323,6 +345,9 @@ async function loadProjets() {
         const thumbEl = card.querySelector('.project-thumb');
         if (thumbEl) thumbEl.innerHTML = `<img src="${imgUrl}" alt="${attrs[f.Titre] || ''}" style="width:100%;height:100%;object-fit:cover;">`;
       }
+
+      // Clic / clavier → ouvrir le modal
+      attachCardModal(card, proj);
     });
   } catch (e) {
     console.error('[CMS] projets:', e.message);
@@ -468,6 +493,242 @@ async function loadArticles() {
   }
 }
 
+/* ── Modal projet ─────────────────────────────────────────── */
+
+let _modalTrigger = null;
+let _modalKeyHandler = null;
+let _sliderCleanup = null;
+
+/* Fusionne galerie (composant répétable) + Image (multiple:true), dédoublonne par url */
+function buildImageSlides(proj) {
+  const seen = new Set();
+  const slides = [];
+  const f = CONFIG.FIELDS.projet;
+
+  const galerie = Array.isArray(proj[f.galerie]) ? proj[f.galerie] : [];
+  galerie.forEach(item => {
+    const imgObj = item && item.image;
+    if (!imgObj) return;
+    const url = mediaUrl(imgObj);
+    if (!url || seen.has(url)) return;
+    seen.add(url);
+    slides.push({ url, legende: item.legende || null });
+  });
+
+  const images = Array.isArray(proj[f.Image]) ? proj[f.Image] : (proj[f.Image] ? [proj[f.Image]] : []);
+  images.forEach(img => {
+    if (!img) return;
+    const url = mediaUrl(img);
+    if (!url || seen.has(url)) return;
+    seen.add(url);
+    slides.push({ url, legende: null });
+  });
+
+  return slides;
+}
+
+function getFocusables(container) {
+  return Array.from(container.querySelectorAll(
+    'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+  )).filter(el => el.offsetParent !== null);
+}
+
+function initModalSlider(sliderEl, slides) {
+  if (_sliderCleanup) { _sliderCleanup(); _sliderCleanup = null; }
+
+  const track = sliderEl.querySelector('#slider-track');
+  const dotsEl = sliderEl.querySelector('#slider-dots');
+  const captionEl = sliderEl.querySelector('#slider-caption');
+  const prevBtn = sliderEl.querySelector('.slider-prev');
+  const nextBtn = sliderEl.querySelector('.slider-next');
+
+  let current = 0;
+
+  track.innerHTML = slides.map((s, idx) => {
+    const loading = idx === 0 ? 'eager' : 'lazy';
+    return `<div class="slider-slide"><img src="${s.url}" alt="${s.legende || ''}" loading="${loading}"></div>`;
+  }).join('');
+
+  dotsEl.innerHTML = slides.map((_, idx) =>
+    `<button class="slider-dot${idx === 0 ? ' active' : ''}" aria-label="Image ${idx + 1}"></button>`
+  ).join('');
+
+  const dots = dotsEl.querySelectorAll('.slider-dot');
+
+  function goTo(idx) {
+    current = (idx + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    const leg = slides[current].legende;
+    captionEl.textContent = leg || '';
+  }
+
+  goTo(0);
+
+  const onPrev = () => goTo(current - 1);
+  const onNext = () => goTo(current + 1);
+  prevBtn.addEventListener('click', onPrev);
+  nextBtn.addEventListener('click', onNext);
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+  // Swipe tactile
+  let touchX = 0;
+  const onTouchStart = e => { touchX = e.touches[0].clientX; };
+  const onTouchEnd = e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+  };
+  track.addEventListener('touchstart', onTouchStart, { passive: true });
+  track.addEventListener('touchend', onTouchEnd, { passive: true });
+
+  _sliderCleanup = () => {
+    prevBtn.removeEventListener('click', onPrev);
+    nextBtn.removeEventListener('click', onNext);
+    track.removeEventListener('touchstart', onTouchStart);
+    track.removeEventListener('touchend', onTouchEnd);
+  };
+
+  // Masquer flèches si une seule image
+  if (slides.length <= 1) {
+    prevBtn.hidden = true;
+    nextBtn.hidden = true;
+    dotsEl.hidden = true;
+  } else {
+    prevBtn.hidden = false;
+    nextBtn.hidden = false;
+    dotsEl.hidden = false;
+  }
+}
+
+function openProjetModal(proj) {
+  const f = CONFIG.FIELDS.projet;
+  const modal = document.getElementById('projet-modal');
+  if (!modal) return;
+
+  const accentColor = proj[f.accentColor] || '#f5c518';
+  modal.querySelector('.modal-panel').style.setProperty('--modal-accent', accentColor);
+  modal.querySelector('.modal-categorie').style.color = accentColor;
+
+  // Titre
+  const titre = proj[f.Titre] || '';
+  modal.querySelector('#modal-titre').textContent = titre;
+
+  // Catégorie
+  const categorie = proj[f.Categorie] || proj[f.Type] || '';
+  modal.querySelector('#modal-categorie').textContent = categorie;
+
+  // Description : descriptionLongue (rich-text blocks) → fallback descriptionCourte (texte)
+  const descEl = modal.querySelector('#modal-desc');
+  const descHtml = blocksToHTML(proj[f.descriptionLongue]);
+  if (descHtml) {
+    descEl.innerHTML = descHtml;
+    descEl.hidden = false;
+  } else {
+    const descCourte = proj[f.descriptionCourte] || '';
+    if (descCourte) {
+      descEl.innerHTML = `<p>${descCourte}</p>`;
+      descEl.hidden = false;
+    } else {
+      descEl.innerHTML = '';
+      descEl.hidden = true;
+    }
+  }
+
+  // Tags : stack (même source que la carte) + badges Strapi, dédoublonnés par label
+  const tagsEl = modal.querySelector('#modal-tags');
+  const stackArr = Array.isArray(proj[f.stack]) ? proj[f.stack] : [];
+  const badgesArr = Array.isArray(proj[f.badges]) ? proj[f.badges] : [];
+  const seenLabels = new Set();
+  const allTags = [];
+  stackArr.forEach(s => {
+    const label = (s && (s.nom || s.name)) || (typeof s === 'string' ? s : '');
+    if (label && !seenLabels.has(label)) { seenLabels.add(label); allTags.push(label); }
+  });
+  badgesArr.forEach(b => {
+    const label = (b && (b.label || b.nom)) || (typeof b === 'string' ? b : '');
+    if (label && !seenLabels.has(label)) { seenLabels.add(label); allTags.push(label); }
+  });
+  if (allTags.length) {
+    tagsEl.innerHTML = allTags.map(l => `<span class="modal-badge">${l}</span>`).join('');
+    tagsEl.hidden = false;
+  } else {
+    tagsEl.innerHTML = '';
+    tagsEl.hidden = true;
+  }
+
+  // Liens : collection liens (label+url) → fallback champ Lien simple
+  const liensEl = modal.querySelector('#modal-liens');
+  const liensArr = Array.isArray(proj[f.liens]) ? proj[f.liens] : [];
+  const liensValides = liensArr.filter(l => l && l.url && l.label);
+  if (!liensValides.length && proj[f.Lien]) {
+    liensValides.push({ label: 'Voir le projet', url: proj[f.Lien] });
+  }
+  const extIcon =
+    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">` +
+    `<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>` +
+    `<polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>` +
+    `</svg>`;
+  if (liensValides.length) {
+    liensEl.innerHTML = liensValides
+      .map(l => `<a href="${l.url}" class="modal-lien-btn" target="_blank" rel="noopener">${extIcon}${l.label}</a>`)
+      .join('');
+    liensEl.hidden = false;
+  } else {
+    liensEl.innerHTML = '';
+    liensEl.hidden = true;
+  }
+
+  // Slider d'images
+  const sliderEl = modal.querySelector('#modal-slider');
+  const slides = buildImageSlides(proj);
+  if (slides.length) {
+    initModalSlider(sliderEl, slides);
+    sliderEl.hidden = false;
+  } else {
+    sliderEl.hidden = true;
+  }
+
+  // Ouvrir
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  _modalTrigger = document.activeElement;
+  modal.querySelector('.modal-close').focus();
+
+  // Focus trap + fermeture Échap
+  _modalKeyHandler = e => {
+    if (e.key === 'Escape') { closeProjetModal(); return; }
+    if (e.key !== 'Tab') return;
+    const focusables = getFocusables(modal.querySelector('.modal-panel'));
+    if (!focusables.length) { e.preventDefault(); return; }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  };
+  document.addEventListener('keydown', _modalKeyHandler);
+}
+
+function closeProjetModal() {
+  const modal = document.getElementById('projet-modal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.style.overflow = '';
+  if (_modalKeyHandler) { document.removeEventListener('keydown', _modalKeyHandler); _modalKeyHandler = null; }
+  if (_sliderCleanup) { _sliderCleanup(); _sliderCleanup = null; }
+  if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
+}
+
+/* Init overlay et croix une seule fois au DOMContentLoaded */
+function initModalListeners() {
+  const modal = document.getElementById('projet-modal');
+  if (!modal) return;
+  modal.querySelector('.modal-overlay').addEventListener('click', closeProjetModal);
+  modal.querySelector('.modal-close').addEventListener('click', closeProjetModal);
+}
+
 /* ── Init ─────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -475,6 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const isBlog = window.location.pathname.includes('blog');
 
   if (isIndex) {
+    initModalListeners();
     loadHero();
     loadApropo();
     loadProjets();

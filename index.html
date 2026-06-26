@@ -251,7 +251,7 @@
 
       <div class="projects-grid" id="projets-container">
         <!-- Projet 1 — Mamy-Délices -->
-        <div class="project-card fade-in visible" data-cms-project="0">
+        <div class="project-card fade-in visible" data-cms-project="0" tabindex="0" role="button" aria-label="Voir le projet Mamy-Délices">
           <div class="project-thumb" style="background: linear-gradient(135deg, #1a0a00 0%, #2e1500 100%);">
             <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
               <circle cx="150" cy="90" r="55" fill="rgba(245,197,24,0.06)" stroke="rgba(245,197,24,0.2)"
@@ -279,7 +279,7 @@
           </div>
         </div>
         <!-- Projet 2 — LeMarchand -->
-        <div class="project-card fade-in visible" style="transition-delay: 0.1s;" data-cms-project="1">
+        <div class="project-card fade-in visible" style="transition-delay: 0.1s;" data-cms-project="1" tabindex="0" role="button" aria-label="Voir le projet LeMarchand">
           <div class="project-thumb" style="background: linear-gradient(135deg, #0d1f14 0%, #122b1c 100%);">
             <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
               <circle cx="150" cy="90" r="55" fill="rgba(74,222,128,0.05)" stroke="rgba(74,222,128,0.15)"
@@ -304,7 +304,7 @@
           </div>
         </div>
         <!-- Projet 3 — DFA-Communication -->
-        <div class="project-card fade-in visible" style="transition-delay: 0.2s;" data-cms-project="2">
+        <div class="project-card fade-in visible" style="transition-delay: 0.2s;" data-cms-project="2" tabindex="0" role="button" aria-label="Voir le projet DFA-Communication">
           <div class="project-thumb" style="background: linear-gradient(135deg, #0d1a2e 0%, #0d1a40 100%);">
             <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
               <circle cx="150" cy="90" r="55" fill="rgba(100,140,255,0.05)" stroke="rgba(100,140,255,0.15)"
@@ -765,6 +765,34 @@
       <a href="#contact">Contact</a>
     </div>
   </footer>
+
+  <!-- ════════════ MODAL PROJET ════════════ -->
+  <div id="projet-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="modal-titre" hidden>
+    <div class="modal-overlay" aria-hidden="true"></div>
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
+
+      <!-- Slider images -->
+      <div class="modal-slider" id="modal-slider" hidden>
+        <div class="slider-track" id="slider-track"></div>
+        <button class="slider-btn slider-prev" aria-label="Image précédente">&#8249;</button>
+        <button class="slider-btn slider-next" aria-label="Image suivante">&#8250;</button>
+        <div class="slider-dots" id="slider-dots" aria-hidden="true"></div>
+        <div class="slider-caption" id="slider-caption" aria-live="polite"></div>
+      </div>
+
+      <!-- Contenu scrollable -->
+      <div class="modal-content">
+        <div class="modal-meta">
+          <span class="modal-categorie" id="modal-categorie"></span>
+        </div>
+        <h2 class="modal-titre" id="modal-titre"></h2>
+        <div class="modal-desc" id="modal-desc" hidden></div>
+        <div class="modal-tags" id="modal-tags" hidden></div>
+        <div class="modal-liens" id="modal-liens" hidden></div>
+      </div>
+    </div>
+  </div>
 
   <script src="script/script.js"></script>
   <script src="script/caroussel.js"></script>
