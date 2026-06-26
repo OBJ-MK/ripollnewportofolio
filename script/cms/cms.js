@@ -260,11 +260,12 @@ function buildProjetCard(proj, index) {
   const lien = attrs[f.Lien] || '#';
   const stackItems = (Array.isArray(attrs[f.stack]) ? attrs[f.stack] : [])
     .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
-  // Image multiple:true → tableau; on prend le premier élément
-  const imageField = Array.isArray(attrs[f.Image]) ? attrs[f.Image][0] : attrs[f.Image];
-  const imgUrl = mediaUrl(imageField);
-  const thumbContent = imgUrl
-    ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
+  // Couverture : 1re image de galerie (initCardCarousel remplacera ensuite pour l'auto-play)
+  const galerieItems = Array.isArray(attrs[f.galerie]) ? attrs[f.galerie] : [];
+  const firstGalerieImg = galerieItems[0] ? (galerieItems[0].Image || galerieItems[0].image) : null;
+  const firstImgUrl = mediaUrl(firstGalerieImg);
+  const thumbContent = firstImgUrl
+    ? `<img src="${firstImgUrl}" alt="${titre}" loading="eager" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
 
   return `<div class="project-card fade-in visible" style="transition-delay:${index * 0.1}s" tabindex="0" role="button" aria-label="Voir le projet ${titre}">
@@ -288,12 +289,55 @@ function attachCardModal(card, proj) {
   });
 }
 
+/* Mini-carrousel à fondu sur le thumb d'une carte projet.
+   slides = [{ url, legende }] issu de buildImageSlides. */
+function initCardCarousel(thumbEl, slides) {
+  if (!thumbEl || !slides.length) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Empiler les images (opacity crossfade)
+  thumbEl.style.position = 'relative';
+  thumbEl.innerHTML = slides.map((s, i) =>
+    `<img src="${s.url}" alt="${s.legende || ''}" loading="${i === 0 ? 'eager' : 'lazy'}" ` +
+    `style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;` +
+    `opacity:${i === 0 ? 1 : 0};transition:opacity 0.7s ease;">`
+  ).join('');
+
+  if (slides.length <= 1 || prefersReduced) return;
+
+  const imgs = thumbEl.querySelectorAll('img');
+  let cur = 0;
+  let timerId = null;
+
+  function showNext() {
+    imgs[cur].style.opacity = '0';
+    cur = (cur + 1) % imgs.length;
+    imgs[cur].style.opacity = '1';
+  }
+
+  function start() { if (!timerId) timerId = setInterval(showNext, 3000); }
+  function pause() { clearInterval(timerId); timerId = null; }
+
+  thumbEl.addEventListener('mouseenter', pause);
+  thumbEl.addEventListener('mouseleave', start);
+  start();
+
+  // Nettoyage si la carte quitte le DOM
+  const card = thumbEl.closest('.project-card');
+  if (card && card.parentElement) {
+    const obs = new MutationObserver(() => {
+      if (!card.isConnected) { pause(); obs.disconnect(); }
+    });
+    obs.observe(card.parentElement, { childList: true });
+  }
+}
+
 async function loadProjets() {
   try {
     const { data } = await fetchJSON(
       '/api/projets' +
-      '?populate[Image]=true' +
-      '&populate[stack]=true' +
+      '?populate[stack]=true' +
       '&populate[galerie][populate][Image]=true' +
       '&populate[badges]=true' +
       '&populate[liens]=true'
@@ -315,6 +359,7 @@ async function loadProjets() {
         tmp.innerHTML = buildProjetCard(proj, i);
         const newCard = tmp.firstElementChild;
         container.appendChild(newCard);
+        initCardCarousel(newCard.querySelector('.project-thumb'), buildImageSlides(proj));
         attachCardModal(newCard, proj);
         return;
       }
@@ -338,13 +383,8 @@ async function loadProjets() {
           .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
       }
 
-      // Image multiple:true → tableau; on prend le premier élément
-      const imageField = Array.isArray(attrs[f.Image]) ? attrs[f.Image][0] : attrs[f.Image];
-      const imgUrl = mediaUrl(imageField);
-      if (imgUrl) {
-        const thumbEl = card.querySelector('.project-thumb');
-        if (thumbEl) thumbEl.innerHTML = `<img src="${imgUrl}" alt="${attrs[f.Titre] || ''}" style="width:100%;height:100%;object-fit:cover;">`;
-      }
+      // Carousel galerie sur la carte
+      initCardCarousel(card.querySelector('.project-thumb'), buildImageSlides(proj));
 
       // Clic / clavier → ouvrir le modal
       attachCardModal(card, proj);
@@ -499,31 +539,19 @@ let _modalTrigger = null;
 let _modalKeyHandler = null;
 let _sliderCleanup = null;
 
-/* Fusionne galerie (composant répétable) + Image (multiple:true), dédoublonne par url */
+/* Construit les slides depuis galerie uniquement (source unique).
+   Champ média dans galerie : "Image" (majuscule, Strapi v5). */
 function buildImageSlides(proj) {
-  const seen = new Set();
-  const slides = [];
   const f = CONFIG.FIELDS.projet;
-
   const galerie = Array.isArray(proj[f.galerie]) ? proj[f.galerie] : [];
+  const slides = [];
   galerie.forEach(item => {
-    const imgObj = item && item.image;
+    const imgObj = item && (item.Image || item.image);
     if (!imgObj) return;
     const url = mediaUrl(imgObj);
-    if (!url || seen.has(url)) return;
-    seen.add(url);
+    if (!url) return;
     slides.push({ url, legende: item.legende || null });
   });
-
-  const images = Array.isArray(proj[f.Image]) ? proj[f.Image] : (proj[f.Image] ? [proj[f.Image]] : []);
-  images.forEach(img => {
-    if (!img) return;
-    const url = mediaUrl(img);
-    if (!url || seen.has(url)) return;
-    seen.add(url);
-    slides.push({ url, legende: null });
-  });
-
   return slides;
 }
 
@@ -559,31 +587,57 @@ function initModalSlider(sliderEl, slides) {
     current = (idx + slides.length) % slides.length;
     track.style.transform = `translateX(-${current * 100}%)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    const leg = slides[current].legende;
-    captionEl.textContent = leg || '';
+    captionEl.textContent = slides[current].legende || '';
   }
 
   goTo(0);
 
-  const onPrev = () => goTo(current - 1);
-  const onNext = () => goTo(current + 1);
+  // Auto-play 4s — stop définitif sur interaction manuelle
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let autoId = null;
+  let autoKilled = false;
+
+  function startAuto() {
+    if (autoKilled || prefersReduced || slides.length <= 1) return;
+    clearInterval(autoId);
+    autoId = setInterval(() => goTo(current + 1), 4000);
+  }
+  function pauseAuto() { clearInterval(autoId); autoId = null; }
+  function killAuto() {
+    autoKilled = true;
+    pauseAuto();
+    sliderEl.removeEventListener('mouseleave', startAuto);
+  }
+
+  startAuto();
+  const onMouseEnter = () => pauseAuto();
+  const onMouseLeave = () => startAuto();
+  sliderEl.addEventListener('mouseenter', onMouseEnter);
+  sliderEl.addEventListener('mouseleave', onMouseLeave);
+
+  // Navigation manuelle → arrêt définitif de l'auto-play
+  const onPrev = () => { killAuto(); goTo(current - 1); };
+  const onNext = () => { killAuto(); goTo(current + 1); };
   prevBtn.addEventListener('click', onPrev);
   nextBtn.addEventListener('click', onNext);
-  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+  dots.forEach((d, i) => d.addEventListener('click', () => { killAuto(); goTo(i); }));
 
-  // Swipe tactile
+  // Swipe tactile → arrêt définitif de l'auto-play
   let touchX = 0;
   const onTouchStart = e => { touchX = e.touches[0].clientX; };
   const onTouchEnd = e => {
     const dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 40) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+    if (Math.abs(dx) > 40) { killAuto(); dx < 0 ? goTo(current + 1) : goTo(current - 1); }
   };
   track.addEventListener('touchstart', onTouchStart, { passive: true });
   track.addEventListener('touchend', onTouchEnd, { passive: true });
 
   _sliderCleanup = () => {
+    pauseAuto();
     prevBtn.removeEventListener('click', onPrev);
     nextBtn.removeEventListener('click', onNext);
+    sliderEl.removeEventListener('mouseenter', onMouseEnter);
+    sliderEl.removeEventListener('mouseleave', onMouseLeave);
     track.removeEventListener('touchstart', onTouchStart);
     track.removeEventListener('touchend', onTouchEnd);
   };
