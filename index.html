@@ -37,7 +37,7 @@
 
   <!-- ════════════ NAVBAR ════════════ -->
   <nav class="nav">
-    <a href="#" class="logo">
+    <a href="/" class="logo">
       <div>
         <i class="fas fa-bars"></i>
       </div>
@@ -63,7 +63,7 @@
   </nav>
   <nav class="side">
     <div class="sideGauche">
-      <a href="#" class="sidelogo">
+      <a href="/" class="sidelogo">
         <div class="sidelogo-fabar">
           <i class="fas fa-bars"></i>
         </div>
@@ -274,7 +274,7 @@
                 <span class="stack-badge">TikTok</span>
                 <span class="stack-badge">E-commerce</span>
               </div>
-              <a href="#" class="project-link" data-cms="projet.Lien">Voir →</a>
+              <a class="project-link" data-cms="projet.Lien">Voir →</a>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@
                 <span class="stack-badge">Instagram</span>
                 <span class="stack-badge">TikTok</span>
               </div>
-              <a href="#" class="project-link" data-cms="projet.Lien">Voir →</a>
+              <a class="project-link" data-cms="projet.Lien">Voir →</a>
             </div>
           </div>
         </div>
@@ -324,7 +324,7 @@
                 <span class="stack-badge">Instagram</span>
                 <span class="stack-badge">Newsletter</span>
               </div>
-              <a href="#" class="project-link" data-cms="projet.Lien">Voir →</a>
+              <a class="project-link" data-cms="projet.Lien">Voir →</a>
             </div>
           </div>
         </div>
@@ -721,7 +721,9 @@
         </div>
 
         <div class="fade-in visible" style="transition-delay: 0.15s;">
-          <form name="contact" method="POST" netlify>
+          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contact">
+            <p hidden><label>Ne pas remplir : <input name="bot-field"></label></p>
             <div class="contact-form">
               <div class="form-row">
                 <div class="form-group">
@@ -760,8 +762,8 @@
   <footer class="footer-bar">
     <div class="footer-copy">© 2026 <em>Ripoll Darcia</em>. Tous droits réservés.</div>
     <div class="footer-links">
-      <a href="#">Mentions légales</a>
-      <a href="#">Politique de confidentialité</a>
+      <a href="/mentions-legales.html">Mentions légales</a>
+      <a href="/politique-de-confidentialite.html">Politique de confidentialité</a>
       <a href="#contact">Contact</a>
     </div>
   </footer>
@@ -796,6 +798,7 @@
 
   <script src="script/script.js"></script>
   <script src="script/caroussel.js"></script>
+  <script src="script/vendor/marked.min.js"></script>
   <script src="script/cms/cms.js" defer></script>
 </body>
 

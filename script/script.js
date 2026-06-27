@@ -28,8 +28,8 @@ function closeSidebar() {
   document.body.style.overflow = '';
 }
 
-if (hamburgerBtn) hamburgerBtn.addEventListener('click', openSidebar);
+if (hamburgerBtn) hamburgerBtn.addEventListener('click', e => { e.stopPropagation(); openSidebar(); });
 if (closeTrigger) closeTrigger.addEventListener('click', closeSidebar);
-if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+if (sidebarClose) sidebarClose.addEventListener('click', e => { e.stopPropagation(); closeSidebar(); });
 sideLinks.forEach(link => link.addEventListener('click', closeSidebar));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSidebar(); });

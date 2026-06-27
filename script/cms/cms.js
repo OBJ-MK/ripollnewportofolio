@@ -498,7 +498,7 @@ function buildArticleCard(article, index) {
       <p class="article-excerpt">${resume}</p>
       <div class="article-footer">
         <div class="article-tags"><span class="article-tag">${categorie}</span></div>
-        <a href="#" class="read-link">Lire →</a>
+        <a class="read-link">Lire →</a>
       </div>
     </div>
   </div>`;
@@ -658,13 +658,21 @@ function openProjetModal(proj) {
   const categorie = proj[f.Categorie] || proj[f.Type] || '';
   modal.querySelector('#modal-categorie').textContent = categorie;
 
-  // Description : descriptionLongue (Markdown string) → fallback descriptionCourte
+  // Description : descriptionLongue (Markdown) → fallback descriptionCourte (texte plat)
   const descEl = modal.querySelector('#modal-desc');
   const descLongue = (proj[f.descriptionLongue] || '').trim();
   const descCourte = (proj[f.descriptionCourte] || '').trim();
-  const descText = descLongue || descCourte;
-  if (descText) {
-    descEl.innerHTML = `<p>${descText}</p>`;
+  if (descLongue) {
+    if (typeof marked !== 'undefined' && marked.parse) {
+      const html = marked.parse(descLongue, { breaks: true, gfm: true });
+      // Forcer target="_blank" rel="noopener" sur tous les liens générés
+      descEl.innerHTML = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
+    } else {
+      descEl.innerHTML = `<p>${descLongue}</p>`;
+    }
+    descEl.hidden = false;
+  } else if (descCourte) {
+    descEl.innerHTML = `<p>${descCourte}</p>`;
     descEl.hidden = false;
   } else {
     descEl.innerHTML = '';
