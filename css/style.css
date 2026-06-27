@@ -1422,6 +1422,14 @@
       flex-shrink: 0;
     }
 
+    .testi-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+
     .testi-name {
       font-size: 13px;
       font-weight: 500;
