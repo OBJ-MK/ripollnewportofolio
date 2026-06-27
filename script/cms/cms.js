@@ -423,25 +423,26 @@ async function loadProjets() {
       attachCardModal(card, proj);
     });
 
-    // Rebuild la bande « Ils m'ont fait confiance » à partir des projets
-    const track = document.querySelector('#temoignages .partners-track');
-    if (track) {
-      const items = data.map(proj => {
-        const logoField = proj[f.logo];
-        const logoSrc = logoField
-          ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
-          : null;
-        const titre = proj[f.Titre] || '';
-        if (logoSrc) {
-          return `<div class="partner-logo has-logo" title="${titre}"><img src="${logoSrc}" alt="${titre}" loading="lazy"></div>`;
-        }
-        return `<div class="partner-logo">${titre}</div>`;
-      }).filter(Boolean);
-      if (items.length) {
-        // Dupliquer pour la boucle infinie du marquee
-        track.innerHTML = items.join('') + items.join('');
+    // Bande « Ils m'ont fait confiance » : garder les chips statiques,
+    // ajouter seulement un logo à gauche du nom quand un projet correspondant a un logo.
+    const logoByName = {};
+    data.forEach(proj => {
+      const lf = proj[f.logo];
+      const src = lf ? (mediaUrl(lf.formats?.thumbnail) || mediaUrl(lf)) : null;
+      const name = (proj[f.Titre] || '').trim();
+      if (name && src) logoByName[name] = src;
+    });
+    document.querySelectorAll('#temoignages .partner-logo').forEach(chip => {
+      const name = chip.textContent.trim();
+      if (logoByName[name] && !chip.querySelector('img')) {
+        chip.classList.add('has-logo');
+        const img = document.createElement('img');
+        img.src = logoByName[name];
+        img.alt = '';
+        img.loading = 'lazy';
+        chip.prepend(img);
       }
-    }
+    });
   } catch (e) {
     console.error('[CMS] projets:', e.message);
   }
