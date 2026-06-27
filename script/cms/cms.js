@@ -35,6 +35,7 @@ const CONFIG = {
       descriptionLongue: 'descriptionLongue', // rich text Markdown (string)
       Lien: 'Lien',
       Image: 'Image',   // Multiple Media → tableau de { url, ... }
+      logo: 'logo',     // Single Media → objet plat { url, formats } ou null
       badges: 'badges', // répétable : { label, Type }
       liens: 'liens',   // répétable : { Label, URL }
       stack: 'stack',   // répétable : { nom }
@@ -55,6 +56,11 @@ const CONFIG = {
       Salaire: 'Salaire',
       Statut: 'Statut',
       Entreprise: 'Entreprise',
+    },
+    partenaire: {
+      NomDuDomaine: 'NomDuDomaine',
+      Description: 'Description',
+      Image: 'Image',
     },
   },
 };
@@ -264,9 +270,18 @@ function buildProjetCard(proj, index) {
   const thumbContent = firstImgUrl
     ? `<img src="${firstImgUrl}" alt="${titre}" loading="eager" style="width:100%;height:100%;object-fit:cover;">`
     : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
+  // Logo rond (optionnel)
+  const logoField = attrs[f.logo];
+  const logoSrc = logoField
+    ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
+    : null;
+  const logoHtml = logoSrc
+    ? `<div class="project-logo"><img src="${logoSrc}" alt="${titre}" loading="lazy"></div>`
+    : '';
+  const hasLogoClass = logoSrc ? ' has-logo' : '';
 
-  return `<div class="project-card fade-in visible" style="transition-delay:${index * 0.1}s" tabindex="0" role="button" aria-label="Voir le projet ${titre}">
-    <div class="project-thumb" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a);">${thumbContent}</div>
+  return `<div class="project-card fade-in visible${hasLogoClass}" style="transition-delay:${index * 0.1}s" tabindex="0" role="button" aria-label="Voir le projet ${titre}">
+    <div class="project-thumb" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a);">${thumbContent}${logoHtml}</div>
     <div class="project-body">
       <div class="project-type">${type}</div>
       <div class="project-name">${titre}</div>
@@ -337,7 +352,8 @@ async function loadProjets() {
       '?populate[Image]=true' +
       '&populate[stack]=true' +
       '&populate[badges]=true' +
-      '&populate[liens]=true'
+      '&populate[liens]=true' +
+      '&populate[logo]=true'
     );
     console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
@@ -380,12 +396,52 @@ async function loadProjets() {
           .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
       }
 
+      // Logo rond : injecter dans .project-thumb si présent et pas déjà là
+      const logoField = attrs[f.logo];
+      const logoSrc = logoField
+        ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
+        : null;
+      if (logoSrc) {
+        const thumbEl = card.querySelector('.project-thumb');
+        if (thumbEl && !thumbEl.querySelector('.project-logo')) {
+          const logoEl = document.createElement('div');
+          logoEl.className = 'project-logo';
+          const img = document.createElement('img');
+          img.src = logoSrc;
+          img.alt = attrs[f.Titre] || '';
+          img.loading = 'lazy';
+          logoEl.appendChild(img);
+          thumbEl.appendChild(logoEl);
+          card.classList.add('has-logo');
+        }
+      }
+
       // Carousel sur la carte
       initCardCarousel(card.querySelector('.project-thumb'), buildImageSlides(proj));
 
       // Clic / clavier → ouvrir le modal
       attachCardModal(card, proj);
     });
+
+    // Rebuild la bande « Ils m'ont fait confiance » à partir des projets
+    const track = document.querySelector('#temoignages .partners-track');
+    if (track) {
+      const items = data.map(proj => {
+        const logoField = proj[f.logo];
+        const logoSrc = logoField
+          ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
+          : null;
+        const titre = proj[f.Titre] || '';
+        if (logoSrc) {
+          return `<div class="partner-logo has-logo" title="${titre}"><img src="${logoSrc}" alt="${titre}" loading="lazy"></div>`;
+        }
+        return `<div class="partner-logo">${titre}</div>`;
+      }).filter(Boolean);
+      if (items.length) {
+        // Dupliquer pour la boucle infinie du marquee
+        track.innerHTML = items.join('') + items.join('');
+      }
+    }
   } catch (e) {
     console.error('[CMS] projets:', e.message);
   }
@@ -771,6 +827,77 @@ function closeProjetModal() {
   if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
 }
 
+/* ── Fetch & hydratation : Partenaires ───────────────────── */
+
+function buildPartenaireCard(partenaire, index) {
+  const f = CONFIG.FIELDS.partenaire;
+  const attrs = partenaire;
+  const nom = attrs[f.NomDuDomaine] || '';
+  const desc = attrs[f.Description] || '';
+  const imgField = attrs[f.Image];
+  const imgSrc = imgField
+    ? (mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+    : null;
+  const iconHtml = imgSrc
+    ? `<div class="service-icon has-image"><img src="${imgSrc}" alt="${nom}" loading="lazy"></div>`
+    : `<div class="service-icon">🤝</div>`;
+
+  return `<div class="service-card partenaires-card fade-in visible" style="transition-delay:${index * 0.1}s" data-cms-partner="${index}">
+    ${iconHtml}
+    <div class="service-name">${nom}</div>
+    <p class="service-desc">${desc}</p>
+    <a href="#contact" class="apply-btn partenaires-cta">Demander une mise en relation</a>
+  </div>`;
+}
+
+async function loadPartenaires() {
+  try {
+    const { data } = await fetchJSON('/api/partenaires?populate=*');
+    console.log('[CMS] partenaires reçus:', data?.length ?? 0);
+    if (!data?.length) return;
+    const container = document.getElementById('partenaires-container');
+    if (!container) return;
+    const f = CONFIG.FIELDS.partenaire;
+
+    data.forEach((partenaire, i) => {
+      const attrs = partenaire;
+      const card = container.querySelector(`[data-cms-partner="${i}"]`);
+
+      const imgField = attrs[f.Image];
+      const imgSrc = imgField
+        ? (mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+        : null;
+
+      if (!card) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildPartenaireCard(partenaire, i);
+        container.appendChild(tmp.firstElementChild);
+        return;
+      }
+
+      // Hydrate titre et description
+      if (attrs[f.NomDuDomaine]) hydrateField(card, 'partenaire.Titre', attrs[f.NomDuDomaine]);
+      if (attrs[f.Description]) hydrateField(card, 'partenaire.Description', attrs[f.Description]);
+
+      // Image : injecter dans .service-icon, vider l'emoji avant
+      if (imgSrc) {
+        const iconEl = card.querySelector('.service-icon');
+        if (iconEl) {
+          iconEl.innerHTML = '';
+          iconEl.classList.add('has-image');
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = attrs[f.NomDuDomaine] || '';
+          img.loading = 'lazy';
+          iconEl.appendChild(img);
+        }
+      }
+    });
+  } catch (e) {
+    console.error('[CMS] partenaires:', e.message);
+  }
+}
+
 /* Init overlay et croix une seule fois au DOMContentLoaded */
 function initModalListeners() {
   const modal = document.getElementById('projet-modal');
@@ -791,6 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadApropo();
     loadProjets();
     loadPostes();
+    loadPartenaires();
   }
   if (isBlog) {
     loadArticles();
