@@ -260,6 +260,10 @@
       font-family: var(--font-body);
       cursor: pointer;
       transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .btn-accent:hover {
@@ -402,6 +406,10 @@
       font-family: var(--font-body);
       cursor: pointer;
       transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .sidebtn-accent:hover {
