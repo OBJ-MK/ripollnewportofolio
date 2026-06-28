@@ -57,6 +57,20 @@ const CONFIG = {
       Statut: 'Statut',
       Entreprise: 'Entreprise',
     },
+    service: {
+      Titre: 'Titre',
+      Description: 'Description',
+      tags: 'tags',
+      Image: 'Image',
+      Ordre: 'Ordre',
+    },
+    outil: {
+      Nom: 'Nom',
+      Image: 'Image',
+      Pourcentage: 'Pourcentage',
+      Vedette: 'Vedette',
+      Ordre: 'Ordre',
+    },
     partenaire: {
       NomDuDomaine: 'NomDuDomaine',
       Description: 'Description',
@@ -186,8 +200,22 @@ async function loadHero() {
     // Strapi v5 : champs plats directement sur data (pas data.attributes)
     const attrs = data || {};
     const f = CONFIG.FIELDS.hero;
-    // Entete (richtext) → sélecteur hero.Entete dans le DOM
-    if (attrs[f.Entete]) hydrate('hero.Entete', attrs[f.Entete]);
+    // Entete : Markdown string → HTML inline, gras → .gold
+    if (attrs[f.Entete]) {
+      const enteteEl = document.querySelector('[data-cms="hero.Entete"]');
+      if (enteteEl) {
+        let html;
+        if (typeof marked !== 'undefined') {
+          html = typeof marked.parseInline === 'function'
+            ? marked.parseInline(attrs[f.Entete])
+            : marked.parse(attrs[f.Entete]).replace(/^<p>|<\/p>\n?$/g, '');
+        } else {
+          html = attrs[f.Entete];
+        }
+        html = html.replace(/<strong>([\s\S]*?)<\/strong>/g, '<span class="gold">$1</span>');
+        enteteEl.innerHTML = html;
+      }
+    }
     if (attrs[f.sousTitre]) hydrate('hero.sousTitre', attrs[f.sousTitre]);
     if (attrs[f.badgeTexte]) hydrate('hero.badgeTexte', attrs[f.badgeTexte]);
     if (attrs[f.statProjets] != null) hydrate('hero.statProjets', attrs[f.statProjets] + '+');
@@ -296,7 +324,7 @@ function buildProjetCard(proj, index) {
       <p class="project-desc">${desc}</p>
       <div class="project-footer">
         <div class="project-stack">${stackItems}</div>
-        <a href="${lien}" class="project-link" target="_blank" rel="noopener">Voir →</a>
+        <div class="project-link">Voir →</d>
       </div>
     </div>
   </div>`;
@@ -369,88 +397,29 @@ async function loadProjets() {
     if (!container) return;
     const f = CONFIG.FIELDS.projet;
 
+    container.innerHTML = '';
     data.forEach((proj, i) => {
-      // Strapi v5 : champs plats
-      const attrs = proj;
-      const card = container.querySelector(`[data-cms-project="${i}"]`);
-
-      if (!card) {
-        // Pas de carte en dur pour cet index : on l'ajoute
-        const tmp = document.createElement('div');
-        tmp.innerHTML = buildProjetCard(proj, i);
-        const newCard = tmp.firstElementChild;
-        container.appendChild(newCard);
-        initCardCarousel(newCard.querySelector('.project-thumb'), buildImageSlides(proj));
-        attachCardModal(newCard, proj);
-        return;
-      }
-
-      // Hydratation champ par champ dans la carte existante
-      if (attrs[f.Titre]) hydrateField(card, 'projet.Titre', attrs[f.Titre]);
-      if (attrs[f.Type]) hydrateField(card, 'projet.Type', attrs[f.Type]);
-      // descriptionCourte remplacé Description dans le schéma
-      if (attrs[f.descriptionCourte]) hydrateField(card, 'projet.Description', attrs[f.descriptionCourte]);
-
-      // Lien : ne jamais écrire "null"
-      if (attrs[f.Lien]) {
-        const lienEl = card.querySelector('[data-cms="projet.Lien"]');
-        if (lienEl) lienEl.href = attrs[f.Lien];
-      }
-
-      // Stack badges : régénérer si l'API renvoie un tableau non vide
-      const stackEl = card.querySelector('[data-cms="projet.stack"]');
-      if (stackEl && Array.isArray(attrs[f.stack]) && attrs[f.stack].length) {
-        stackEl.innerHTML = attrs[f.stack]
-          .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
-      }
-
-      // Logo rond : injecter dans .project-thumb si présent et pas déjà là
-      const logoField = attrs[f.logo];
-      const logoSrc = logoField
-        ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
-        : null;
-      if (logoSrc) {
-        const thumbEl = card.querySelector('.project-thumb');
-        if (thumbEl && !thumbEl.querySelector('.project-logo')) {
-          const logoEl = document.createElement('div');
-          logoEl.className = 'project-logo';
-          const img = document.createElement('img');
-          img.src = logoSrc;
-          img.alt = attrs[f.Titre] || '';
-          img.loading = 'lazy';
-          logoEl.appendChild(img);
-          thumbEl.appendChild(logoEl);
-          card.classList.add('has-logo');
-        }
-      }
-
-      // Carousel sur la carte
-      initCardCarousel(card.querySelector('.project-thumb'), buildImageSlides(proj));
-
-      // Clic / clavier → ouvrir le modal
-      attachCardModal(card, proj);
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildProjetCard(proj, i);
+      const newCard = tmp.firstElementChild;
+      container.appendChild(newCard);
+      initCardCarousel(newCard.querySelector('.project-thumb'), buildImageSlides(proj));
+      attachCardModal(newCard, proj);
     });
 
-    // Bande « Ils m'ont fait confiance » : garder les chips statiques,
-    // ajouter seulement un logo à gauche du nom quand un projet correspondant a un logo.
-    const logoByName = {};
-    data.forEach(proj => {
-      const lf = proj[f.logo];
-      const src = lf ? (mediaUrl(lf.formats?.thumbnail) || mediaUrl(lf)) : null;
-      const name = (proj[f.Titre] || '').trim();
-      if (name && src) logoByName[name] = src;
-    });
-    document.querySelectorAll('#temoignages .partner-logo').forEach(chip => {
-      const name = chip.textContent.trim();
-      if (logoByName[name] && !chip.querySelector('img')) {
-        chip.classList.add('has-logo');
-        const img = document.createElement('img');
-        img.src = logoByName[name];
-        img.alt = '';
-        img.loading = 'lazy';
-        chip.prepend(img);
-      }
-    });
+    // Bande « Ils m'ont fait confiance » : reconstruire depuis les projets (×3 pour le marquee)
+    const track = document.querySelector('#temoignages .partners-track');
+    if (track) {
+      const items = data.map(proj => {
+        const lf = proj[f.logo];
+        const src = lf ? (mediaUrl(lf.formats?.thumbnail) || mediaUrl(lf)) : null;
+        const titre = (proj[f.Titre] || '').trim();
+        const imgHtml = src ? `<img src="${src}" alt="" loading="lazy">` : '';
+        const hasLogo = src ? ' has-logo' : '';
+        return `<div class="partner-logo${hasLogo}">${imgHtml}${titre}</div>`;
+      });
+      track.innerHTML = [...items, ...items, ...items].join('');
+    }
   } catch (e) {
     console.error('[CMS] projets:', e.message);
   }
@@ -499,42 +468,110 @@ async function loadPostes() {
     if (!data?.length) return;
     const container = document.getElementById('postes-container');
     if (!container) return;
-    const f = CONFIG.FIELDS.poste;
 
+    container.innerHTML = '';
     data.forEach((poste, i) => {
-      // Strapi v5 : champs plats
-      const attrs = poste;
-      const card = container.querySelector(`[data-cms-poste="${i}"]`);
-
-      if (!card) {
-        // Pas de carte en dur pour cet index : on l'ajoute
-        const tmp = document.createElement('div');
-        tmp.innerHTML = buildPosteCard(poste, i);
-        container.appendChild(tmp.firstElementChild);
-        return;
-      }
-
-      // Hydratation champ par champ dans la carte existante
-      if (attrs[f.Titre]) hydrateField(card, 'poste.Titre', attrs[f.Titre]);
-      if (attrs[f.Description]) hydrateField(card, 'poste.Description', attrs[f.Description]);
-      if (attrs[f.Entreprise]) hydrateField(card, 'poste.Entreprise', attrs[f.Entreprise]);
-
-      // Préfixes emoji conservés
-      if (attrs[f.Localisation]) hydrateField(card, 'poste.Localisation', `📍 ${attrs[f.Localisation]}`);
-      if (attrs[f.Temps]) hydrateField(card, 'poste.Temps', `⏱ ${attrs[f.Temps]}`);
-      if (attrs[f.Salaire]) hydrateField(card, 'poste.Salaire', `💶 ${attrs[f.Salaire]}`);
-
-      // Statut : texte + classe badge
-      if (attrs[f.Statut]) {
-        const statutEl = card.querySelector('[data-cms="poste.Statut"]');
-        if (statutEl) {
-          statutEl.textContent = attrs[f.Statut];
-          statutEl.className = `poste-badge ${attrs[f.Statut] === 'Disponible' ? 'badge-open' : 'badge-closed'}`;
-        }
-      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildPosteCard(poste, i);
+      container.appendChild(tmp.firstElementChild);
     });
   } catch (e) {
     console.error('[CMS] postes:', e.message);
+  }
+}
+
+/* ── Fetch & hydratation : Services ──────────────────────── */
+
+function buildServiceCard(s, index) {
+  const f = CONFIG.FIELDS.service;
+  const titre = s[f.Titre] || '';
+  const desc = s[f.Description];
+  const descHtml = Array.isArray(desc) ? blocksToHTML(desc) : (desc ? `<p>${desc}</p>` : '');
+  const imgField = s[f.Image];
+  const imgSrc = imgField
+    ? (mediaUrl(imgField.formats?.small) || mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+    : null;
+  const iconHtml = imgSrc
+    ? `<div class="service-icon"><img src="${imgSrc}" alt="${titre}" loading="lazy"></div>`
+    : `<div class="service-icon"></div>`;
+  const tags = Array.isArray(s[f.tags]) ? s[f.tags] : [];
+  const tagsHtml = tags.length
+    ? `<div class="service-tags">${tags.map(t => {
+        const label = t.nom || t.Nom || t.label || t.Label || t.Name || t.name || t.titre || t.Titre || '';
+        return label ? `<span class="tag">${label}</span>` : '';
+      }).filter(Boolean).join('')}</div>`
+    : '';
+
+  return `<div class="service-card fade-in visible" style="transition-delay:${index * 0.1}s">
+    ${iconHtml}
+    <div class="service-name">${titre}</div>
+    <div class="service-desc">${descHtml}</div>
+    ${tagsHtml}
+    <a href="#contact" class="apply-btn">Demander ce service</a>
+  </div>`;
+}
+
+async function loadServices() {
+  try {
+    const { data } = await fetchJSON('/api/services?populate=*&sort=Ordre:asc');
+    console.log('[CMS] services reçus:', data?.length ?? 0);
+    if (!data?.length) return;
+    const grid = document.querySelector('.services-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    data.forEach((s, i) => {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildServiceCard(s, i);
+      grid.appendChild(tmp.firstElementChild);
+    });
+  } catch (e) {
+    console.error('[CMS] services:', e.message);
+  }
+}
+
+/* ── Fetch & hydratation : Outils ────────────────────────── */
+
+async function loadOutils() {
+  try {
+    const { data } = await fetchJSON('/api/outils?populate=*&sort=Ordre:asc');
+    console.log('[CMS] outils reçus:', data?.length ?? 0);
+    if (!data?.length) return;
+    const f = CONFIG.FIELDS.outil;
+    const skillBars = document.querySelector('.skill-bars');
+    const toolsGrid = document.querySelector('.tools-grid');
+
+    if (skillBars) {
+      skillBars.innerHTML = '';
+      data.filter(o => o[f.Vedette] === true).forEach(o => {
+        const nom = o[f.Nom] || '';
+        const pct = Math.min(100, Math.max(0, o[f.Pourcentage] || 0));
+        const row = document.createElement('div');
+        row.className = 'skill-row';
+        row.innerHTML = `<div class="skill-meta"><span>${nom}</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>`;
+        skillBars.appendChild(row);
+      });
+    }
+
+    if (toolsGrid) {
+      toolsGrid.innerHTML = '';
+      data.forEach(o => {
+        const nom = o[f.Nom] || '';
+        const imgField = o[f.Image];
+        const imgSrc = imgField
+          ? (mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+          : null;
+        const iconHtml = imgSrc
+          ? `<img src="${imgSrc}" alt="${nom}" loading="lazy">`
+          : '';
+        const item = document.createElement('div');
+        item.className = 'tool-item';
+        item.innerHTML = `<div class="tool-icon">${iconHtml}</div><div class="tool-name">${nom}</div>`;
+        toolsGrid.appendChild(item);
+      });
+    }
+  } catch (e) {
+    console.error('[CMS] outils:', e.message);
   }
 }
 
@@ -921,41 +958,12 @@ async function loadPartenaires() {
     if (!data?.length) return;
     const container = document.getElementById('partenaires-container');
     if (!container) return;
-    const f = CONFIG.FIELDS.partenaire;
 
+    container.innerHTML = '';
     data.forEach((partenaire, i) => {
-      const attrs = partenaire;
-      const card = container.querySelector(`[data-cms-partner="${i}"]`);
-
-      const imgField = attrs[f.Image];
-      const imgSrc = imgField
-        ? (mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
-        : null;
-
-      if (!card) {
-        const tmp = document.createElement('div');
-        tmp.innerHTML = buildPartenaireCard(partenaire, i);
-        container.appendChild(tmp.firstElementChild);
-        return;
-      }
-
-      // Hydrate titre et description
-      if (attrs[f.NomDuDomaine]) hydrateField(card, 'partenaire.Titre', attrs[f.NomDuDomaine]);
-      if (attrs[f.Description]) hydrateField(card, 'partenaire.Description', attrs[f.Description]);
-
-      // Image : injecter dans .service-icon, vider l'emoji avant
-      if (imgSrc) {
-        const iconEl = card.querySelector('.service-icon');
-        if (iconEl) {
-          iconEl.innerHTML = '';
-          iconEl.classList.add('has-image');
-          const img = document.createElement('img');
-          img.src = imgSrc;
-          img.alt = attrs[f.NomDuDomaine] || '';
-          img.loading = 'lazy';
-          iconEl.appendChild(img);
-        }
-      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildPartenaireCard(partenaire, i);
+      container.appendChild(tmp.firstElementChild);
     });
   } catch (e) {
     console.error('[CMS] partenaires:', e.message);
@@ -982,6 +990,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadApropo();
     loadProjets();
     loadPostes();
+    loadServices();
+    loadOutils();
     loadPartenaires();
     loadTemoignages();
   }

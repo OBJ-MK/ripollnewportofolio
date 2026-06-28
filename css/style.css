@@ -743,6 +743,16 @@
       justify-content: center;
       margin-bottom: 20px;
       font-size: 20px;
+      overflow: hidden;
+    }
+
+    .service-icon img,
+    .tool-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
     }
 
     .service-name {
@@ -765,6 +775,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      margin-top: 1.5rem;
     }
 
     .tag {
@@ -948,9 +959,15 @@
     }
 
     .tool-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 24px;
-      margin-bottom: 8px;
-      display: block;
+      overflow: hidden;
     }
 
     .tool-name {
@@ -1374,9 +1391,33 @@
     }
 
     .testimonial-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      overflow-x: auto;
       gap: 20px;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245, 197, 24, 0.3) transparent;
+    }
+
+    .testimonial-grid::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .testimonial-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .testimonial-grid::-webkit-scrollbar-thumb {
+      background: rgba(245, 197, 24, 0.3);
+      border-radius: 2px;
+    }
+
+    .testimonial-grid > .testimonial-card {
+      flex: 0 0 auto;
+      width: min(340px, 82vw);
+      scroll-snap-align: start;
     }
 
     .testimonial-card {
@@ -1521,9 +1562,33 @@
     }
 
     .partenaires-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      overflow-x: auto;
       gap: 20px;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 10px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245, 197, 24, 0.3) transparent;
+    }
+
+    .partenaires-grid::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .partenaires-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .partenaires-grid::-webkit-scrollbar-thumb {
+      background: rgba(245, 197, 24, 0.3);
+      border-radius: 2px;
+    }
+
+    .partenaires-grid > .service-card {
+      flex: 0 0 auto;
+      width: min(340px, 82vw);
+      scroll-snap-align: start;
     }
 
     .partenaires-cta {
