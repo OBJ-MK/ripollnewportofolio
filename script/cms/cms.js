@@ -40,13 +40,32 @@ const CONFIG = {
       liens: 'liens',   // répétable : { Label, URL }
       stack: 'stack',   // répétable : { nom }
     },
-    article: {
+    blogArticle: {
       Titre: 'Titre',
       slug: 'slug',
-      Contenu: 'Contenu',
-      Resume: 'Resume',
-      Image: 'Image',
-      Categorie: 'Categorie',
+      description_courte: 'description_courte',
+      contenu: 'contenu',                 // blocks Strapi v5
+      image_couverture: 'image_couverture', // Single Media plat { url, formats }
+      date_publication: 'date_publication',
+      blog_tags: 'blog_tags',             // relation manyToMany → [{ nom }]
+      mis_en_avant: 'mis_en_avant',
+    },
+    blogTag: {
+      nom: 'nom',
+    },
+    pageBlog: {
+      titre_principal: 'titre_principal',
+      sous_titre: 'sous_titre',
+    },
+    socialPost: {
+      plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn
+      date_texte: 'date_texte',
+      contenu: 'contenu',
+      hashtags: 'hashtags',
+      likes: 'likes',
+      Commantaire: 'Commantaire', // ⚠ casse immuable du schéma (C majuscule, orthographe du schéma)
+      Repost: 'Repost',           // ⚠ casse immuable du schéma
+      lien_externe: 'lien_externe',
     },
     poste: {
       Titre: 'Titre',
@@ -99,32 +118,62 @@ async function fetchJSON(path) {
   return res.json();
 }
 
-/* Convertit le format "blocks" (rich text Strapi v5) en HTML simplifié */
+/* Échappe le HTML d'un texte saisi dans Strapi (anti-injection) */
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/* Rend les nœuds inline d'un block (texte formaté + liens) */
+function renderInline(nodes) {
+  return (nodes || []).map(n => {
+    if (n.type === 'link') {
+      const inner = renderInline(n.children);
+      return `<a href="${escapeHTML(n.url || '#')}" target="_blank" rel="noopener">${inner}</a>`;
+    }
+    let t = escapeHTML(n.text || '');
+    if (n.code) t = `<code>${t}</code>`;
+    if (n.bold) t = `<strong>${t}</strong>`;
+    if (n.italic) t = `<em>${t}</em>`;
+    if (n.underline) t = `<u>${t}</u>`;
+    if (n.strikethrough) t = `<s>${t}</s>`;
+    return t;
+  }).join('');
+}
+
+/* Convertit le format "blocks" (rich text Strapi v5) en HTML */
 function blocksToHTML(blocks) {
   if (!Array.isArray(blocks)) return '';
   return blocks.map(block => {
     if (block.type === 'paragraph') {
-      const text = (block.children || []).map(n => {
-        let t = n.text || '';
-        if (n.bold) t = `<strong>${t}</strong>`;
-        if (n.italic) t = `<em>${t}</em>`;
-        if (n.underline) t = `<u>${t}</u>`;
-        return t;
-      }).join('');
-      return `<p>${text}</p>`;
+      const text = renderInline(block.children);
+      return text.trim() ? `<p>${text}</p>` : '';
     }
     if (block.type === 'heading') {
-      const level = block.level || 2;
-      const text = (block.children || []).map(n => n.text || '').join('');
-      return `<h${level}>${text}</h${level}>`;
+      const level = Math.min(6, Math.max(1, block.level || 2));
+      return `<h${level}>${renderInline(block.children)}</h${level}>`;
     }
     if (block.type === 'list') {
       const tag = block.format === 'ordered' ? 'ol' : 'ul';
-      const items = (block.children || []).map(item => {
-        const text = (item.children || []).map(n => n.text || '').join('');
-        return `<li>${text}</li>`;
-      }).join('');
+      const items = (block.children || []).map(item =>
+        `<li>${renderInline(item.children)}</li>`
+      ).join('');
       return `<${tag}>${items}</${tag}>`;
+    }
+    if (block.type === 'quote') {
+      return `<blockquote>${renderInline(block.children)}</blockquote>`;
+    }
+    if (block.type === 'code') {
+      const text = (block.children || []).map(n => n.text || '').join('');
+      return `<pre><code>${escapeHTML(text)}</code></pre>`;
+    }
+    if (block.type === 'image' && block.image) {
+      const src = block.image.url && block.image.url.startsWith('http')
+        ? block.image.url
+        : CONFIG.STRAPI_URL + (block.image.url || '');
+      const alt = escapeHTML(block.image.alternativeText || '');
+      return block.image.url ? `<figure><img src="${src}" alt="${alt}" loading="lazy"></figure>` : '';
     }
     return '';
   }).join('');
@@ -575,60 +624,282 @@ async function loadOutils() {
   }
 }
 
-/* ── Fetch & hydratation : Articles (blog.html) ──────────── */
+/* ── Fetch & hydratation : Page blog (en-tête) ───────────── */
 
-function buildArticleCard(article, index) {
-  const f = CONFIG.FIELDS.article;
-  // Strapi v5 : champs plats
-  const attrs = article;
-  const titre = attrs[f.Titre] || '';
-  const resume = attrs[f.Resume] || '';
-  const categorie = attrs[f.Categorie] || '';
-  // Strapi v5 : media plat { url, ... }
-  const imgUrl = mediaUrl(attrs[f.Image]);
+async function loadPageBlog() {
+  try {
+    const { data } = await fetchJSON('/api/page-blog');
+    const attrs = data || {};
+    const f = CONFIG.FIELDS.pageBlog;
+
+    // titre_principal : string — **gras** → <span> (accent or), saut de ligne → <br>
+    if (attrs[f.titre_principal]) {
+      const el = document.querySelector('[data-cms="pageBlog.titre_principal"]');
+      if (el) {
+        el.innerHTML = escapeHTML(attrs[f.titre_principal])
+          .replace(/\*\*([\s\S]*?)\*\*/g, '<span>$1</span>')
+          .replace(/\n/g, '<br>');
+      }
+    }
+    if (attrs[f.sous_titre]) hydrate('pageBlog.sous_titre', attrs[f.sous_titre]);
+  } catch (e) {
+    // 404 attendu tant que le single type n'est pas publié — fallback HTML conservé
+    console.error('[CMS] page-blog:', e.message);
+  }
+}
+
+/* ── Fetch & hydratation : Articles de blog ──────────────── */
+
+function formatDateFR(isoDate) {
+  if (!isoDate) return '';
+  const d = new Date(isoDate);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function articleTags(article) {
+  const rel = article[CONFIG.FIELDS.blogArticle.blog_tags];
+  return (Array.isArray(rel) ? rel : [])
+    .map(t => (t && t.nom) || '')
+    .filter(Boolean);
+}
+
+function buildBlogArticleCard(article, index, { featured = false } = {}) {
+  const f = CONFIG.FIELDS.blogArticle;
+  const titre = escapeHTML(article[f.Titre] || '');
+  const resume = escapeHTML(article[f.description_courte] || '');
+  const slug = encodeURIComponent(article[f.slug] || '');
+  const date = formatDateFR(article[f.date_publication]);
+  const tags = articleTags(article);
+  const imgUrl = mediaUrl(article[f.image_couverture]?.formats?.medium)
+    || mediaUrl(article[f.image_couverture]);
+  const href = `article.html?slug=${slug}`;
+
   const thumbContent = imgUrl
-    ? `<img src="${imgUrl}" alt="${titre}" style="width:100%;height:100%;object-fit:cover;">`
+    ? `<img src="${imgUrl}" alt="${titre}" loading="${index === 0 ? 'eager' : 'lazy'}" style="width:100%;height:100%;object-fit:cover;">`
     : `<div class="article-thumb-bg" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a)"><i class="fa-solid fa-newspaper"></i></div>`;
+  const badge = featured ? `<span class="article-type-badge">À la une</span>` : '';
+  const tagsHtml = tags.map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
 
-  return `<div class="article-card fade-in visible" style="transition-delay:${index * 0.1}s" data-type="article">
-    <div class="article-thumb">${thumbContent}</div>
+  return `<div class="article-card fade-in visible${featured ? ' featured' : ''}"
+    style="transition-delay:${index * 0.1}s" data-type="article"
+    data-tags="${escapeHTML(tags.join('|').toLowerCase())}"
+    tabindex="0" role="link" aria-label="Lire l'article ${titre}" data-href="${href}">
+    <div class="article-thumb"${featured ? '' : ' style="height:150px"'}>${thumbContent}${badge}</div>
     <div class="article-body">
       <div class="article-meta">
-        <span class="article-date">${categorie}</span>
+        <span class="article-date">${date}</span>
       </div>
       <div class="article-title">${titre}</div>
       <p class="article-excerpt">${resume}</p>
       <div class="article-footer">
-        <div class="article-tags"><span class="article-tag">${categorie}</span></div>
-        <a class="read-link">Lire →</a>
+        <div class="article-tags">${tagsHtml}</div>
+        <a class="read-link" href="${href}">Lire →</a>
       </div>
     </div>
   </div>`;
 }
 
+function attachArticleNavigation(card) {
+  const href = card.getAttribute('data-href');
+  if (!href) return;
+  card.addEventListener('click', e => {
+    if (e.target.closest('a')) return; // le lien "Lire →" gère déjà sa navigation
+    window.location.href = href;
+  });
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter') window.location.href = href;
+  });
+  card.style.cursor = 'pointer';
+}
+
+/* Puces de filtre par tag — filtrage client, pas de re-fetch */
+function buildTagChips(articles) {
+  const chipsEl = document.getElementById('tag-chips');
+  if (!chipsEl) return;
+  const allTags = [...new Set(articles.flatMap(articleTags))];
+  if (!allTags.length) return;
+
+  chipsEl.innerHTML =
+    `<button class="article-tag tag-chip active" data-tag="">Tous</button>` +
+    allTags.map(t =>
+      `<button class="article-tag tag-chip" data-tag="${escapeHTML(t.toLowerCase())}">${escapeHTML(t)}</button>`
+    ).join('');
+  chipsEl.hidden = false;
+
+  chipsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.tag-chip');
+    if (!btn) return;
+    chipsEl.querySelectorAll('.tag-chip').forEach(b => b.classList.toggle('active', b === btn));
+    const tag = btn.getAttribute('data-tag');
+    document.querySelectorAll('.article-card[data-tags]').forEach(card => {
+      const cardTags = (card.getAttribute('data-tags') || '').split('|');
+      card.style.display = !tag || cardTags.includes(tag) ? '' : 'none';
+    });
+  });
+}
+
 async function loadArticles() {
   try {
-    const { data } = await fetchJSON('/api/articles?populate=*');
-    console.log('[CMS] articles reçus:', data?.length ?? 0);
-    if (!data?.length) return;
+    const { data } = await fetchJSON('/api/blog-articles?populate=*');
+    console.log('[CMS] blog-articles reçus:', data?.length ?? 0);
+    if (!data?.length) return; // collection vide → fallback HTML intact
     const featured = document.getElementById('section-articles');
     if (!featured) return;
-    const cards = featured.querySelectorAll('.article-card');
+    const row2 = document.getElementById('articles-row2');
+    const f = CONFIG.FIELDS.blogArticle;
 
-    data.forEach((article, i) => {
-      const newCardHtml = buildArticleCard(article, i);
+    // Tri : date_publication décroissante ; mis_en_avant prioritaire en tête
+    const sorted = [...data].sort((a, b) =>
+      new Date(b[f.date_publication] || 0) - new Date(a[f.date_publication] || 0));
+    const star = sorted.find(a => a[f.mis_en_avant]) || sorted[0];
+    const rest = sorted.filter(a => a !== star);
+
+    // Rangée vedette : article mis en avant + le suivant
+    featured.innerHTML = '';
+    [star, ...rest.slice(0, 1)].forEach((article, i) => {
       const tmp = document.createElement('div');
-      tmp.innerHTML = newCardHtml;
-      const newCard = tmp.firstElementChild;
-      if (cards[i]) {
-        // Remplace la carte existante, les cartes suivantes restent intactes
-        cards[i].replaceWith(newCard);
-      } else {
-        featured.appendChild(newCard);
-      }
+      tmp.innerHTML = buildBlogArticleCard(article, i, { featured: i === 0 });
+      const card = tmp.firstElementChild;
+      featured.appendChild(card);
+      attachArticleNavigation(card);
     });
+
+    // Rangée secondaire : le reste
+    if (row2) {
+      row2.innerHTML = '';
+      rest.slice(1).forEach((article, i) => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildBlogArticleCard(article, i + 2);
+        const card = tmp.firstElementChild;
+        row2.appendChild(card);
+        attachArticleNavigation(card);
+      });
+      row2.style.display = rest.length > 1 ? '' : 'none';
+    }
+
+    buildTagChips(sorted);
+    // Le carrousel mobile (caroussel.js) se réinitialise sur resize
+    window.dispatchEvent(new Event('resize'));
   } catch (e) {
-    console.error('[CMS] articles:', e.message);
+    console.error('[CMS] blog-articles:', e.message);
+  }
+}
+
+/* ── Fetch & hydratation : Flux social ───────────────────── */
+
+const SOCIAL_PLATFORMS = {
+  LinkedIn:  { cls: 'linkedin',  icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn',    btn: 'Voir sur LinkedIn ↗' },
+  Instagram: { cls: 'instagram', icon: 'fa-brands fa-instagram',   label: 'Instagram',   btn: 'Voir sur Instagram ↗' },
+  Twitter:   { cls: 'twitter',   icon: 'fa-brands fa-x-twitter',   label: 'Twitter / X', btn: 'Voir sur X ↗' },
+};
+
+function buildSocialCard(post) {
+  const f = CONFIG.FIELDS.socialPost;
+  const platform = SOCIAL_PLATFORMS[post[f.plateforme]] || SOCIAL_PLATFORMS.LinkedIn;
+  const contenu = escapeHTML(post[f.contenu] || '');
+  const hashtags = escapeHTML(post[f.hashtags] || '');
+  const dateTexte = escapeHTML(post[f.date_texte] || '');
+  const lien = post[f.lien_externe] || '';
+
+  // biginteger Strapi → string ; n'afficher une stat que si renseignée
+  const stat = (icon, val) => (val != null && val !== '' && val !== '0')
+    ? `<span class="social-stat"><i class="${icon}"></i> ${escapeHTML(String(val))}</span>` : '';
+  const stats =
+    stat('fa-solid fa-heart', post[f.likes]) +
+    stat('fa-solid fa-comment', post[f.Commantaire]) +
+    stat('fa-solid fa-retweet', post[f.Repost]);
+
+  const viewBtn = lien
+    ? `<a class="social-view-btn" href="${escapeHTML(lien)}" target="_blank" rel="noopener">${platform.btn}</a>`
+    : '';
+
+  return `<div class="social-card ${platform.cls}">
+    <div class="social-card-header">
+      <div class="social-platform">
+        <div class="platform-icon"><i class="${platform.icon}"></i></div>
+        <span style="color:rgba(238,240,248,0.7)">${platform.label}</span>
+      </div>
+      <span class="social-date">${dateTexte}</span>
+    </div>
+    <p class="social-content">${contenu}</p>
+    ${hashtags ? `<div class="social-hashtags">${hashtags}</div>` : ''}
+    <div class="social-card-footer">
+      <div class="social-stats">${stats}</div>
+      ${viewBtn}
+    </div>
+  </div>`;
+}
+
+async function loadSocialPosts() {
+  try {
+    const { data } = await fetchJSON('/api/social-posts');
+    console.log('[CMS] social-posts reçus:', data?.length ?? 0);
+    if (!data?.length) return; // collection vide → fallback HTML intact
+    const wall = document.getElementById('section-social');
+    if (!wall) return;
+
+    wall.innerHTML = '';
+    data.forEach(post => {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = buildSocialCard(post);
+      wall.appendChild(tmp.firstElementChild);
+    });
+    window.dispatchEvent(new Event('resize'));
+  } catch (e) {
+    console.error('[CMS] social-posts:', e.message);
+  }
+}
+
+/* ── Page détail article (article.html?slug=) ────────────── */
+
+async function loadArticleDetail() {
+  const container = document.getElementById('article-detail');
+  if (!container) return;
+  const notFound = () => {
+    const el = document.getElementById('article-notfound');
+    if (el) el.hidden = false;
+    container.hidden = true;
+  };
+  try {
+    const slug = new URLSearchParams(window.location.search).get('slug');
+    if (!slug) { notFound(); return; }
+    const { data } = await fetchJSON(
+      `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`);
+    const article = data?.[0];
+    if (!article) { notFound(); return; }
+    const f = CONFIG.FIELDS.blogArticle;
+
+    const titre = article[f.Titre] || '';
+    document.title = `${titre} — Ripoll Darcia`;
+
+    const titreEl = document.getElementById('article-titre');
+    if (titreEl) titreEl.textContent = titre;
+
+    const dateEl = document.getElementById('article-date');
+    if (dateEl) dateEl.textContent = formatDateFR(article[f.date_publication]);
+
+    const tagsEl = document.getElementById('article-tags');
+    if (tagsEl) {
+      tagsEl.innerHTML = articleTags(article)
+        .map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
+    }
+
+    const coverEl = document.getElementById('article-cover');
+    const coverUrl = mediaUrl(article[f.image_couverture]?.formats?.large)
+      || mediaUrl(article[f.image_couverture]);
+    if (coverEl && coverUrl) {
+      coverEl.innerHTML = `<img src="${coverUrl}" alt="${escapeHTML(titre)}">`;
+      coverEl.hidden = false;
+    }
+
+    const bodyEl = document.getElementById('article-contenu');
+    if (bodyEl) bodyEl.innerHTML = blocksToHTML(article[f.contenu]);
+
+    container.hidden = false;
+  } catch (e) {
+    console.error('[CMS] article détail:', e.message);
+    notFound();
   }
 }
 
@@ -981,8 +1252,10 @@ function initModalListeners() {
 /* ── Init ─────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const isIndex = !window.location.pathname.includes('blog');
-  const isBlog = window.location.pathname.includes('blog');
+  const path = window.location.pathname;
+  const isBlog = path.includes('blog');
+  const isArticle = path.includes('article.html');
+  const isIndex = !isBlog && !isArticle;
 
   if (isIndex) {
     initModalListeners();
@@ -996,6 +1269,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTemoignages();
   }
   if (isBlog) {
+    loadPageBlog();
     loadArticles();
+    loadSocialPosts();
+  }
+  if (isArticle) {
+    loadArticleDetail();
   }
 });

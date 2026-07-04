@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article — Ripoll Darcia</title>
+  <meta name="description" content="Article de Ripoll Darcia — journaliste et community manager.">
+  <link rel="icon" type="image/svg+xml" href="../assets/image/favicon.svg">
+  <link rel="stylesheet" href="../css/blog.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/telephone.css">
+  <link rel="stylesheet" href="../css/tablette.css">
+  <link rel="stylesheet" href="../css/desktop.css">
+  <link rel="stylesheet" href="../assets/icons/css/all.min.css">
+</head>
+
+<body>
+
+  <!-- ════════════ NAVBAR ════════════ -->
+  <nav class="nav">
+    <a href="../index.html" class="logo">
+      <div>
+        <i class="fas fa-bars"></i>
+      </div>
+      <div class="logo-icon">
+        <div class="logo-icon-inner">R</div>
+        Ripoll<em>Darcia</em>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html#services">Services</a></li>
+      <li><a href="../index.html#projects">Projects</a></li>
+      <li><a href="../index.html#outils">Outils</a></li>
+      <li><a href="../index.html#postes">Postes</a></li>
+      <li><a href="../index.html#apropos">À propos</a></li>
+      <li><a href="../index.html#partenaires">Partenaires</a></li>
+      <li><a href="blog.html">Blog</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-ghost">Commencer une discussion</button>
+      <a class="btn-accent" href="https://ripolldarcia-backend.up.railway.app/admin" target="_blank" rel="noopener">Admin</a>
+    </div>
+  </nav>
+  <nav class="side">
+    <div class="sideGauche">
+      <a href="../index.html" class="sidelogo">
+        <div class="sidelogo-fabar">
+          <i class="fas fa-bars"></i>
+        </div>
+        <div class="sidelogo-icon">
+          <div class="sidelogo-icon-inner">R</div>
+          Ripoll<em>Darcia</em>
+        </div>
+      </a>
+      <ul class="sidenav-links">
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#outils">Outils</a></li>
+        <li><a href="../index.html#postes">Postes</a></li>
+        <li><a href="../index.html#apropos">À propos</a></li>
+        <li><a href="../index.html#partenaires">Partenaires</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+      <div class="sidenav-actions">
+        <button class="sidebtn-ghost">Commencer une discussion</button>
+        <a class="sidebtn-accent" href="https://ripolldarcia-backend.up.railway.app/admin" target="_blank" rel="noopener">Admin</a>
+      </div>
+    </div>
+    <div class="sideDroite"></div>
+  </nav>
+
+  <div class="blog-page">
+
+    <div class="article-page">
+      <a href="blog.html" class="article-back"><i class="fa-solid fa-arrow-left"></i> Retour au blog</a>
+
+      <!-- Rempli par cms.js selon ?slug= — masqué tant que l'article n'est pas chargé -->
+      <article id="article-detail" hidden>
+        <div class="article-detail-meta">
+          <span class="article-date" id="article-date"></span>
+          <div class="article-tags" id="article-tags"></div>
+        </div>
+        <h1 id="article-titre"></h1>
+        <div class="article-cover" id="article-cover" hidden></div>
+        <div class="article-detail-body" id="article-contenu"></div>
+      </article>
+
+      <div id="article-notfound" hidden>
+        <h1>Article introuvable</h1>
+        <p>Cet article n'existe pas ou n'est plus disponible.</p>
+        <a href="blog.html" class="article-back"><i class="fa-solid fa-arrow-left"></i> Voir tous les articles</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../script/script.js"></script>
+  <script src="../script/cms/cms.js" defer></script>
+</body>
+
+</html>

@@ -76,17 +76,26 @@ Collection rendering (projets, postes, articles) replaces the entire `#projets-c
 |---|---|---|---|
 | hero | Single | `/api/hero` | — |
 | apropo | Single | `/api/apropo?populate=*` | Photo (media) |
-| projet | Collection | `/api/projets?populate=*` | Image + stack component |
-| article | Collection | `/api/articles?populate=*` | Image |
+| page-blog | Single | `/api/page-blog` | — (404 until published — expected, caught) |
+| projet | Collection | `/api/projets?populate[...]` | Image + stack/badges/liens/logo |
+| blog-article | Collection | `/api/blog-articles?populate=*` | image_couverture + blog_tags |
+| blog-tag | Collection | (via blog-article populate) | — |
+| social-post | Collection | `/api/social-posts` | — |
 | poste | Collection | `/api/postes` | — |
 
+The old `article` collection was removed (2026-07) — the blog reads `blog-article` only.
+
 ### Strapi field name convention
-**All fields are PascalCase/capitalised**: `Titre`, `Contenu`, `Photo`, `Description`, `Image`, `Lien`, `Type`, `Resume`, `Categorie`, `LinkedIn`, `Email`, `Statut`, `Entreprise`, `Localisation`, `Temps`, `Salaire`. The only camelCase fields are: `sousTitre`, `badgeTexte`, `statProjets`, `statExperience`, `statSatisfaction`, `slug`, `stack`.
+Legacy content types use PascalCase fields (`Titre`, `Photo`, `Description`, `Image`, `Lien`, `Type`, `Statut`, `Entreprise`, `Localisation`, `Temps`, `Salaire`) with camelCase exceptions (`sousTitre`, `badgeTexte`, `statProjets`, `statExperience`, `statSatisfaction`, `slug`, `stack`). Blog content types use snake_case (`description_courte`, `image_couverture`, `date_publication`, `blog_tags`, `mis_en_avant`, `titre_principal`, `sous_titre`, `date_texte`, `lien_externe`) — except `Titre`. **Immutable typo'd fields on social-post: `Commantaire` and `Repost` (capitalised) — use as-is, never "fix" them.**
 
 The `CONFIG.FIELDS` object in `cms.js` centralises these names — update there if schemas ever change.
 
 ### Rich text (blocks)
-`apropo.Contenu` and `article.Contenu` are Strapi `blocks` (rich text). The `blocksToHTML()` helper in `cms.js` converts them to HTML; it handles `paragraph`, `heading`, and `list` block types.
+`apropo.points_forts` and `blog-article.contenu` are Strapi `blocks` (rich text). The `blocksToHTML()` helper in `cms.js` converts them to HTML; it handles `paragraph`, `heading`, `list`, `quote`, `code`, `image` and inline `link` nodes, escaping text via `escapeHTML()`.
+
+### Blog pages
+- `pages/blog.html` — header hydrated from `page-blog`, article cards from `blog-articles` (sorted by `date_publication` desc, `mis_en_avant` first as featured card), tag filter chips generated client-side, social wall from `social-posts` (manual-first: Ripoll copies posts into Strapi by hand; any future automation must write into the same collection).
+- `pages/article.html?slug=<slug>` — article detail page; fetches `/api/blog-articles?filters[slug][$eq]=...`, renders blocks content, shows `#article-notfound` on unknown slug.
 
 ### shared.stack component
 The `stack` field on `projet` is a repeatable component with a single `nom` field (string). Each item arrives as `{ nom: "..." }` in the API response.
