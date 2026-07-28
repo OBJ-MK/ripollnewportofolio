@@ -44,7 +44,8 @@ const CONFIG = {
       Titre: 'Titre',
       slug: 'slug',
       description_courte: 'description_courte',
-      contenu: 'contenu',                 // richtext Markdown (string) — voir loadArticleDetail      image_couverture: 'image_couverture', // Single Media plat { url, formats }
+      contenu: 'contenu',                 // richtext Markdown (string) — voir loadArticleDetail      
+      image_couverture: 'image_couverture', // Single Media plat { url, formats }
       date_publication: 'date_publication',
       blog_tags: 'blog_tags',             // relation manyToMany → [{ nom }]
       mis_en_avant: 'mis_en_avant',
@@ -885,6 +886,7 @@ async function loadArticleDetail() {
     }
 
     const coverEl = document.getElementById('article-cover');
+    console.log('[DEBUG] valeur de f.image_couverture:', JSON.stringify(f.image_couverture));
     const coverUrl = mediaUrl(article[f.image_couverture]?.formats?.large)
       || mediaUrl(article[f.image_couverture]);
     if (coverEl && coverUrl) {
