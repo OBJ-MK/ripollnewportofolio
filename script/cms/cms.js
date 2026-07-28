@@ -44,8 +44,7 @@ const CONFIG = {
       Titre: 'Titre',
       slug: 'slug',
       description_courte: 'description_courte',
-      contenu: 'contenu',                 // blocks Strapi v5
-      image_couverture: 'image_couverture', // Single Media plat { url, formats }
+      contenu: 'contenu',                 // richtext Markdown (string) — voir loadArticleDetail      image_couverture: 'image_couverture', // Single Media plat { url, formats }
       date_publication: 'date_publication',
       blog_tags: 'blog_tags',             // relation manyToMany → [{ nom }]
       mis_en_avant: 'mis_en_avant',
@@ -894,7 +893,15 @@ async function loadArticleDetail() {
     }
 
     const bodyEl = document.getElementById('article-contenu');
-    if (bodyEl) bodyEl.innerHTML = blocksToHTML(article[f.contenu]);
+    const contenuMd = article[f.contenu] || '';
+    if (bodyEl && contenuMd) {
+      if (typeof marked !== 'undefined' && marked.parse) {
+        const html = marked.parse(contenuMd, { breaks: true, gfm: true });
+        bodyEl.innerHTML = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
+      } else {
+        bodyEl.innerHTML = `<p>${escapeHTML(contenuMd)}</p>`;
+      }
+    }
 
     container.hidden = false;
   } catch (e) {
