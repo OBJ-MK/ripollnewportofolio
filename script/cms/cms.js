@@ -877,6 +877,18 @@ async function loadSocialPosts() {
   }
 }
 
+async function loadBlogView() {
+  try {
+    await Promise.allSettled([
+      typeof loadPageBlog === 'function' ? loadPageBlog() : Promise.resolve(),
+      typeof loadArticles === 'function' ? loadArticles() : Promise.resolve(),
+      typeof loadSocialPosts === 'function' ? loadSocialPosts() : Promise.resolve(),
+    ]);
+  } finally {
+    hideSkeleton('skeleton-view-blog');
+  }
+}
+
 /* ── Page détail article (article.html?slug=) ────────────── */
 
 // async function loadArticleDetail() {
@@ -1022,6 +1034,8 @@ async function loadArticleDetailSPA(slug) {
 
   } catch (e) {
     console.error('[CMS] Erreur lors du rendu du détail de l\'article :', e);
+  } finally {
+    hideSkeleton('skeleton-view-article');
   }
 }
 
@@ -1432,10 +1446,12 @@ function navigateTo(route, params = {}) {
       blogView.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    // Appelle uniquement les fonctions d'API qui existent dans ton cms.js
-    if (typeof loadArticles === 'function') loadArticles();
-    if (typeof loadSocialPosts === 'function') loadSocialPosts();
-    
+    if (typeof loadBlogView === 'function') {
+      loadBlogView();
+    } else {
+      if (typeof loadArticles === 'function') loadArticles();
+      if (typeof loadSocialPosts === 'function') loadSocialPosts();
+    }
     history.pushState({ route: 'blog' }, '', '#blog');
   } 
   else if (route === 'article') {
@@ -1445,8 +1461,6 @@ function navigateTo(route, params = {}) {
     }
     history.pushState({ route: 'article', slug: params.slug }, '', `#article?slug=${params.slug}`);
     if (typeof loadArticleDetailSPA === 'function') loadArticleDetailSPA(params.slug);
-
-    loadArticleDetailSPA(params.slug);
   } 
   else {
     if (indexView) {
