@@ -1280,6 +1280,9 @@ function closeProjetModal() {
   if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
 }
 
+// Rendre la fonction accessible globalement pour les attributs onclick
+window.closeProjetModal = closeProjetModal;   
+
 /* ── Fetch & hydratation : Témoignages ───────────────────── */
 
 function buildTemoignageCard(t, index) {
@@ -1378,13 +1381,25 @@ async function loadPartenaires() {
 }
 
 /* Init overlay et croix une seule fois au DOMContentLoaded */
+/* Init overlay, croix et touche Échap pour la fermeture du modal */
 function initModalListeners() {
   const modal = document.getElementById('projet-modal');
   if (!modal) return;
-  modal.querySelector('.modal-overlay').addEventListener('click', closeProjetModal);
-  modal.querySelector('.modal-close').addEventListener('click', closeProjetModal);
-}
 
+  const overlay = modal.querySelector('.modal-overlay');
+  const closeBtn = modal.querySelector('.modal-close');
+
+  if (overlay) {
+    overlay.addEventListener('click', closeProjetModal);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeProjetModal();
+    });
+  }
+}
 /* ── Init ─────────────────────────────────────────────────── */
 
 /* ── SPA Router (sans rechargement) ─────────────────────── */
@@ -1482,12 +1497,15 @@ window.addEventListener('popstate', (e) => {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Rendre navigateTo accessible aux attributs HTML (onclick="...")
+  /// 1. Rendre les fonctions accessibles aux attributs HTML
   window.navigateTo = navigateTo;
+  window.closeProjetModal = closeProjetModal;
 
-  // 2. Détecter l'URL / Ancre au démarrage
+  // 2. Initialiser les écouteurs de la modale
+  initModalListeners();
+
+  // 3. Détecter l'URL / Ancre au démarrage
   const hash = window.location.hash;
-
   if (hash.startsWith('#blog')) {
     navigateTo('blog');
   } 
