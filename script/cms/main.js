@@ -5,6 +5,16 @@
 
 import { navigateTo } from './router/router.js';
 import { initModalListeners, closeProjetModal } from './modal/projet-modal.js';
+import { loadHero } from './components/hero.js';
+import { loadApropo } from './components/apropo.js';
+import { loadProjets } from './components/projets.js';
+import { loadPostes } from './components/postes.js';
+import { loadServices } from './components/services.js';
+import { loadOutils } from './components/outils.js';
+import { loadPartenaires } from './components/partenaires.js';
+import { loadTemoignages } from './components/temoignages.js';
+import { loadArticles, loadArticleDetailSPA } from './components/blog.js';
+import { loadSocialPosts } from './components/social.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
@@ -20,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (hash.startsWith('#blog')) {
     navigateTo('blog');
-  } 
+  }
   else if (hash.startsWith('#article')) {
     const paramsString = hash.includes('?') ? hash.split('?')[1] : '';
     const searchParams = new URLSearchParams(paramsString);
@@ -31,8 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       navigateTo('blog');
     }
-  } 
+  }
   else {
+    loadHero();
+    loadApropo();
+    loadProjets();
+    loadPostes();
+    loadServices();
+    loadOutils();
+    loadPartenaires();
+    loadTemoignages();
     navigateTo('index');
   }
 });
