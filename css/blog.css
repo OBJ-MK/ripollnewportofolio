@@ -11,7 +11,7 @@
   font-family: 'Lexend', sans-serif;
   color: #eef0f8;
   min-height: 100vh;
-  padding-bottom: 80px;
+  padding-bottom: 40px;
 }
 
 .blog-hero {
@@ -142,6 +142,10 @@
   text-transform: uppercase;
   color: rgba(238, 240, 248, 0.35);
   margin-bottom: 28px;
+}
+
+.section-label:nth-child(2){
+  margin-top: 50px;
 }
 
 .section-label::after {
@@ -618,7 +622,7 @@
 .article-page {
   max-width: 780px;
   margin: 0 auto;
-  padding: 120px 24px 40px;
+  padding: 20px 24px 40px;
 }
 
 .article-back {

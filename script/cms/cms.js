@@ -241,6 +241,12 @@ function hydrateField(card, selector, value) {
   el.textContent = value;
 }
 
+/* Masque un écran skeleton par son id, une fois les données chargées */
+function hideSkeleton(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('hidden');
+}
+
 /* ── Fetch & hydratation : Hero ───────────────────────────── */
 
 async function loadHero() {
@@ -270,8 +276,11 @@ async function loadHero() {
     if (attrs[f.statProjets] != null) hydrate('hero.statProjets', attrs[f.statProjets] + '+');
     if (attrs[f.statExperience] != null) hydrate('hero.statExperience', attrs[f.statExperience] + ' ans');
     if (attrs[f.statSatisfaction] != null) hydrate('hero.statSatisfaction', String(attrs[f.statSatisfaction]) + '%');
+    hideSkeleton('skeleton-hero');
   } catch (e) {
     console.error('[CMS] hero:', e.message);
+  } finally {
+    hideSkeleton('skeleton-hero');
   }
 }
 
@@ -333,7 +342,7 @@ async function loadApropo() {
     }
   } catch (e) {
     console.error('[CMS] apropo:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-apropo') }
 }
 
 /* ── Fetch & hydratation : Projets ───────────────────────── */
@@ -471,7 +480,7 @@ async function loadProjets() {
     }
   } catch (e) {
     console.error('[CMS] projets:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-projets') }
 }
 
 /* ── Fetch & hydratation : Postes ────────────────────────── */
@@ -526,7 +535,7 @@ async function loadPostes() {
     });
   } catch (e) {
     console.error('[CMS] postes:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-postes') }
 }
 
 /* ── Fetch & hydratation : Services ──────────────────────── */
@@ -575,7 +584,7 @@ async function loadServices() {
     });
   } catch (e) {
     console.error('[CMS] services:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-services') }
 }
 
 /* ── Fetch & hydratation : Outils ────────────────────────── */
@@ -621,7 +630,7 @@ async function loadOutils() {
     }
   } catch (e) {
     console.error('[CMS] outils:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-outils') }
 }
 
 /* ── Fetch & hydratation : Page blog (en-tête) ───────────── */
@@ -1205,7 +1214,7 @@ async function loadTemoignages() {
     });
   } catch (e) {
     console.error('[CMS] temoignages:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-temoignages') }
 }
 
 /* ── Fetch & hydratation : Partenaires ───────────────────── */
@@ -1247,7 +1256,7 @@ async function loadPartenaires() {
     });
   } catch (e) {
     console.error('[CMS] partenaires:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-partenaires') }
 }
 
 /* Init overlay et croix une seule fois au DOMContentLoaded */
