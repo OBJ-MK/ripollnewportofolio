@@ -342,7 +342,7 @@ async function loadApropo() {
     }
   } catch (e) {
     console.error('[CMS] apropo:', e.message);
-  }finally { hideSkeleton('skeleton-apropo') }
+  } finally { hideSkeleton('skeleton-apropo') }
 }
 
 /* ── Fetch & hydratation : Projets ───────────────────────── */
@@ -480,7 +480,7 @@ async function loadProjets() {
     }
   } catch (e) {
     console.error('[CMS] projets:', e.message);
-  }finally { hideSkeleton('skeleton-projets') }
+  } finally { hideSkeleton('skeleton-projets') }
 }
 
 /* ── Fetch & hydratation : Postes ────────────────────────── */
@@ -535,7 +535,7 @@ async function loadPostes() {
     });
   } catch (e) {
     console.error('[CMS] postes:', e.message);
-  }finally { hideSkeleton('skeleton-postes') }
+  } finally { hideSkeleton('skeleton-postes') }
 }
 
 /* ── Fetch & hydratation : Services ──────────────────────── */
@@ -555,9 +555,9 @@ function buildServiceCard(s, index) {
   const tags = Array.isArray(s[f.tags]) ? s[f.tags] : [];
   const tagsHtml = tags.length
     ? `<div class="service-tags">${tags.map(t => {
-        const label = t.nom || t.Nom || t.label || t.Label || t.Name || t.name || t.titre || t.Titre || '';
-        return label ? `<span class="tag">${label}</span>` : '';
-      }).filter(Boolean).join('')}</div>`
+      const label = t.nom || t.Nom || t.label || t.Label || t.Name || t.name || t.titre || t.Titre || '';
+      return label ? `<span class="tag">${label}</span>` : '';
+    }).filter(Boolean).join('')}</div>`
     : '';
 
   return `<div class="service-card fade-in visible" style="transition-delay:${index * 0.1}s">
@@ -584,7 +584,7 @@ async function loadServices() {
     });
   } catch (e) {
     console.error('[CMS] services:', e.message);
-  }finally { hideSkeleton('skeleton-services') }
+  } finally { hideSkeleton('skeleton-services') }
 }
 
 /* ── Fetch & hydratation : Outils ────────────────────────── */
@@ -630,7 +630,7 @@ async function loadOutils() {
     }
   } catch (e) {
     console.error('[CMS] outils:', e.message);
-  }finally { hideSkeleton('skeleton-outils') }
+  } finally { hideSkeleton('skeleton-outils') }
 }
 
 /* ── Fetch & hydratation : Page blog (en-tête) ───────────── */
@@ -682,7 +682,7 @@ function buildBlogArticleCard(article, index, { featured = false } = {}) {
   const tags = articleTags(article);
   const imgUrl = mediaUrl(article[f.image_couverture]?.formats?.medium)
     || mediaUrl(article[f.image_couverture]);
-  const href = `article.html?slug=${slug}`;
+  const href = `#article?slug=${slug}`;
 
   const thumbContent = imgUrl
     ? `<img src="${imgUrl}" alt="${titre}" loading="${index === 0 ? 'eager' : 'lazy'}" style="width:100%;height:100%;object-fit:cover;">`
@@ -703,25 +703,42 @@ function buildBlogArticleCard(article, index, { featured = false } = {}) {
       <p class="article-excerpt">${resume}</p>
       <div class="article-footer">
         <div class="article-tags">${tagsHtml}</div>
-        <a class="read-link" href="${href}">Lire →</a>
+        <a href="#article?slug=${slug}" class="read-link" onclick="event.preventDefault(); navigateTo('article', { slug: '${slug}' });">Lire →</a>
       </div>
     </div>
   </div>`;
 }
 
-function attachArticleNavigation(card) {
-  const href = card.getAttribute('data-href');
-  if (!href) return;
-  card.addEventListener('click', e => {
-    if (e.target.closest('a')) return; // le lien "Lire →" gère déjà sa navigation
-    window.location.href = href;
+// function attachArticleNavigation(card) {
+//   const href = card.getAttribute('data-href');
+//   if (!href) return;
+//   card.addEventListener('click', e => {
+//     if (e.target.closest('a')) return; // le lien "Lire →" gère déjà sa navigation
+//     window.location.href = href;
+//   });
+//   card.addEventListener('keydown', e => {
+//     if (e.key === 'Enter') window.location.href = href;
+//   });
+//   card.style.cursor = 'pointer';
+// }
+
+function attachArticleNavigation(card, article) {
+  if (!card) return;
+
+  const slug = article?.slug 
+    || article?.attributes?.slug 
+    || card.getAttribute('data-slug');
+
+  // Intercepter le clic sur TOUTE la carte
+  card.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (slug) {
+      navigateTo('article', { slug: slug });
+    }
   });
-  card.addEventListener('keydown', e => {
-    if (e.key === 'Enter') window.location.href = href;
-  });
+
   card.style.cursor = 'pointer';
 }
-
 /* Puces de filtre par tag — filtrage client, pas de re-fetch */
 function buildTagChips(articles) {
   const chipsEl = document.getElementById('tag-chips');
@@ -771,7 +788,7 @@ async function loadArticles() {
       tmp.innerHTML = buildBlogArticleCard(article, i, { featured: i === 0 });
       const card = tmp.firstElementChild;
       featured.appendChild(card);
-      attachArticleNavigation(card);
+      attachArticleNavigation(card, article);
     });
 
     // Rangée secondaire : le reste
@@ -782,7 +799,7 @@ async function loadArticles() {
         tmp.innerHTML = buildBlogArticleCard(article, i + 2);
         const card = tmp.firstElementChild;
         row2.appendChild(card);
-        attachArticleNavigation(card);
+        attachArticleNavigation(card, article);
       });
       row2.style.display = rest.length > 1 ? '' : 'none';
     }
@@ -798,9 +815,9 @@ async function loadArticles() {
 /* ── Fetch & hydratation : Flux social ───────────────────── */
 
 const SOCIAL_PLATFORMS = {
-  LinkedIn:  { cls: 'linkedin',  icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn',    btn: 'Voir sur LinkedIn ↗' },
-  Instagram: { cls: 'instagram', icon: 'fa-brands fa-instagram',   label: 'Instagram',   btn: 'Voir sur Instagram ↗' },
-  Twitter:   { cls: 'twitter',   icon: 'fa-brands fa-x-twitter',   label: 'Twitter / X', btn: 'Voir sur X ↗' },
+  LinkedIn: { cls: 'linkedin', icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', btn: 'Voir sur LinkedIn ↗' },
+  Instagram: { cls: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram', btn: 'Voir sur Instagram ↗' },
+  Twitter: { cls: 'twitter', icon: 'fa-brands fa-x-twitter', label: 'Twitter / X', btn: 'Voir sur X ↗' },
 };
 
 function buildSocialCard(post) {
@@ -862,62 +879,149 @@ async function loadSocialPosts() {
 
 /* ── Page détail article (article.html?slug=) ────────────── */
 
-async function loadArticleDetail() {
-  const container = document.getElementById('article-detail');
-  if (!container) return;
-  const notFound = () => {
-    const el = document.getElementById('article-notfound');
-    if (el) el.hidden = false;
-    container.hidden = true;
-  };
+// async function loadArticleDetail() {
+//   const container = document.getElementById('article-detail');
+//   if (!container) return;
+//   const notFound = () => {
+//     const el = document.getElementById('article-notfound');
+//     if (el) el.hidden = false;
+//     container.hidden = true;
+//   };
+//   try {
+//     const slug = new URLSearchParams(window.location.search).get('slug');
+//     if (!slug) { notFound(); return; }
+//     const { data } = await fetchJSON(
+//       `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`);
+//     const article = data?.[0];
+//     if (!article) { notFound(); return; }
+//     const f = CONFIG.FIELDS.blogArticle;
+
+//     const titre = article[f.Titre] || '';
+//     document.title = `${titre} — Ripoll Darcia`;
+
+//     const titreEl = document.getElementById('article-titre');
+//     if (titreEl) titreEl.textContent = titre;
+
+//     const dateEl = document.getElementById('article-date');
+//     if (dateEl) dateEl.textContent = formatDateFR(article[f.date_publication]);
+
+//     const tagsEl = document.getElementById('article-tags');
+//     if (tagsEl) {
+//       tagsEl.innerHTML = articleTags(article)
+//         .map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
+//     }
+
+//     const coverEl = document.getElementById('article-cover');
+//     console.log('[DEBUG] valeur de f.image_couverture:', JSON.stringify(f.image_couverture));
+//     const coverUrl = mediaUrl(article[f.image_couverture]?.formats?.large)
+//       || mediaUrl(article[f.image_couverture]);
+//     if (coverEl && coverUrl) {
+//       coverEl.innerHTML = `<img src="${coverUrl}" alt="${escapeHTML(titre)}">`;
+//       coverEl.hidden = false;
+//     }
+
+//     const bodyEl = document.getElementById('article-contenu');
+//     const contenuMd = article[f.contenu] || '';
+//     if (bodyEl && contenuMd) {
+//       if (typeof marked !== 'undefined' && marked.parse) {
+//         const html = marked.parse(contenuMd, { breaks: true, gfm: true });
+//         bodyEl.innerHTML = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
+//       } else {
+//         bodyEl.innerHTML = `<p>${escapeHTML(contenuMd)}</p>`;
+//       }
+//     }
+
+//     container.hidden = false;
+//   } catch (e) {
+//     console.error('[CMS] article détail:', e.message);
+//     notFound();
+//   }
+// }
+
+async function loadArticleDetailSPA(slug) {
+  const elArticle = document.getElementById('article-detail');
+  const elNotFound = document.getElementById('article-notfound');
+
+  if (!slug) return;
+
   try {
-    const slug = new URLSearchParams(window.location.search).get('slug');
-    if (!slug) { notFound(); return; }
-    const { data } = await fetchJSON(
-      `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`);
-    const article = data?.[0];
-    if (!article) { notFound(); return; }
-    const f = CONFIG.FIELDS.blogArticle;
+    const endpoint = `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
+    const { data } = await fetchJSON(endpoint);
 
-    const titre = article[f.Titre] || '';
-    document.title = `${titre} — Ripoll Darcia`;
-
-    const titreEl = document.getElementById('article-titre');
-    if (titreEl) titreEl.textContent = titre;
-
-    const dateEl = document.getElementById('article-date');
-    if (dateEl) dateEl.textContent = formatDateFR(article[f.date_publication]);
-
-    const tagsEl = document.getElementById('article-tags');
-    if (tagsEl) {
-      tagsEl.innerHTML = articleTags(article)
-        .map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
+    if (!data || data.length === 0) {
+      if (elArticle) elArticle.hidden = true;
+      if (elNotFound) elNotFound.hidden = false;
+      return;
     }
 
-    const coverEl = document.getElementById('article-cover');
-    console.log('[DEBUG] valeur de f.image_couverture:', JSON.stringify(f.image_couverture));
-    const coverUrl = mediaUrl(article[f.image_couverture]?.formats?.large)
-      || mediaUrl(article[f.image_couverture]);
-    if (coverEl && coverUrl) {
-      coverEl.innerHTML = `<img src="${coverUrl}" alt="${escapeHTML(titre)}">`;
-      coverEl.hidden = false;
+    const article = data[0];
+    const attr = article.attributes || article;
+    const f = CONFIG?.FIELDS?.blogArticle || {};
+
+    // 1. Récupération dynamique de toutes les clés d'attributs
+    const titre = attr[f.titre] || attr.titre || attr.title || attr.name || 'Article sans titre';
+    const contenu = attr[f.contenu] || attr.contenu || attr.content || '';
+    const dateRaw = attr[f.date_publication] || attr.date_publication || attr.publishedAt;
+    const date = dateRaw ? new Date(dateRaw).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    const tags = attr[f.tags] || attr.tags || [];
+
+    // Image de couverture
+    const coverData = attr.image_couverture ;
+    console.log('[CMS] Structure de coverData :', coverData);
+    let coverUrl = '';
+    if (coverData) {
+      coverUrl = coverData.url 
+        || coverData.data?.attributes?.url 
+        || (Array.isArray(coverData) && coverData[0]?.url)
+        || '';
+    }
+    if (coverUrl && coverUrl.startsWith('/')) {
+      coverUrl = (CONFIG?.API_URL || '') + coverUrl;
     }
 
-    const bodyEl = document.getElementById('article-contenu');
-    const contenuMd = article[f.contenu] || '';
-    if (bodyEl && contenuMd) {
-      if (typeof marked !== 'undefined' && marked.parse) {
-        const html = marked.parse(contenuMd, { breaks: true, gfm: true });
-        bodyEl.innerHTML = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
+    // 2. Sélection des éléments HTML du DOM
+    const elTitre = document.getElementById('article-titre');
+    const elDate = document.getElementById('article-date');
+    const elTags = document.getElementById('article-tags');
+    const elCover = document.getElementById('article-cover');
+    const elContenu = document.getElementById('article-contenu');
+
+    // 3. Injection complète des contenus
+    if (elTitre) elTitre.textContent = titre;
+    if (elDate) elDate.textContent = date;
+
+    if (elTags) {
+      if (Array.isArray(tags) && tags.length > 0) {
+        elTags.innerHTML = tags.map(tag => `<span class="article-tag">${tag}</span>`).join('');
       } else {
-        bodyEl.innerHTML = `<p>${escapeHTML(contenuMd)}</p>`;
+        elTags.innerHTML = '';
       }
     }
 
-    container.hidden = false;
+    if (elCover) {
+      if (coverUrl) {
+        elCover.innerHTML = `<img src="${coverUrl}" alt="${titre}" style="width:100%; max-height:450px; object-fit:cover; border-radius:12px; margin: 1rem 0;">`;
+        elCover.hidden = false;
+      } else {
+        
+        elCover.hidden = true;
+      }
+    }
+
+    if (elContenu) {
+      if (typeof marked !== 'undefined') {
+        elContenu.innerHTML = marked.parse(contenu);
+      } else {
+        elContenu.innerHTML = contenu;
+      }
+    }
+
+    // 4. Affichage de la vue
+    if (elNotFound) elNotFound.hidden = true;
+    if (elArticle) elArticle.hidden = false;
+
   } catch (e) {
-    console.error('[CMS] article détail:', e.message);
-    notFound();
+    console.error('[CMS] Erreur lors du rendu du détail de l\'article :', e);
   }
 }
 
@@ -1214,7 +1318,7 @@ async function loadTemoignages() {
     });
   } catch (e) {
     console.error('[CMS] temoignages:', e.message);
-  }finally { hideSkeleton('skeleton-temoignages') }
+  } finally { hideSkeleton('skeleton-temoignages') }
 }
 
 /* ── Fetch & hydratation : Partenaires ───────────────────── */
@@ -1256,7 +1360,7 @@ async function loadPartenaires() {
     });
   } catch (e) {
     console.error('[CMS] partenaires:', e.message);
-  }finally { hideSkeleton('skeleton-partenaires') }
+  } finally { hideSkeleton('skeleton-partenaires') }
 }
 
 /* Init overlay et croix une seule fois au DOMContentLoaded */
@@ -1269,29 +1373,123 @@ function initModalListeners() {
 
 /* ── Init ─────────────────────────────────────────────────── */
 
-document.addEventListener('DOMContentLoaded', () => {
-  const path = window.location.pathname;
-  const isBlog = path.includes('blog');
-  const isArticle = path.includes('article.html');
-  const isIndex = !isBlog && !isArticle;
+/* ── SPA Router (sans rechargement) ─────────────────────── */
 
-  if (isIndex) {
-    initModalListeners();
-    loadHero();
-    loadApropo();
-    loadProjets();
-    loadPostes();
-    loadServices();
-    loadOutils();
-    loadPartenaires();
-    loadTemoignages();
+/* Naviguer vers l'index ET faire défiler jusqu'à la bonne section */
+function navigateToSection(sectionId, event) {
+  if (event) event.preventDefault();
+
+  // 1. S'assurer qu'on affiche bien la vue Index / Portfolio
+  const indexView = document.getElementById('view-index');
+  const blogView = document.getElementById('view-blog');
+  const articleView = document.getElementById('view-article');
+
+  if (blogView) blogView.hidden = true;
+  if (articleView) articleView.hidden = true;
+
+  if (indexView) {
+    const wasHidden = indexView.hidden;
+    indexView.hidden = false;
+
+    // Si l'index était caché, charger les données Strapi si nécessaire
+    if (wasHidden) {
+      loadHero();
+      loadApropo();
+      loadProjets();
+      loadPostes();
+      loadServices();
+      loadOutils();
+      loadPartenaires();
+      loadTemoignages();
+    }
   }
-  if (isBlog) {
-    loadPageBlog();
-    loadArticles();
-    loadSocialPosts();
+
+  // 2. Mettre à jour l'URL avec l'ancre
+  history.pushState({ route: 'index', section: sectionId }, '', `#${sectionId}`);
+
+  // 3. Défiler jusqu'à la section de manière fluide
+  const targetSection = document.getElementById(sectionId);
+  if (targetSection) {
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  if (isArticle) {
-    loadArticleDetail();
+}
+
+function navigateTo(route, params = {}) {
+  const indexView = document.getElementById('view-index');
+  const blogView = document.getElementById('view-blog');
+  const articleView = document.getElementById('view-article');
+
+  // 1. Masquer systématiquement toutes les vues
+  if (indexView) indexView.hidden = true;
+  if (blogView) blogView.hidden = true;
+  if (articleView) articleView.hidden = true;
+
+  // 2. Afficher la vue demandée et charger ses données
+  if (route === 'blog') {
+    if (blogView) {
+      blogView.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // Appelle uniquement les fonctions d'API qui existent dans ton cms.js
+    if (typeof loadArticles === 'function') loadArticles();
+    if (typeof loadSocialPosts === 'function') loadSocialPosts();
+    
+    history.pushState({ route: 'blog' }, '', '#blog');
+  } 
+  else if (route === 'article') {
+    if (articleView) {
+      articleView.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    history.pushState({ route: 'article', slug: params.slug }, '', `#article?slug=${params.slug}`);
+    if (typeof loadArticleDetailSPA === 'function') loadArticleDetailSPA(params.slug);
+
+    loadArticleDetailSPA(params.slug);
+  } 
+  else {
+    if (indexView) {
+      indexView.hidden = false;
+    }
+    history.pushState({ route: 'index' }, '', '#portfolio');
+  }
+}
+
+// Intercepter les boutons Retour / Suivant du navigateur
+window.addEventListener('popstate', (e) => {
+  const state = e.state || {};
+  if (state.section) {
+    navigateToSection(state.section);
+  } else {
+    navigateTo(state.route || 'index', state);
+  }
+});
+
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Rendre navigateTo accessible aux attributs HTML (onclick="...")
+  window.navigateTo = navigateTo;
+
+  // 2. Détecter l'URL / Ancre au démarrage
+  const hash = window.location.hash;
+
+  if (hash.startsWith('#blog')) {
+    navigateTo('blog');
+  } 
+  else if (hash.startsWith('#article')) {
+    // Extraire le slug après "slug="
+    const paramsString = hash.includes('?') ? hash.split('?')[1] : '';
+    const searchParams = new URLSearchParams(paramsString);
+    const slug = searchParams.get('slug');
+
+    if (slug && slug !== 'undefined') {
+      navigateTo('article', { slug: slug });
+    } else {
+      navigateTo('blog'); // Si le slug est invalide, redirection vers le blog
+    }
+  } 
+  else {
+    navigateTo('index');
   }
 });

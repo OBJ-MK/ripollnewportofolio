@@ -43,6 +43,7 @@
   <link rel="preload" href="assets/fonts/lexend-v26-latin-800.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
   <link rel="stylesheet" href="css/telephone.css">
   <link rel="stylesheet" href="css/tablette.css">
   <link rel="stylesheet" href="css/desktop.css">
@@ -63,14 +64,14 @@
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#outils">Outils</a></li>
-      <li><a href="#postes">Postes</a></li>
-      <li><a href="#apropos">À propos</a></li>
-      <li><a href="#partenaires">Partenaires</a></li>
-      <li><a href="#temoignages">Témoignages</a></li>
-      <li><a href="pages/blog.html">Blog</a></li>
+      <li><a href="#services" onclick="navigateToSection('services', event)">Services</a></li>
+      <li><a href="#projects" onclick="navigateToSection('projects', event)">Projects</a></li>
+      <li><a href="#outils" onclick="navigateToSection('outils', event)">Outils</a></li>
+      <li><a href="#postes" onclick="navigateToSection('postes', event)">Postes</a></li>
+      <li><a href="#apropo" onclick="navigateToSection('apropo', event)">À propos</a></li>
+      <li><a href="#partenaires" onclick="navigateToSection('partenaires', event)">Partenaires</a></li>
+      <li><a href="#temoignages" onclick="navigateToSection('temoignages', event)">Témoignages</a></li>
+      <li><a href="#blog" onclick="event.preventDefault(); navigateTo('blog');">Blog</a></li>
     </ul>
     <div class="nav-actions">
       <button class="btn-ghost">Commencer une discussion</button>
@@ -90,14 +91,14 @@
         </div>
       </a>
       <ul class="sidenav-links">
-        <li><a href="#services">Services</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#outils">Outils</a></li>
-        <li><a href="#postes">Postes</a></li>
-        <li><a href="#apropos">À propos</a></li>
-        <li><a href="#partenaires">Partenaires</a></li>
-        <li><a href="#temoignages">Témoignages</a></li>
-        <li><a href="pages/blog.html">Blog</a></li>
+        <li><a href="#services" onclick="navigateToSection('services', event)">Services</a></li>
+        <li><a href="#projects" onclick="navigateToSection('projects', event)">Projects</a></li>
+        <li><a href="#outils" onclick="navigateToSection('outils', event)">Outils</a></li>
+        <li><a href="#postes" onclick="navigateToSection('postes', event)">Postes</a></li>
+        <li><a href="#apropo" onclick="navigateToSection('apropo', event)">À propos</a></li>
+        <li><a href="#partenaires" onclick="navigateToSection('partenaires', event)">Partenaires</a></li>
+        <li><a href="#temoignages" onclick="navigateToSection('temoignages', event)">Témoignages</a></li>
+        <li><a href="#blog" onclick="navigateTo('blog'); return false;">Blog</a></li>
       </ul>
       <div class="sidenav-actions">
         <button class="sidebtn-ghost">Commencer une discussion</button>
@@ -108,415 +109,777 @@
     <div class="sideDroite"></div>
   </nav>
 
-  <!-- ════════════ HERO ════════════ -->
-  <section class="hero">
-    <div id="skeleton-hero" class="skeleton-overlay">
-      <div class="skeleton-block" style="width:40%;height:20px;"></div>
-      <div class="skeleton-block" style="width:70%;height:48px;"></div>
-      <div class="skeleton-block" style="width:90%;height:16px;"></div>
-    </div>
-    <div class="hero-bg">
-      <div class="glow glow-gold"></div>
-      <div class="glow glow-blue"></div>
-      <svg viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="780,0 1080,0 940,190" fill="rgba(245,197,24,0.03)"></polygon>
-        <polygon points="1080,0 1400,0 1400,280 1080,140" fill="rgba(245,197,24,0.04)"></polygon>
-        <polygon points="1180,180 1400,80 1400,380" fill="rgba(245,197,24,0.025)"></polygon>
-        <polygon points="940,190 1180,180 1080,380" fill="rgba(20,40,90,0.3)"></polygon>
-        <polygon points="1080,140 1280,240 1180,380" fill="rgba(245,197,24,0.03)"></polygon>
-        <polygon points="0,480 180,380 280,580" fill="rgba(20,40,90,0.2)"></polygon>
-        <line x1="780" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
-        <line x1="1080" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
-        <line x1="940" y1="190" x2="1180" y2="180" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
-        <line x1="1180" y1="180" x2="1080" y2="380" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
-      </svg>
-    </div>
+  <!-- Vue Accueil / Portfolio -->
+  <main id="view-index">
 
-    <div class="hero-inner">
-      <div class="hero-left">
-        <div class="hero-badge" data-cms="hero.badgeTexte">
-          <span class="pulse-dot"></span>
-          Disponible pour de nouveaux projets
-        </div>
-        <h1 class="hero-title" data-cms="hero.Entete">
-          Le Partenaire Stratégique pour votre
-          <span class="gold">visibilité digitale &amp; médiatique</span>
-        </h1>
-        <p class="hero-desc" data-cms="hero.sousTitre">
-          Communication digitale &amp; médias
-        </p>
-        <div class="hero-btns">
-          <button class="cta-main">
-            Explorer mes projets
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
-          <button class="cta-outline">Me contacter</button>
-        </div>
-        <div class="hero-stats">
-          <div>
-            <div class="stat-num" data-cms="hero.statProjets">20+</div>
-            <div class="stat-lbl">Marques accompagnées</div>
+
+    <!-- ════════════ HERO ════════════ -->
+    <section class="hero">
+      <div id="skeleton-hero" class="skeleton-overlay">
+        <div class="skeleton-block" style="width:40%;height:20px;"></div>
+        <div class="skeleton-block" style="width:70%;height:48px;"></div>
+        <div class="skeleton-block" style="width:90%;height:16px;"></div>
+      </div>
+      <div class="hero-bg">
+        <div class="glow glow-gold"></div>
+        <div class="glow glow-blue"></div>
+        <svg viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="780,0 1080,0 940,190" fill="rgba(245,197,24,0.03)"></polygon>
+          <polygon points="1080,0 1400,0 1400,280 1080,140" fill="rgba(245,197,24,0.04)"></polygon>
+          <polygon points="1180,180 1400,80 1400,380" fill="rgba(245,197,24,0.025)"></polygon>
+          <polygon points="940,190 1180,180 1080,380" fill="rgba(20,40,90,0.3)"></polygon>
+          <polygon points="1080,140 1280,240 1180,380" fill="rgba(245,197,24,0.03)"></polygon>
+          <polygon points="0,480 180,380 280,580" fill="rgba(20,40,90,0.2)"></polygon>
+          <line x1="780" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
+          <line x1="1080" y1="0" x2="940" y2="190" stroke="rgba(245,197,24,0.07)" stroke-width="0.5"></line>
+          <line x1="940" y1="190" x2="1180" y2="180" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
+          <line x1="1180" y1="180" x2="1080" y2="380" stroke="rgba(245,197,24,0.055)" stroke-width="0.5"></line>
+        </svg>
+      </div>
+
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-badge" data-cms="hero.badgeTexte">
+            <span class="pulse-dot"></span>
+            Disponible pour de nouveaux projets
           </div>
-          <div>
-            <div class="stat-num" data-cms="hero.statExperience">5 ans</div>
-            <div class="stat-lbl">D'expérience</div>
-          </div>
-          <div>
-            <div class="stat-num" data-cms="hero.statSatisfaction">100%</div>
-            <div class="stat-lbl">Clients satisfaits</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- À VALIDER PAR LE CLIENT -->
-      <div class="hero-card">
-        <div class="card-head">Outils &amp; plateformes</div>
-        <div class="tech-grid">
-          <div class="tech-pill on">Meta Business Suite</div>
-          <div class="tech-pill on">Canva</div>
-          <div class="tech-pill">CapCut</div>
-          <div class="tech-pill">Notion</div>
-          <div class="tech-pill">Google Analytics</div>
-          <div class="tech-pill">Instagram</div>
-          <div class="tech-pill">TikTok</div>
-          <div class="tech-pill">LinkedIn</div>
-        </div>
-        <div class="avail">
-          <span class="avail-dot"></span>
-          Disponible dès maintenant
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════ SERVICES ════════════ -->
-  <div class="divider"></div>
-  <div id="services" class="full-section" style="background: var(--bg2);">
-    <div id="skeleton-services" class="skeleton-overlay">
-      <div class="skeleton-cards">
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-      </div>
-    </div>
-
-    <div class="section-inner section">
-
-      <div class="section-header fade-in visible">
-        <div>
-          <div class="section-tag">Ce que je fais</div>
-          <h2 class="section-title">Mes Services</h2>
-        </div>
-        <p class="section-subtitle">Des solutions numériques complètes, du design à la mise en production.</p>
-      </div>
-
-      <div class="services-grid">
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════ PROJECTS ════════════ -->
-  <div class="divider"></div>
-  <div id="projects" class="full-section" style="background: var(--bg);">
-    <div id="skeleton-projets" class="skeleton-overlay">
-      <div class="skeleton-cards">
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-      </div>
-    </div>
-    <div class="section-inner section">
-
-      <div class="section-header fade-in visible">
-        <div>
-          <div class="section-tag">Portfolio</div>
-          <h2 class="section-title">Projets Récents</h2>
-        </div>
-        <p class="section-subtitle">Une sélection de réalisations concrètes et de leurs résultats.</p>
-      </div>
-
-      <div class="projects-grid" id="projets-container">
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════ OUTILS ════════════ -->
-  <div class="divider"></div>
-  <div id="outils" class="full-section" style="background: var(--bg2);">
-    <div id="skeleton-outils" class="skeleton-overlay">
-      <div class="skeleton-block" style="width:50%;height:16px;margin-bottom:8px;"></div>
-      <div class="skeleton-block" style="width:100%;height:10px;"></div>
-      <div class="skeleton-block" style="width:100%;height:10px;"></div>
-      <div class="skeleton-icons">
-        <div class="skeleton-block skeleton-icon"></div>
-        <div class="skeleton-block skeleton-icon"></div>
-        <div class="skeleton-block skeleton-icon"></div>
-        <div class="skeleton-block skeleton-icon"></div>
-      </div>
-    </div>
-    <div class="section-inner section">
-
-      <div class="tools-wrapper">
-        <!-- À VALIDER PAR LE CLIENT -->
-        <div class="tools-text fade-in visible">
-          <div class="section-tag">Boîte à outils</div>
-          <h2 class="section-title">Mes Outils</h2>
-          <p class="section-subtitle" style="margin-bottom: 36px;">Les plateformes et outils que j'utilise au quotidien
-            pour créer, piloter et analyser vos contenus digitaux.</p>
-
-          <div class="skill-bars">
-          </div>
-        </div>
-
-        <div class="fade-in visible" style="transition-delay: 0.15s;">
-          <div class="tools-grid">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════ POSTES ════════════ -->
-  <div class="divider"></div>
-  <div id="postes" class="full-section" style="background: var(--bg);">
-    <div id="skeleton-postes" class="skeleton-overlay">
-      <div class="skeleton-block skeleton-row"></div>
-      <div class="skeleton-block skeleton-row"></div>
-    </div>
-    <div class="section-inner section">
-
-      <div class="section-header fade-in visible">
-        <div>
-          <div class="section-tag">Opportunités</div>
-          <h2 class="section-title">Postes Ouverts</h2>
-        </div>
-        <p class="section-subtitle">Je suis ouvert à des collaborations et missions freelance sélectionnées.</p>
-      </div>
-
-      <div class="postes-grid" id="postes-container">
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════ À PROPOS ════════════ -->
-  <div class="divider"></div>
-  <div id="apropos" class="full-section" style="background: var(--bg2);">
-    <div id="skeleton-apropo" class="skeleton-overlay" style="flex-direction:row;align-items:center;gap:32px;">
-      <div class="skeleton-block skeleton-circle"></div>
-      <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
-        <div class="skeleton-block" style="width:60%;height:24px;"></div>
-        <div class="skeleton-block" style="width:100%;height:16px;"></div>
-        <div class="skeleton-block" style="width:100%;height:16px;"></div>
-      </div>
-    </div>
-    <div class="section-inner section">
-
-      <div class="apropos-grid">
-        <div class="apropos-visual fade-in visible">
-          <div class="avatar-frame">
-            <div class="avatar-placeholder">RD</div>
-            <div class="frame-badge">
-              <div class="frame-badge-name" data-cms="apropo.Titre">Ripoll Darcia </div>
-              <div class="frame-badge-role">Journaliste &amp; Communiquant</div>
-            </div>
-          </div>
-          <div class="float-chip chip1">
-            <span class="chip-dot"></span>
-            <span style="font-size: 12px; color: var(--muted);">20+ marques accompagnées</span>
-          </div>
-          <div class="float-chip chip2">
-            <span style="font-size: 14px;">⭐</span>
-            <span style="font-size: 12px; color: var(--muted);">5.0 / 5 satisfaction</span>
-          </div>
-        </div>
-
-        <div class="apropos-text fade-in visible" style="transition-delay: 0.15s;">
-          <div class="section-tag">Mon histoire</div>
-          <h2 class="section-title">À Propos de Moi</h2>
-          <p class="about-body" data-cms="apropo.Paragraphe1">
-            Diplômé en journalisme et communication de l'<strong>UCAO-UUBa</strong> avec plus de
-            <strong>5 ans d'expérience</strong> dans la création et le pilotage des stratégies de contenus digitaux
-            pour les marques et institutions.
+          <h1 class="hero-title" data-cms="hero.Entete">
+            Le Partenaire Stratégique pour votre
+            <span class="gold">visibilité digitale &amp; médiatique</span>
+          </h1>
+          <p class="hero-desc" data-cms="hero.sousTitre">
+            Communication digitale &amp; médias
           </p>
-          <p class="about-body" data-cms="apropo.Paragraphe2">
-            Expertise complète en <strong>communication digitale &amp; médias</strong>, community management,
-            création de contenus et performances web.
-          </p>
-
-          <div class="values-list" data-cms="apropo.points_forts">
-            <div class="value-item"><span class="value-check">✦</span>Stratégies éditoriales orientées résultats</div>
-            <div class="value-item"><span class="value-check">✦</span>Contenus authentiques ancrés dans le terrain</div>
-            <div class="value-item"><span class="value-check">✦</span>Reporting transparent et suivi des KPIs</div>
-            <div class="value-item"><span class="value-check">✦</span>Disponible pour missions remote et sur site</div>
-          </div>
-
-          <div class="social-row">
-            <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" class="social-btn"
-              data-cms="apropo.LinkedIn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
+          <div class="hero-btns">
+            <button class="cta-main">
+              Explorer mes projets
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
               </svg>
-              LinkedIn
-            </a>
-            <button class="social-btn">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-              Me contacter
             </button>
+            <button class="cta-outline">Me contacter</button>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="stat-num" data-cms="hero.statProjets">20+</div>
+              <div class="stat-lbl">Marques accompagnées</div>
+            </div>
+            <div>
+              <div class="stat-num" data-cms="hero.statExperience">5 ans</div>
+              <div class="stat-lbl">D'expérience</div>
+            </div>
+            <div>
+              <div class="stat-num" data-cms="hero.statSatisfaction">100%</div>
+              <div class="stat-lbl">Clients satisfaits</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- À VALIDER PAR LE CLIENT -->
+        <div class="hero-card">
+          <div class="card-head">Outils &amp; plateformes</div>
+          <div class="tech-grid">
+            <div class="tech-pill on">Meta Business Suite</div>
+            <div class="tech-pill on">Canva</div>
+            <div class="tech-pill">CapCut</div>
+            <div class="tech-pill">Notion</div>
+            <div class="tech-pill">Google Analytics</div>
+            <div class="tech-pill">Instagram</div>
+            <div class="tech-pill">TikTok</div>
+            <div class="tech-pill">LinkedIn</div>
+          </div>
+          <div class="avail">
+            <span class="avail-dot"></span>
+            Disponible dès maintenant
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════ SERVICES ════════════ -->
+    <div class="divider"></div>
+    <div id="services" class="full-section" style="background: var(--bg2);">
+      <div id="skeleton-services" class="skeleton-overlay">
+        <div class="skeleton-cards">
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+        </div>
+      </div>
+
+      <div class="section-inner section">
+
+        <div class="section-header fade-in visible">
+          <div>
+            <div class="section-tag">Ce que je fais</div>
+            <h2 class="section-title">Mes Services</h2>
+          </div>
+          <p class="section-subtitle">Des solutions numériques complètes, du design à la mise en production.</p>
+        </div>
+
+        <div class="services-grid">
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ PROJECTS ════════════ -->
+    <div class="divider"></div>
+    <div id="projects" class="full-section" style="background: var(--bg);">
+      <div id="skeleton-projets" class="skeleton-overlay">
+        <div class="skeleton-cards">
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+        </div>
+      </div>
+      <div class="section-inner section">
+
+        <div class="section-header fade-in visible">
+          <div>
+            <div class="section-tag">Portfolio</div>
+            <h2 class="section-title">Projets Récents</h2>
+          </div>
+          <p class="section-subtitle">Une sélection de réalisations concrètes et de leurs résultats.</p>
+        </div>
+
+        <div class="projects-grid" id="projets-container">
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ OUTILS ════════════ -->
+    <div class="divider"></div>
+    <div id="outils" class="full-section" style="background: var(--bg2);">
+      <div id="skeleton-outils" class="skeleton-overlay">
+        <div class="skeleton-block" style="width:50%;height:16px;margin-bottom:8px;"></div>
+        <div class="skeleton-block" style="width:100%;height:10px;"></div>
+        <div class="skeleton-block" style="width:100%;height:10px;"></div>
+        <div class="skeleton-icons">
+          <div class="skeleton-block skeleton-icon"></div>
+          <div class="skeleton-block skeleton-icon"></div>
+          <div class="skeleton-block skeleton-icon"></div>
+          <div class="skeleton-block skeleton-icon"></div>
+        </div>
+      </div>
+      <div class="section-inner section">
+
+        <div class="tools-wrapper">
+          <!-- À VALIDER PAR LE CLIENT -->
+          <div class="tools-text fade-in visible">
+            <div class="section-tag">Boîte à outils</div>
+            <h2 class="section-title">Mes Outils</h2>
+            <p class="section-subtitle" style="margin-bottom: 36px;">Les plateformes et outils que j'utilise au
+              quotidien
+              pour créer, piloter et analyser vos contenus digitaux.</p>
+
+            <div class="skill-bars">
+            </div>
+          </div>
+
+          <div class="fade-in visible" style="transition-delay: 0.15s;">
+            <div class="tools-grid">
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ════════════ PARTENAIRES — Réseau d'experts ════════════ -->
-  <div class="divider"></div>
-  <div id="partenaires" class="full-section" style="background: var(--bg2);">
-    <div id="skeleton-partenaires" class="skeleton-overlay">
-      <div class="skeleton-cards">
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
+    <!-- ════════════ POSTES ════════════ -->
+    <div class="divider"></div>
+    <div id="postes" class="full-section" style="background: var(--bg);">
+      <div id="skeleton-postes" class="skeleton-overlay">
+        <div class="skeleton-block skeleton-row"></div>
+        <div class="skeleton-block skeleton-row"></div>
       </div>
-    </div>
-    <div class="section-inner section">
+      <div class="section-inner section">
 
-      <div class="section-header fade-in visible">
-        <div>
-          <div class="section-tag">Réseau</div>
-          <h2 class="section-title">Partenaires <span style="color: var(--accent);">experts</span></h2>
-        </div>
-        <p class="section-subtitle">Pour compléter mon offre, je m'entoure d'experts qualifiés.</p>
-      </div>
-
-      <div class="partenaires-category fade-in visible">
-        <div class="section-tag partenaires-category-label">Services numériques</div>
-
-        <!-- Carte mise en avant -->
-        <div class="service-card partenaires-card partenaires-card--featured fade-in visible">
-          <span class="poste-badge badge-open partenaires-featured-badge">Collaboration prioritaire</span>
-          <div class="service-name">Besoin d'une expertise complémentaire ?</div>
-          <p class="service-desc">Selon votre projet, je mobilise le bon expert de mon réseau pour vous offrir une
-            réponse complète et qualitative.</p>
-          <a href="#contact" class="apply-btn partenaires-cta">Demander ce service</a>
+        <div class="section-header fade-in visible">
+          <div>
+            <div class="section-tag">Opportunités</div>
+            <h2 class="section-title">Postes Ouverts</h2>
+          </div>
+          <p class="section-subtitle">Je suis ouvert à des collaborations et missions freelance sélectionnées.</p>
         </div>
 
-        <div class="partenaires-grid" id="partenaires-container">
-        </div><!-- /#partenaires-container -->
-      </div><!-- /.partenaires-category -->
-
-    </div>
-  </div>
-
-  <!-- ════════════ TEMOIGNAGES ════════════ -->
-  <div class="divider"></div>
-  <div id="temoignages" class="full-section" style="background: var(--bg);">
-    <div id="skeleton-temoignages" class="skeleton-overlay">
-      <div class="skeleton-cards">
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-        <div class="skeleton-block skeleton-card"></div>
-      </div>
-    </div>
-    <div class="section-inner section">
-
-      <div class="partners-intro fade-in visible">
-        <div class="section-tag">Confiance</div>
-        <h2 class="section-title">Ils m'ont fait confiance</h2>
-        <p class="section-subtitle">Des entreprises de toutes tailles qui ont choisi de collaborer avec moi.</p>
-      </div>
-
-      <div class="partners-track-wrap fade-in visible">
-        <div class="partners-track">
+        <div class="postes-grid" id="postes-container">
         </div>
       </div>
-
-      <div class="testimonial-grid">
-      </div>
     </div>
-  </div>
 
-  <!-- ════════════ CONTACT ════════════ -->
-  <div class="divider"></div>
-  <div id="contact" class="full-section" style="background: var(--bg2);">
-    <div class="section-inner section">
+    <!-- ════════════ À PROPOS ════════════ -->
+    <div class="divider"></div>
+    <div id="apropos" class="full-section" style="background: var(--bg2);">
+      <div id="skeleton-apropo" class="skeleton-overlay" style="flex-direction:row;align-items:center;gap:32px;">
+        <div class="skeleton-block skeleton-circle"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+          <div class="skeleton-block" style="width:60%;height:24px;"></div>
+          <div class="skeleton-block" style="width:100%;height:16px;"></div>
+          <div class="skeleton-block" style="width:100%;height:16px;"></div>
+        </div>
+      </div>
+      <div class="section-inner section">
 
-      <div class="contact-inner">
-        <div class="contact-left fade-in visible">
-          <div class="section-tag">On commence ?</div>
-          <h2 class="section-title">Parlons de votre projet</h2>
-          <p class="contact-desc">
-            Vous avez une idée, un projet ou une question ? Je suis à votre écoute. Répondez généralement sous 24h.
-          </p>
-
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-icon-wrap">📧</div>
-              <div class="contact-item-text">
-                <strong>Email</strong>
-                <a href="mailto:ripollbis@gmail.com" data-cms="apropo.Email">ripollbis@gmail.com</a>
+        <div class="apropos-grid">
+          <div class="apropos-visual fade-in visible">
+            <div class="avatar-frame">
+              <div class="avatar-placeholder">RD</div>
+              <div class="frame-badge">
+                <div class="frame-badge-name" data-cms="apropo.Titre">Ripoll Darcia </div>
+                <div class="frame-badge-role">Journaliste &amp; Communiquant</div>
               </div>
             </div>
-            <div class="contact-item">
-              <div class="contact-icon-wrap">📍</div>
-              <div class="contact-item-text">
-                <strong>Localisation</strong>
-                Pointe Noire, Congo — Remote possible
+            <div class="float-chip chip1">
+              <span class="chip-dot"></span>
+              <span style="font-size: 12px; color: var(--muted);">20+ marques accompagnées</span>
+            </div>
+            <div class="float-chip chip2">
+              <span style="font-size: 14px;">⭐</span>
+              <span style="font-size: 12px; color: var(--muted);">5.0 / 5 satisfaction</span>
+            </div>
+          </div>
+
+          <div class="apropos-text fade-in visible" style="transition-delay: 0.15s;">
+            <div class="section-tag">Mon histoire</div>
+            <h2 class="section-title">À Propos de Moi</h2>
+            <p class="about-body" data-cms="apropo.Paragraphe1">
+              Diplômé en journalisme et communication de l'<strong>UCAO-UUBa</strong> avec plus de
+              <strong>5 ans d'expérience</strong> dans la création et le pilotage des stratégies de contenus digitaux
+              pour les marques et institutions.
+            </p>
+            <p class="about-body" data-cms="apropo.Paragraphe2">
+              Expertise complète en <strong>communication digitale &amp; médias</strong>, community management,
+              création de contenus et performances web.
+            </p>
+
+            <div class="values-list" data-cms="apropo.points_forts">
+              <div class="value-item"><span class="value-check">✦</span>Stratégies éditoriales orientées résultats</div>
+              <div class="value-item"><span class="value-check">✦</span>Contenus authentiques ancrés dans le terrain
+              </div>
+              <div class="value-item"><span class="value-check">✦</span>Reporting transparent et suivi des KPIs</div>
+              <div class="value-item"><span class="value-check">✦</span>Disponible pour missions remote et sur site
               </div>
             </div>
-            <div class="contact-item">
-              <div class="contact-icon-wrap">⏰</div>
-              <div class="contact-item-text">
-                <strong>Disponibilité</strong>
-                Lun – Ven, 9h – 17h (CET)
+
+            <div class="social-row">
+              <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" class="social-btn"
+                data-cms="apropo.LinkedIn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+                LinkedIn
+              </a>
+              <button class="social-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Me contacter
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ PARTENAIRES — Réseau d'experts ════════════ -->
+    <div class="divider"></div>
+    <div id="partenaires" class="full-section" style="background: var(--bg2);">
+      <div id="skeleton-partenaires" class="skeleton-overlay">
+        <div class="skeleton-cards">
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+        </div>
+      </div>
+      <div class="section-inner section">
+
+        <div class="section-header fade-in visible">
+          <div>
+            <div class="section-tag">Réseau</div>
+            <h2 class="section-title">Partenaires <span style="color: var(--accent);">experts</span></h2>
+          </div>
+          <p class="section-subtitle">Pour compléter mon offre, je m'entoure d'experts qualifiés.</p>
+        </div>
+
+        <div class="partenaires-category fade-in visible">
+          <div class="section-tag partenaires-category-label">Services numériques</div>
+
+          <!-- Carte mise en avant -->
+          <div class="service-card partenaires-card partenaires-card--featured fade-in visible">
+            <span class="poste-badge badge-open partenaires-featured-badge">Collaboration prioritaire</span>
+            <div class="service-name">Besoin d'une expertise complémentaire ?</div>
+            <p class="service-desc">Selon votre projet, je mobilise le bon expert de mon réseau pour vous offrir une
+              réponse complète et qualitative.</p>
+            <a href="#contact" class="apply-btn partenaires-cta">Demander ce service</a>
+          </div>
+
+          <div class="partenaires-grid" id="partenaires-container">
+          </div><!-- /#partenaires-container -->
+        </div><!-- /.partenaires-category -->
+
+      </div>
+    </div>
+
+    <!-- ════════════ TEMOIGNAGES ════════════ -->
+    <div class="divider"></div>
+    <div id="temoignages" class="full-section" style="background: var(--bg);">
+      <div id="skeleton-temoignages" class="skeleton-overlay">
+        <div class="skeleton-cards">
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+          <div class="skeleton-block skeleton-card"></div>
+        </div>
+      </div>
+      <div class="section-inner section">
+
+        <div class="partners-intro fade-in visible">
+          <div class="section-tag">Confiance</div>
+          <h2 class="section-title">Ils m'ont fait confiance</h2>
+          <p class="section-subtitle">Des entreprises de toutes tailles qui ont choisi de collaborer avec moi.</p>
+        </div>
+
+        <div class="partners-track-wrap fade-in visible">
+          <div class="partners-track">
+          </div>
+        </div>
+
+        <div class="testimonial-grid">
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ CONTACT ════════════ -->
+    <div class="divider"></div>
+    <div id="contact" class="full-section" style="background: var(--bg2);">
+      <div class="section-inner section">
+
+        <div class="contact-inner">
+          <div class="contact-left fade-in visible">
+            <div class="section-tag">On commence ?</div>
+            <h2 class="section-title">Parlons de votre projet</h2>
+            <p class="contact-desc">
+              Vous avez une idée, un projet ou une question ? Je suis à votre écoute. Répondez généralement sous 24h.
+            </p>
+
+            <div class="contact-info">
+              <div class="contact-item">
+                <div class="contact-icon-wrap">📧</div>
+                <div class="contact-item-text">
+                  <strong>Email</strong>
+                  <a href="mailto:ripollbis@gmail.com" data-cms="apropo.Email">ripollbis@gmail.com</a>
+                </div>
               </div>
+              <div class="contact-item">
+                <div class="contact-icon-wrap">📍</div>
+                <div class="contact-item-text">
+                  <strong>Localisation</strong>
+                  Pointe Noire, Congo — Remote possible
+                </div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon-wrap">⏰</div>
+                <div class="contact-item-text">
+                  <strong>Disponibilité</strong>
+                  Lun – Ven, 9h – 17h (CET)
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="fade-in visible" style="transition-delay: 0.15s;">
+            <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+              <input type="hidden" name="form-name" value="contact">
+              <p hidden><label>Ne pas remplir : <input name="bot-field"></label></p>
+              <div class="contact-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="contact-prenom">Prénom</label>
+                    <input id="contact-prenom" name="prenom" type="text" class="form-input" placeholder="Jean" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="contact-nom">Nom</label>
+                    <input id="contact-nom" name="nom" type="text" class="form-input" placeholder="Dupont" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contact-email">Email</label>
+                  <input id="contact-email" name="email" type="email" class="form-input" placeholder="jean@example.com"
+                    required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contact-sujet">Sujet</label>
+                  <input id="contact-sujet" name="sujet" type="text" class="form-input"
+                    placeholder="Community management, journalisme web..." required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contact-message">Message</label>
+                  <textarea id="contact-message" name="message" class="form-textarea" rows="5"
+                    placeholder="Décrivez votre projet, vos besoins, vos attentes..." required></textarea>
+                </div>
+                <button type="submit" class="form-submit">Envoyer le message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <!-- Vue Blog -->
+  <main id="view-blog" hidden>
+    <div class="blog-page">
+
+      <div class="blog-hero">
+        <div class="blog-tag">Actualités & Réflexions</div>
+        <h1 data-cms="pageBlog.titre_principal">Ma plume,<br><span>mes réseaux</span></h1>
+        <p class="blog-hero-desc" data-cms="pageBlog.sous_titre">Articles de fond, analyses, reportages — et tout ce que
+          je partage au quotidien sur
+          LinkedIn, Instagram et Twitter.</p>
+        <div class="blog-stats">
+          <div>
+            <div class="blog-stat-num">48</div>
+            <div class="blog-stat-lbl">Articles publiés</div>
+          </div>
+          <div>
+            <div class="blog-stat-num">12k</div>
+            <div class="blog-stat-lbl">Abonnés réseaux</div>
+          </div>
+          <div>
+            <div class="blog-stat-num">5 ans</div>
+            <div class="blog-stat-lbl">D'expérience</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">Tout voir</button>
+        <button class="filter-btn" onclick="setFilter('article', this)">
+          <span class="filter-dot" style="background:#f5c518"></span>
+          Articles
+        </button>
+        <button class="filter-btn" onclick="setFilter('linkedin', this)">
+          <span class="filter-dot" style="background:#0077B5"></span>
+          LinkedIn
+        </button>
+        <button class="filter-btn" onclick="setFilter('instagram', this)">
+          <span class="filter-dot" style="background:#dc2743"></span>
+          Instagram
+        </button>
+        <button class="filter-btn" onclick="setFilter('twitter', this)">
+          <span class="filter-dot" style="background:#1DA1F2"></span>
+          Twitter / X
+        </button>
+      </div>
+
+      <div class="blog-content">
+
+        <div class="section-label" id="lbl-articles">Articles originaux</div>
+
+        <div class="tag-chips" id="tag-chips" hidden></div>
+
+        <div class="articles-featured" id="section-articles">
+          <div class="article-card featured">
+            <div class="article-thumb">
+              <div class="article-thumb-bg" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a)"><i
+                  class="fa-solid fa-newspaper"></i></div>
+              <span class="article-type-badge">À la une</span>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-date">2 juin 2026</span>
+                <span class="article-read"><i class="fa-regular fa-clock"></i> 8 min de lecture</span>
+              </div>
+              <div class="article-title">L'IA dans les rédactions : opportunité ou menace pour le journalisme humain ?
+              </div>
+              <p class="article-excerpt">Depuis l'explosion des outils génératifs, les grandes rédactions mondiales se
+                retrouvent face à un choix stratégique majeur. Enquête au cœur des newsrooms qui ont décidé
+                d'expérimenter
+                — et de celles qui résistent.</p>
+              <div class="article-footer">
+                <div class="article-tags">
+                  <span class="article-tag">IA</span>
+                  <span class="article-tag">Journalisme</span>
+                  <span class="article-tag">Médias</span>
+                </div>
+                <a class="read-link">Lire →</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="article-card">
+            <div class="article-thumb">
+              <div class="article-thumb-bg" style="background:linear-gradient(135deg,#0d1f14,#122b1c)"><i
+                  class="fa-solid fa-earth-americas"></i></div>
+              <span class="article-type-badge">Analyse</span>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-date">28 mai 2026</span>
+                <span class="article-read"><i class="fa-regular fa-clock"></i> 5 min</span>
+              </div>
+              <div class="article-title">Community management en 2026 : les règles ont changé</div>
+              <p class="article-excerpt">L'engagement ne suffit plus. Ce qui différencie les marques qui percent de
+                celles
+                qui stagnent, c'est une nouvelle façon de penser la présence digitale.</p>
+              <div class="article-footer">
+                <div class="article-tags">
+                  <span class="article-tag">CM</span>
+                  <span class="article-tag">Stratégie</span>
+                </div>
+                <a class="read-link">Lire →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="articles-row" id="articles-row2">
+          <div class="article-card">
+            <div class="article-thumb" style="height:150px">
+              <div class="article-thumb-bg" style="background:linear-gradient(135deg,#1a0f2e,#2a1a4a)"><i
+                  class="fa-solid fa-microphone-lines"></i></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-date">20 mai 2026</span>
+                <span class="article-read"><i class="fa-regular fa-clock"></i> 4 min</span>
+              </div>
+              <div class="article-title">Reportage : la vérité derrière les chiffres du chômage</div>
+              <p class="article-excerpt">Les statistiques officielles cachent une réalité de terrain bien plus complexe.
+                Rencontre avec ceux que les chiffres oublient.</p>
+              <div class="article-footer">
+                <div class="article-tags"><span class="article-tag">Reportage</span></div>
+                <a class="read-link">Lire →</a>
+              </div>
+            </div>
+          </div>
+          <div class="article-card">
+            <div class="article-thumb" style="height:150px">
+              <div class="article-thumb-bg" style="background:linear-gradient(135deg,#1a1a0d,#2a2a12)"><i
+                  class="fa-solid fa-chart-simple"></i></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-date">14 mai 2026</span>
+                <span class="article-read"><i class="fa-regular fa-clock"></i> 6 min</span>
+              </div>
+              <div class="article-title">Infox et désinformation : comment les détecter en 2026 ?</div>
+              <p class="article-excerpt">Guide pratique pour vérifier l'information à l'ère des deepfakes et de la
+                surcharge informationnelle.</p>
+              <div class="article-footer">
+                <div class="article-tags"><span class="article-tag">Fact-check</span><span
+                    class="article-tag">Médias</span></div>
+                <a class="read-link">Lire →</a>
+              </div>
+            </div>
+          </div>
+          <div class="article-card">
+            <div class="article-thumb" style="height:150px">
+              <div class="article-thumb-bg" style="background:linear-gradient(135deg,#0d1a1f,#122838)"><i
+                  class="fa-solid fa-trophy"></i></div>
+            </div>
+            <div class="article-body">
+              <div class="article-meta">
+                <span class="article-date">7 mai 2026</span>
+                <span class="article-read"><i class="fa-regular fa-clock"></i> 3 min</span>
+              </div>
+              <div class="article-title">5 newsletters qui valent vraiment la peine d'être lues</div>
+              <p class="article-excerpt">Ma sélection personnelle des newsletters indépendantes qui font un travail
+                journalistique sérieux et original.</p>
+              <div class="article-footer">
+                <div class="article-tags"><span class="article-tag">Newsletter</span><span
+                    class="article-tag">Sélection</span></div>
+                <a class="read-link">Lire →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label" id="lbl-social">Sur les réseaux</div>
+
+        <div class="social-wall" id="section-social">
+
+          <div class="social-card linkedin">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">LinkedIn</span>
+              </div>
+              <span class="social-date">Hier, 14h22</span>
+            </div>
+            <p class="social-content">J'ai animé hier un atelier sur la désinformation pour 80 étudiants en journalisme.
+              Ce qui m'a frappé ? Leur capacité à déconstruire une image en moins de 3 minutes. <i
+                class="fa-solid fa-magnifying-glass"></i></p>
+            <div class="social-hashtags">#Journalisme #Formation #Médias #Désinformation</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 247</span>
+                <span class="social-stat"><i class="fa-solid fa-comment"></i> 38</span>
+                <span class="social-stat"><i class="fa-solid fa-retweet"></i> 54</span>
+              </div>
+              <button class="social-view-btn">Voir sur LinkedIn ↗</button>
+            </div>
+          </div>
+
+          <div class="social-card instagram">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-instagram"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">Instagram</span>
+              </div>
+              <span class="social-date">Il y a 2 jours</span>
+            </div>
+            <p class="social-content">Dans les coulisses d'un tournage pour un reportage sur l'agriculture urbaine à
+              Paris. 4h du matin, lumière naturelle, des maraîchers qui font un travail incroyable. Ces gens méritent
+              qu'on parle d'eux. <i class="fa-solid fa-seedling"></i></p>
+            <div class="social-hashtags">#Reportage #Agriculture #Paris #Photojournalisme</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 1.2k</span>
+                <span class="social-stat"><i class="fa-solid fa-comment"></i> 89</span>
+              </div>
+              <button class="social-view-btn">Voir sur Instagram ↗</button>
+            </div>
+          </div>
+
+          <div class="social-card twitter">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">Twitter / X</span>
+              </div>
+              <span class="social-date">Il y a 3 jours</span>
+            </div>
+            <p class="social-content">Thread <i class="fa-solid fa-thread"></i> : Ce que personne ne vous dit sur la
+              rémunération des journalistes freelance en France en 2026. Chiffres, retours d'expérience, et ce qu'il
+              faudrait vraiment changer. (1/12)</p>
+            <div class="social-hashtags">#Journalisme #Freelance #Thread #Médias</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 892</span>
+                <span class="social-stat"><i class="fa-solid fa-retweet"></i> 341</span>
+              </div>
+              <button class="social-view-btn">Voir sur X ↗</button>
+            </div>
+          </div>
+
+          <div class="social-card linkedin">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">LinkedIn</span>
+              </div>
+              <span class="social-date">Il y a 4 jours</span>
+            </div>
+            <p class="social-content">Mon article sur l'IA dans les rédactions a généré des retours que je n'attendais
+              pas. Des chefs de rubrique qui me confient leur anxiété, des jeunes journalistes qui voient ça comme une
+              opportunité. Le débat est loin d'être tranché.</p>
+            <div class="social-hashtags">#IA #Journalisme #Futur #Médias</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 412</span>
+                <span class="social-stat"><i class="fa-solid fa-comment"></i> 67</span>
+                <span class="social-stat"><i class="fa-solid fa-retweet"></i> 98</span>
+              </div>
+              <button class="social-view-btn">Voir sur LinkedIn ↗</button>
+            </div>
+          </div>
+
+          <div class="social-card instagram">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-instagram"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">Instagram</span>
+              </div>
+              <span class="social-date">Il y a 5 jours</span>
+            </div>
+            <p class="social-content">Ma bibliographie du mois. 6 livres, 3 revues, 2 documentaires. Tout ce qui nourrit
+              mon regard de journaliste. Je partage ma liste complète en story ce soir <i class="fa-solid fa-book"></i>
+            </p>
+            <div class="social-hashtags">#Lecture #Journalisme #Culture #Livres</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 567</span>
+                <span class="social-stat"><i class="fa-solid fa-comment"></i> 44</span>
+              </div>
+              <button class="social-view-btn">Voir sur Instagram ↗</button>
+            </div>
+          </div>
+
+          <div class="social-card twitter">
+            <div class="social-card-header">
+              <div class="social-platform">
+                <div class="platform-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                <span style="color:rgba(238,240,248,0.7)">Twitter / X</span>
+              </div>
+              <span class="social-date">Il y a 6 jours</span>
+            </div>
+            <p class="social-content">Rappel : un bon titre ne résume pas l'article. Il donne envie de le lire. C'est
+              tout. La différence entre les deux, c'est l'ensemble de la formation journalistique.</p>
+            <div class="social-hashtags">#Écriture #Journalisme #Tips</div>
+            <div class="social-card-footer">
+              <div class="social-stats">
+                <span class="social-stat"><i class="fa-solid fa-heart"></i> 1.4k</span>
+                <span class="social-stat"><i class="fa-solid fa-retweet"></i> 620</span>
+              </div>
+              <button class="social-view-btn">Voir sur X ↗</button>
             </div>
           </div>
 
         </div>
 
-        <div class="fade-in visible" style="transition-delay: 0.15s;">
-          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="contact">
-            <p hidden><label>Ne pas remplir : <input name="bot-field"></label></p>
-            <div class="contact-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="contact-prenom">Prénom</label>
-                  <input id="contact-prenom" name="prenom" type="text" class="form-input" placeholder="Jean" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="contact-nom">Nom</label>
-                  <input id="contact-nom" name="nom" type="text" class="form-input" placeholder="Dupont" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="contact-email">Email</label>
-                <input id="contact-email" name="email" type="email" class="form-input" placeholder="jean@example.com"
-                  required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="contact-sujet">Sujet</label>
-                <input id="contact-sujet" name="sujet" type="text" class="form-input"
-                  placeholder="Community management, journalisme web..." required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="contact-message">Message</label>
-                <textarea id="contact-message" name="message" class="form-textarea" rows="5"
-                  placeholder="Décrivez votre projet, vos besoins, vos attentes..." required></textarea>
-              </div>
-              <button type="submit" class="form-submit">Envoyer le message</button>
-            </div>
-          </form>
+        <div class="load-more">
+          <button class="load-more-btn">Charger plus de posts <i class="fa-solid fa-arrow-down"></i></button>
+        </div>
+
+      </div>
+
+      <div class="newsletter-band">
+        <div class="newsletter-left">
+          <h3>Ne rien manquer <i class="fa-solid fa-sparkles"></i></h3>
+          <p>Chaque semaine, mes derniers articles et les posts qui ont le plus compté.</p>
+        </div>
+        <div class="newsletter-form">
+          <input class="newsletter-input" type="email" placeholder="votre@email.com" />
+          <button class="newsletter-btn">S'abonner →</button>
         </div>
       </div>
+
     </div>
-  </div>
+  </main>
+
+
+  <main id="view-article" hidden>
+    <div class="blog-page">
+
+      <div class="article-page">
+        <button onclick="navigateTo('blog')" class="article-back">
+          <i class="fa-solid fa-arrow-left"></i> Retour aux articles
+        </button>
+
+        <!-- Rempli par cms.js selon ?slug= — masqué tant que l'article n'est pas chargé -->
+        <article id="article-detail" hidden>
+          <div class="article-detail-meta">
+            <span class="article-date" id="article-date"></span>
+            <div class="article-tags" id="article-tags"></div>
+          </div>
+          <h1 id="article-titre"></h1>
+          <div class="article-cover" id="article-cover" hidden></div>
+          <div class="article-detail-body" id="article-contenu"></div>
+        </article>
+
+        <div id="article-notfound" hidden>
+          <h1>Article introuvable</h1>
+          <p>Cet article n'existe pas ou n'est plus disponible.</p>
+          <button onclick="navigateTo('blog')" class="article-back">
+            <i class="fa-solid fa-arrow-left"></i> Voir tous les articles
+          </button>
+        </div>
+
+      </div>
+  </main>
 
   <!-- ════════════ FOOTER BAR ════════════ -->
   <footer class="footer-bar">
