@@ -43,7 +43,6 @@ export function buildSocialCard(post) {
 export async function loadSocialPosts() {
   try {
     const { data } = await fetchJSON('/api/social-posts');
-    console.log('[CMS] social-posts reçus:', data?.length ?? 0);
     if (!data?.length) return; // collection vide → fallback HTML intact
     const wall = document.getElementById('section-social');
     if (!wall) return;

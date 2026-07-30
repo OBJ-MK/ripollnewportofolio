@@ -9,7 +9,6 @@ import { hideSkeleton } from '../utils/dom-helpers.js';
 export async function loadOutils() {
   try {
     const { data } = await fetchJSON('/api/outils?populate=*&sort=Ordre:asc');
-    console.log('[CMS] outils reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const f = CONFIG.FIELDS.outil;
     const skillBars = document.querySelector('.skill-bars');

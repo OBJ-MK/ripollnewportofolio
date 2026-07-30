@@ -42,7 +42,6 @@ export function buildTemoignageCard(t, index) {
 export async function loadTemoignages() {
   try {
     const { data } = await fetchJSON('/api/temoignages?populate=*');
-    console.log('[CMS] témoignages reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const grid = document.querySelector('#temoignages .testimonial-grid');
     if (!grid) return;

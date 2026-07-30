@@ -445,7 +445,6 @@ async function loadProjets() {
       '&populate[liens]=true' +
       '&populate[logo]=true'
     );
-    console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('projets-container');
     if (!container) return;
@@ -518,7 +517,6 @@ function buildPosteCard(poste, index) {
 async function loadPostes() {
   try {
     const { data } = await fetchJSON('/api/postes');
-    console.log('[CMS] postes reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('postes-container');
     if (!container) return;
@@ -568,7 +566,6 @@ function buildServiceCard(s, index) {
 async function loadServices() {
   try {
     const { data } = await fetchJSON('/api/services?populate=*&sort=Ordre:asc');
-    console.log('[CMS] services reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const grid = document.querySelector('.services-grid');
     if (!grid) return;
@@ -588,7 +585,6 @@ async function loadServices() {
 async function loadOutils() {
   try {
     const { data } = await fetchJSON('/api/outils?populate=*&sort=Ordre:asc');
-    console.log('[CMS] outils reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const f = CONFIG.FIELDS.outil;
     const skillBars = document.querySelector('.skill-bars');
@@ -764,7 +760,6 @@ function buildTagChips(articles) {
 async function loadArticles() {
   try {
     const { data } = await fetchJSON('/api/blog-articles?populate=*');
-    console.log('[CMS] blog-articles reçus:', data?.length ?? 0);
     if (!data?.length) return; // collection vide → fallback HTML intact
     const featured = document.getElementById('section-articles');
     if (!featured) return;
@@ -848,7 +843,6 @@ function buildSocialCard(post) {
 async function loadSocialPosts() {
   try {
     const { data } = await fetchJSON('/api/social-posts');
-    console.log('[CMS] social-posts reçus:', data?.length ?? 0);
     if (!data?.length) return; // collection vide → fallback HTML intact
     const wall = document.getElementById('section-social');
     if (!wall) return;
@@ -879,65 +873,6 @@ async function loadBlogView() {
 
 /* ── Page détail article (article.html?slug=) ────────────── */
 
-// async function loadArticleDetail() {
-//   const container = document.getElementById('article-detail');
-//   if (!container) return;
-//   const notFound = () => {
-//     const el = document.getElementById('article-notfound');
-//     if (el) el.hidden = false;
-//     container.hidden = true;
-//   };
-//   try {
-//     const slug = new URLSearchParams(window.location.search).get('slug');
-//     if (!slug) { notFound(); return; }
-//     const { data } = await fetchJSON(
-//       `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`);
-//     const article = data?.[0];
-//     if (!article) { notFound(); return; }
-//     const f = CONFIG.FIELDS.blogArticle;
-
-//     const titre = article[f.Titre] || '';
-//     document.title = `${titre} — Ripoll Darcia`;
-
-//     const titreEl = document.getElementById('article-titre');
-//     if (titreEl) titreEl.textContent = titre;
-
-//     const dateEl = document.getElementById('article-date');
-//     if (dateEl) dateEl.textContent = formatDateFR(article[f.date_publication]);
-
-//     const tagsEl = document.getElementById('article-tags');
-//     if (tagsEl) {
-//       tagsEl.innerHTML = articleTags(article)
-//         .map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
-//     }
-
-//     const coverEl = document.getElementById('article-cover');
-//     console.log('[DEBUG] valeur de f.image_couverture:', JSON.stringify(f.image_couverture));
-//     const coverUrl = mediaUrl(article[f.image_couverture]?.formats?.large)
-//       || mediaUrl(article[f.image_couverture]);
-//     if (coverEl && coverUrl) {
-//       coverEl.innerHTML = `<img src="${coverUrl}" alt="${escapeHTML(titre)}">`;
-//       coverEl.hidden = false;
-//     }
-
-//     const bodyEl = document.getElementById('article-contenu');
-//     const contenuMd = article[f.contenu] || '';
-//     if (bodyEl && contenuMd) {
-//       if (typeof marked !== 'undefined' && marked.parse) {
-//         const html = marked.parse(contenuMd, { breaks: true, gfm: true });
-//         bodyEl.innerHTML = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener" ');
-//       } else {
-//         bodyEl.innerHTML = `<p>${escapeHTML(contenuMd)}</p>`;
-//       }
-//     }
-
-//     container.hidden = false;
-//   } catch (e) {
-//     console.error('[CMS] article détail:', e.message);
-//     notFound();
-//   }
-// }
-
 async function loadArticleDetailSPA(slug) {
   const elArticle = document.getElementById('article-detail');
   const elNotFound = document.getElementById('article-notfound');
@@ -967,7 +902,6 @@ async function loadArticleDetailSPA(slug) {
 
     // Image de couverture
     const coverData = attr.image_couverture ;
-    console.log('[CMS] Structure de coverData :', coverData);
     let coverUrl = '';
     if (coverData) {
       coverUrl = coverData.url 
@@ -1309,7 +1243,6 @@ function buildTemoignageCard(t, index) {
 async function loadTemoignages() {
   try {
     const { data } = await fetchJSON('/api/temoignages?populate=*');
-    console.log('[CMS] témoignages reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const grid = document.querySelector('#temoignages .testimonial-grid');
     if (!grid) return;
@@ -1352,7 +1285,6 @@ function buildPartenaireCard(partenaire, index) {
 async function loadPartenaires() {
   try {
     const { data } = await fetchJSON('/api/partenaires?populate=*');
-    console.log('[CMS] partenaires reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('partenaires-container');
     if (!container) return;

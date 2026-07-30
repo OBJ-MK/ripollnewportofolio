@@ -30,7 +30,6 @@ export function buildPartenaireCard(partenaire, index) {
 export async function loadPartenaires() {
   try {
     const { data } = await fetchJSON('/api/partenaires?populate=*');
-    console.log('[CMS] partenaires reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('partenaires-container');
     if (!container) return;

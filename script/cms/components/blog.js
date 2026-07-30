@@ -90,7 +90,6 @@ export function buildTagChips(articles) {
 export async function loadArticles() {
   try {
     const { data } = await fetchJSON('/api/blog-articles?populate=*');
-    console.log('[CMS] blog-articles reçus:', data?.length ?? 0);
     if (!data?.length) return; // collection vide → fallback HTML intact
     const featured = document.getElementById('section-articles');
     if (!featured) return;
@@ -163,7 +162,6 @@ export async function loadArticleDetailSPA(slug) {
 
     // Image de couverture
     const coverData = attr.image_couverture ;
-    console.log('[CMS] Structure de coverData :', coverData);
     let coverUrl = '';
     if (coverData) {
       coverUrl = coverData.url 

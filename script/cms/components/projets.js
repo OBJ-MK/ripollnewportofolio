@@ -107,7 +107,6 @@ export async function loadProjets() {
       '&populate[liens]=true' +
       '&populate[logo]=true'
     );
-    console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('projets-container');
     if (!container) return;

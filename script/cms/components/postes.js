@@ -41,7 +41,6 @@ export function buildPosteCard(poste, index) {
 export async function loadPostes() {
   try {
     const { data } = await fetchJSON('/api/postes');
-    console.log('[CMS] postes reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('postes-container');
     if (!container) return;
