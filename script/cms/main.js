@@ -3,7 +3,7 @@
  * This file should be referenced from HTML as: <script type="module" src="script/cms/main.js" defer></script>
  */
 
-import { navigateTo } from './router/router.js';
+import { navigateTo, navigateToSection } from './router/router.js';
 import { initModalListeners, closeProjetModal } from './modal/projet-modal.js';
 import { loadHero } from './components/hero.js';
 import { loadApropo } from './components/apropo.js';
@@ -18,6 +18,7 @@ import { loadSocialPosts } from './components/social.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
+window.navigateToSection = navigateToSection;
 window.closeProjetModal = closeProjetModal;
 
 // Initialize once DOM is ready
@@ -52,5 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPartenaires();
     loadTemoignages();
     navigateTo('index');
+    const targetId = hash ? hash.slice(1) : '';
+    if (targetId) {
+      const target = document.getElementById(targetId);
+      if (target) {
+        setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 400);
+      }
+    }
   }
 });

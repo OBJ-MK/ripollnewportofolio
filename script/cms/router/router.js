@@ -13,6 +13,8 @@ import { loadTemoignages } from '../components/temoignages.js';
 import { loadArticles, loadArticleDetailSPA } from '../components/blog.js';
 import { loadSocialPosts } from '../components/social.js';
 
+
+
 export function navigateToSection(sectionId, event) {
   if (event) event.preventDefault();
 

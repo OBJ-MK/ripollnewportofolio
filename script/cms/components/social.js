@@ -66,5 +66,5 @@ export async function loadSocialPosts() {
     window.dispatchEvent(new Event('resize'));
   } catch (e) {
     console.error('[CMS] social-posts:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-view-blog') }
 }

@@ -3,6 +3,7 @@
  */
 
 import { fetchJSON, CONFIG } from '../config/config.js';
+import { hideSkeleton } from '../utils/dom-helpers.js';
 import { escapeHTML } from '../utils/format.js';
 import { mediaUrl, formatDateFR, articleTags } from '../utils/media.js';
 
@@ -130,7 +131,7 @@ export async function loadArticles() {
     window.dispatchEvent(new Event('resize'));
   } catch (e) {
     console.error('[CMS] blog-articles:', e.message);
-  }
+  }finally { hideSkeleton('skeleton-view-article') }
 }
 
 export async function loadArticleDetailSPA(slug) {
