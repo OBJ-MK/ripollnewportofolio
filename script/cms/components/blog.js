@@ -89,7 +89,7 @@ export function buildTagChips(articles) {
 
 export async function loadArticles() {
   try {
-    const { data } = await fetchJSON('/api/blog-articles?populate=*');
+    const { data } = await fetchJSON('/api/blog-articles?populate[image_couverture]=true&populate[blog_tags]=true');
     if (!data?.length) return; // collection vide → fallback HTML intact
     const featured = document.getElementById('section-articles');
     if (!featured) return;
@@ -140,7 +140,7 @@ export async function loadArticleDetailSPA(slug) {
   if (!slug) return;
 
   try {
-    const endpoint = `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
+    const endpoint = `/api/blog-articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[image_couverture]=true&populate[blog_tags]=true`;
     const { data } = await fetchJSON(endpoint);
 
     if (!data || data.length === 0) {

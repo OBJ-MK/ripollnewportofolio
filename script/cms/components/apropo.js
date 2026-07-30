@@ -9,7 +9,7 @@ import { mediaUrl } from '../utils/media.js';
 
 export async function loadApropo() {
   try {
-    const { data } = await fetchJSON('/api/apropo?populate=*');
+    const { data } = await fetchJSON('/api/apropo?populate[Photo]=true');
     // Strapi v5 : champs plats directement sur data
     const attrs = data || {};
     const f = CONFIG.FIELDS.apropo;

@@ -38,7 +38,7 @@ export function buildServiceCard(s, index) {
 
 export async function loadServices() {
   try {
-    const { data } = await fetchJSON('/api/services?populate=*&sort=Ordre:asc');
+    const { data } = await fetchJSON('/api/services?populate[Image]=true&sort=Ordre:asc');
     if (!data?.length) return;
     const grid = document.querySelector('.services-grid');
     if (!grid) return;

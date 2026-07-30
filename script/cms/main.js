@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ensure modal close/overlay handlers are wired
   initModalListeners();
 
+  // AJOUTEZ CETTE LIGNE POUR DÉFINIR 'hash'
+  const hash = window.location.hash; 
 
   if (hash.startsWith('#blog')) {
     navigateTo('blog');
