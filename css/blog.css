@@ -349,6 +349,10 @@
   background: #0077B5;
 }
 
+.social-card.facebook::before {
+  background: #1877F2;
+}
+
 .social-card.twitter::before {
   background: #1DA1F2;
 }
@@ -363,6 +367,10 @@
 
 .social-card.linkedin:hover {
   border-color: rgba(0, 119, 181, 0.3);
+}
+
+.social-card.facebook:hover {
+  border-color: rgba(24, 119, 242, 0.3);
 }
 
 .social-card.twitter:hover {

@@ -9,6 +9,7 @@ import { hideSkeleton } from '../utils/dom-helpers.js';
 export const SOCIAL_PLATFORMS = {
   LinkedIn: { cls: 'linkedin', icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', btn: 'Voir sur LinkedIn ↗' },
   Instagram: { cls: 'instagram', icon: 'fa-brands fa-instagram', label: 'Instagram', btn: 'Voir sur Instagram ↗' },
+  Facebook: { cls: 'facebook', icon: 'fa-brands fa-facebook-f', label: 'Facebook', btn: 'Voir sur Facebook ↗' },
   Twitter: { cls: 'twitter', icon: 'fa-brands fa-x-twitter', label: 'Twitter / X', btn: 'Voir sur X ↗' },
 };
 

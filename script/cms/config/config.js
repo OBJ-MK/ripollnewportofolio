@@ -58,7 +58,7 @@ export const CONFIG = {
       sous_titre: 'sous_titre',
     },
     socialPost: {
-      plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn
+      plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn | Facebook
       date_texte: 'date_texte',
       contenu: 'contenu',
       hashtags: 'hashtags',
