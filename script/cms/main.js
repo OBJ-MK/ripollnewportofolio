@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ensure modal close/overlay handlers are wired
   initModalListeners();
 
-  // Detect current hash and route like the original cms.js
-  const hash = window.location.hash;
 
   if (hash.startsWith('#blog')) {
     navigateTo('blog');

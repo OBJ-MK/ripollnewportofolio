@@ -447,12 +447,7 @@
   overflow: hidden;
 }
 
-.social-hashtags {
-  font-size: 12px;
-  color: rgba(245, 197, 24, 0.6);
-  margin-bottom: 16px;
-  line-height: 1.6;
-}
+
 
 .social-card-footer {
   display: flex;

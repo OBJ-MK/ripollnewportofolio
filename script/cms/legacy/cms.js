@@ -60,11 +60,7 @@ const CONFIG = {
     socialPost: {
       plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn
       date_texte: 'date_texte',
-      contenu: 'contenu',
-      hashtags: 'hashtags',
-      likes: 'likes',
-      Commantaire: 'Commantaire', // ⚠ casse immuable du schéma (C majuscule, orthographe du schéma)
-      Repost: 'Repost',           // ⚠ casse immuable du schéma
+      contenu: 'contenu',       // ⚠ casse immuable du schéma
       lien_externe: 'lien_externe',
     },
     poste: {
@@ -824,17 +820,10 @@ function buildSocialCard(post) {
   const f = CONFIG.FIELDS.socialPost;
   const platform = SOCIAL_PLATFORMS[post[f.plateforme]] || SOCIAL_PLATFORMS.LinkedIn;
   const contenu = escapeHTML(post[f.contenu] || '');
-  const hashtags = escapeHTML(post[f.hashtags] || '');
   const dateTexte = escapeHTML(post[f.date_texte] || '');
   const lien = post[f.lien_externe] || '';
 
-  // biginteger Strapi → string ; n'afficher une stat que si renseignée
-  const stat = (icon, val) => (val != null && val !== '' && val !== '0')
-    ? `<span class="social-stat"><i class="${icon}"></i> ${escapeHTML(String(val))}</span>` : '';
-  const stats =
-    stat('fa-solid fa-heart', post[f.likes]) +
-    stat('fa-solid fa-comment', post[f.Commantaire]) +
-    stat('fa-solid fa-retweet', post[f.Repost]);
+  
 
   const viewBtn = lien
     ? `<a class="social-view-btn" href="${escapeHTML(lien)}" target="_blank" rel="noopener">${platform.btn}</a>`
@@ -849,7 +838,6 @@ function buildSocialCard(post) {
       <span class="social-date">${dateTexte}</span>
     </div>
     <p class="social-content">${contenu}</p>
-    ${hashtags ? `<div class="social-hashtags">${hashtags}</div>` : ''}
     <div class="social-card-footer">
       <div class="social-stats">${stats}</div>
       ${viewBtn}

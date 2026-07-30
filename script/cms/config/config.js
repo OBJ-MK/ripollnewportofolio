@@ -61,10 +61,6 @@ export const CONFIG = {
       plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn | Facebook
       date_texte: 'date_texte',
       contenu: 'contenu',
-      hashtags: 'hashtags',
-      likes: 'likes',
-      Commantaire: 'Commantaire', // ⚠ casse immuable du schéma (C majuscule, orthographe du schéma)
-      Repost: 'Repost',           // ⚠ casse immuable du schéma
       lien_externe: 'lien_externe',
     },
     poste: {

@@ -20,14 +20,7 @@ export function buildSocialCard(post) {
   const dateTexte = escapeHTML(post[f.date_texte] || '');
   const lien = post[f.lien_externe] || '';
 
-  // biginteger Strapi → string ; n'afficher une stat que si renseignée
-  // const stat = (icon, val) => (val != null && val !== '' && val !== '0')
-  //   ? `<span class="social-stat"><i class="${icon}"></i> ${escapeHTML(String(val))}</span>` : '';
-  // const stats =
-  //   stat('fa-solid fa-heart', post[f.likes]) +
-  //   stat('fa-solid fa-comment', post[f.Commantaire]) +
-  //   stat('fa-solid fa-retweet', post[f.Repost]);
-
+  
   const viewBtn = lien
     ? `<a class="social-view-btn" href="${escapeHTML(lien)}" target="_blank" rel="noopener">${platform.btn}</a>`
     : '';
