@@ -35,7 +35,6 @@ export function buildSocialCard(post) {
     </div>
     <p class="social-content">${contenu}</p>
     <div class="social-card-footer">
-      <div class="social-stats">${stats}</div>
       ${viewBtn}
     </div>
   </div>`;
