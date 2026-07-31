@@ -93,6 +93,55 @@ export function buildTagChips(articles) {
 
 const ARTICLES_ROW2_BATCH = 4;
 
+/* ── Fetch & hydratation : Page blog (en-tête) ─────────────
+ * Réintégré depuis l'ancien legacy/cms.js (monolithique), adapté aux
+ * imports du système en composants — logique inchangée. */
+export async function loadPageBlog() {
+  try {
+    const { data } = await fetchJSON('/api/page-blog?populate[image]=true');
+    const attrs = data || {};
+    const f = CONFIG.FIELDS.pageBlog;
+
+    // titre_principal : string — **gras** → <span> (accent or), saut de ligne → <br>
+    if (attrs[f.titre_principal]) {
+      const el = document.querySelector('[data-cms="pageBlog.titre_principal"]');
+      if (el) {
+        el.innerHTML = escapeHTML(attrs[f.titre_principal])
+          .replace(/\*\*([\s\S]*?)\*\*/g, '<span>$1</span>')
+          .replace(/\n/g, '<br>');
+      }
+    }
+
+    const sousTitre = document.querySelector('[data-cms="pageBlog.sous_titre"]');
+    if (sousTitre && attrs[f.sous_titre]) {
+      sousTitre.innerHTML = escapeHTML(attrs[f.sous_titre]);
+    }
+
+    // Strapi v5 : média plat { url, formats }, pas { data: { attributes: { url } } }
+    const blogHero = document.querySelector('.blog-hero');
+    const imageUrl = mediaUrl(attrs[f.image]);
+    if (imageUrl && blogHero) {
+      blogHero.style.backgroundImage = `url(${imageUrl})`;
+    }
+
+    // Années d'expérience
+    const blogStatsExp = document.getElementById('annee-exp-stat-num');
+    if (blogStatsExp && attrs[f.annne_exp] != null) {
+      blogStatsExp.textContent = `${parseInt(attrs[f.annne_exp], 10)} ans`;
+    }
+
+    // Abonnés réseaux
+    const blogStatsAbonnes = document.getElementById('abonnes-stat-num');
+    if (blogStatsAbonnes && attrs[f.abonner_reseaux] != null) {
+      blogStatsAbonnes.textContent = parseInt(attrs[f.abonner_reseaux], 10);
+    }
+    
+  } catch (e) {
+    // 404 attendu tant que le single type n'est pas publié — fallback HTML conservé
+    console.error('[CMS] page-blog:', e.message);
+  }
+}
+
 export async function loadArticles() {
   try {
     const { data } = await fetchJSON('/api/blog-articles?populate[image_couverture]=true&populate[blog_tags]=true');
@@ -101,6 +150,13 @@ export async function loadArticles() {
     if (!featured) return;
     const row2 = document.getElementById('articles-row2');
     const f = CONFIG.FIELDS.blogArticle;
+
+    // Nombre d'articles dans la base — data est bien un tableau ici,
+    // contrairement à loadPageBlog() où data est l'objet du single type.
+    const blogStatsCount = document.getElementById('article-stat-num');
+    if (blogStatsCount) {
+      blogStatsCount.textContent = data.length;
+    }
 
     // Tri : date_publication décroissante ; mis_en_avant prioritaire en tête
     const sorted = [...data].sort((a, b) =>
