@@ -28,12 +28,14 @@ export function buildServiceCard(s, index) {
     }).filter(Boolean).join('')}</div>`
     : '';
 
-  return `<div class="service-card fade-in visible" style="transition-delay:${index * 0.1}s">
+    const lien = titre.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
+  return `<div id="${lien}" class="service-card fade-in visible" style="transition-delay:${index * 0.1}s">
     ${iconHtml}
     <div class="service-name">${titre}</div>
     <div class="service-desc">${descHtml}</div>
     ${tagsHtml}
-    <a href="#contact" class="apply-btn">Demander ce service</a>
+    <span class="apply-btn">Demander ce service</span>
   </div>`;
 }
 
@@ -45,6 +47,15 @@ export async function loadServices() {
     console.log('[CMS] services reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const grid = document.querySelector('.services-grid');
+    const footerServicesList = document.getElementById('footer-services-list');
+    footerServicesList.innerHTML = data.map(s => {
+      const f = CONFIG.FIELDS.service;
+      const titre = s[f.Titre] || '';
+      const lien = titre.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+      return `<li><a href="${'#'}${lien || '#'}">${titre}</a></li>`;
+    }).join('');
+    if (!footerServicesList) return;
+
     if (!grid) return;
 
     grid.innerHTML = '';
@@ -62,8 +73,11 @@ export async function loadServices() {
       return cursor < data.length;
     }
 
+
+
     const hasMore = renderNextBatch();
     if (hasMore) watchSentinel(ensureSentinel(grid), renderNextBatch);
+
   } catch (e) {
     console.error('[CMS] services:', e.message);
   } finally { hideSkeleton('skeleton-services') }

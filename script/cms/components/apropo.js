@@ -31,6 +31,9 @@ export async function loadApropo() {
       }
     }
 
+    const footerBio = document.getElementById('footer-bio');
+    if (footerBio) footerBio.textContent = attrs[f.Paragraphe2] || '';
+
     // Réseaux sociaux : ne toucher au href que si la valeur n'est pas null
     if (attrs[f.LinkedIn]) {
       const el = document.querySelector('[data-cms="apropo.LinkedIn"]');
@@ -55,6 +58,8 @@ export async function loadApropo() {
       const avatar = document.querySelector('.avatar-placeholder');
       if (avatar) {
         const img = document.createElement('img');
+        const footerPhoto = document.getElementById('footer-photo');
+        if (footerPhoto) footerPhoto.src = photoUrl;
         img.src = photoUrl;
         img.alt = 'Photo de profil';
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
