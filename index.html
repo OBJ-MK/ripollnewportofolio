@@ -114,7 +114,7 @@
   </nav>
   <nav class="side">
     <div class="sideGauche">
-      <a href="/" class="sidelogo">
+      <span class="sidelogo">
         <div class="sidelogo-fabar">
           <i class="fas fa-bars"></i>
         </div>
@@ -122,7 +122,7 @@
           <div class="sidelogo-icon-inner">R</div>
           Ripoll<em>Darcia</em>
         </div>
-      </a>
+      </span>
       <ul class="sidenav-links">
         <li><a href="#services" onclick="navigateToSection('services', event)">Services</a></li>
         <li><a href="#projects" onclick="navigateToSection('projects', event)">Projects</a></li>
@@ -950,31 +950,39 @@
   </div>
 
   <!-- ════════════ MODAL POSTE ════════════ -->
-<div id="poste-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="poste-modal-titre" hidden>
-  <div class="modal-overlay" aria-hidden="true"></div>
-  <div class="modal-panel">
-    <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
+  <div id="poste-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="poste-modal-titre" hidden>
+    <div class="modal-overlay" aria-hidden="true"></div>
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
 
-    <div class="modal-content">
-      <div class="modal-meta">
-        <span class="modal-categorie" id="poste-modal-entreprise"></span>
-        <span class="poste-badge" id="poste-modal-statut" style="float:right"></span>
-      </div>
-      <h2 class="modal-titre" id="poste-modal-titre"></h2>
-      <div class="modal-tags" id="poste-modal-meta"></div>
-      <div class="modal-desc" id="poste-modal-desc"></div>
+      <div class="modal-content">
+        <div class="modal-meta">
+          <span class="modal-categorie" id="poste-modal-entreprise"></span>
+          <span class="poste-badge" id="poste-modal-statut" style="float:right"></span>
+        </div>
+        <h2 class="modal-titre" id="poste-modal-titre"></h2>
+        <div class="modal-tags" id="poste-modal-meta"></div>
+        <div class="modal-desc" id="poste-modal-desc"></div>
 
-      <div class="modal-liens" style="margin-top:24px;">
-        <button class="modal-lien-btn" id="poste-download-pdf" type="button">
-          <i class="fa-solid fa-file-pdf"></i>&nbsp; Télécharger en PDF
-        </button>
-        <button class="modal-lien-btn" id="poste-download-word" type="button">
-          <i class="fa-solid fa-file-word"></i>&nbsp; Télécharger en Word
-        </button>
+        <div class="modal-liens" style="margin-top:24px;">
+          <button class="modal-lien-btn" id="poste-download-pdf" type="button">
+            <i class="fa-solid fa-file-pdf"></i>&nbsp; Fiche de poste (PDF)
+          </button>
+          <button class="modal-lien-btn" id="poste-download-word" type="button">
+            <i class="fa-solid fa-file-word"></i>&nbsp; Fiche de poste (Word)
+          </button>
+        </div>
+        <div class="modal-liens" style="margin-top:12px;">
+          <button class="modal-lien-btn" id="poste-download-cv-pdf" type="button">
+            <i class="fa-solid fa-id-card"></i>&nbsp; Mon CV pour ce poste (PDF)
+          </button>
+          <button class="modal-lien-btn" id="poste-download-cv-word" type="button">
+            <i class="fa-solid fa-id-card"></i>&nbsp; Mon CV pour ce poste (Word)
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <script src="script/script.js"></script>
   <script src="script/caroussel.js"></script>
