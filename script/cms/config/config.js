@@ -21,7 +21,8 @@ export const CONFIG = {
       Paragraphe1: 'Paragraphe1', // remappé : était Contenu — texte richtext (string)
       Paragraphe2: 'Paragraphe2', // nouveau : second paragraphe (string)
       points_forts: 'points_forts', // nouveau : rich-text blocks → liste .value-item
-      Photo: 'Photo',             // inchangé : media plat { url, ... }
+      Photo: 'Photo', 
+      cv_pdf: 'cv_pdf',            // inchangé : media plat { url, ... }
       Email: 'Email',
       LinkedIn: 'LinkedIn',
       Facebook: 'Facebook',

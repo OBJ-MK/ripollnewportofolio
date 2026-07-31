@@ -5,6 +5,7 @@
 import { fetchJSON, CONFIG } from '../config/config.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 import { openPosteModal } from '../modal/poste-modal.js';
+import { openCvModal } from '../modal/cv-modal.js';
 
 export function buildPosteCard(poste, index) {
   const f = CONFIG.FIELDS.poste;
@@ -40,8 +41,17 @@ export function buildPosteCard(poste, index) {
 
 function attachPosteModal(card, poste) {
   card.style.cursor = 'pointer';
+
+  const applyBtn = card.querySelector('.apply-btn');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openCvModal();
+    });
+  }
+
   card.addEventListener('click', (e) => {
-    if (e.target.closest('[data-no-modal]')) return; // "Postuler" reste indépendant
+    if (e.target.closest('[data-no-modal]')) return;
     openPosteModal(poste);
   });
   card.addEventListener('keydown', e => {
@@ -51,6 +61,7 @@ function attachPosteModal(card, poste) {
     }
   });
 }
+
 
 export async function loadPostes() {
   try {

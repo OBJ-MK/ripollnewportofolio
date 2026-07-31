@@ -17,6 +17,7 @@ import { loadArticles, loadArticleDetailSPA } from './components/blog.js';
 import { loadSocialPosts } from './components/social.js';
 import { initWhatsappModal } from './components/contact-modal.js';
 import { initPosteModalListeners } from './modal/poste-modal.js';
+import { initCvModalListeners } from './modal/cv-modal.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModalListeners();
   initWhatsappModal();
   initPosteModalListeners(); 
+  initCvModalListeners();
 
   // AJOUTEZ CETTE LIGNE POUR DÉFINIR 'hash'
   const hash = window.location.hash; 

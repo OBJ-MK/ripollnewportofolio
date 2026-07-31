@@ -950,11 +950,11 @@
   </div>
 
   <!-- ════════════ MODAL POSTE ════════════ -->
+  <!-- ════════════ MODAL POSTE (détail, sans téléchargement) ════════════ -->
   <div id="poste-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="poste-modal-titre" hidden>
     <div class="modal-overlay" aria-hidden="true"></div>
     <div class="modal-panel">
       <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
-
       <div class="modal-content">
         <div class="modal-meta">
           <span class="modal-categorie" id="poste-modal-entreprise"></span>
@@ -963,22 +963,29 @@
         <h2 class="modal-titre" id="poste-modal-titre"></h2>
         <div class="modal-tags" id="poste-modal-meta"></div>
         <div class="modal-desc" id="poste-modal-desc"></div>
+      </div>
+    </div>
+  </div>
 
-        <div class="modal-liens" style="margin-top:24px;">
-          <button class="modal-lien-btn" id="poste-download-pdf" type="button">
-            <i class="fa-solid fa-file-pdf"></i>&nbsp; Fiche de poste (PDF)
-          </button>
-          <button class="modal-lien-btn" id="poste-download-word" type="button">
-            <i class="fa-solid fa-file-word"></i>&nbsp; Fiche de poste (Word)
-          </button>
+  <!-- ════════════ MODAL CV (déclenché par "Postuler") ════════════ -->
+  <div id="cv-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="cv-modal-titre" hidden>
+    <div class="modal-overlay" aria-hidden="true"></div>
+    <div class="modal-panel">
+      <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
+      <div class="modal-content">
+        <div class="modal-meta">
+          <span class="modal-categorie">Candidature</span>
         </div>
-        <div class="modal-liens" style="margin-top:12px;">
-          <button class="modal-lien-btn" id="poste-download-cv-pdf" type="button">
-            <i class="fa-solid fa-id-card"></i>&nbsp; Mon CV pour ce poste (PDF)
-          </button>
-          <button class="modal-lien-btn" id="poste-download-cv-word" type="button">
-            <i class="fa-solid fa-id-card"></i>&nbsp; Mon CV pour ce poste (Word)
-          </button>
+        <h2 class="modal-titre" id="cv-modal-titre">Télécharger mon CV</h2>
+        <div class="modal-desc">
+          <p>Vous pouvez télécharger mon CV ci-dessous, puis me contacter directement pour toute question sur ce poste.
+          </p>
+        </div>
+        <p id="cv-modal-status" style="color:rgba(238,240,248,0.5);font-size:13px;"></p>
+        <div class="modal-liens" style="margin-top:24px;">
+          <a class="modal-lien-btn" id="cv-modal-link" href="#" target="_blank" rel="noopener" hidden>
+            <i class="fa-solid fa-file-pdf"></i>&nbsp; Télécharger le CV (PDF)
+          </a>
         </div>
       </div>
     </div>
@@ -987,8 +994,6 @@
   <script src="script/script.js"></script>
   <script src="script/caroussel.js"></script>
   <script src="script/vendor/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="https://unpkg.com/docx@8/build/index.js"></script>
   <script type="module" src="script/cms/main.js" defer></script>
 </body>
 
