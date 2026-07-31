@@ -3,6 +3,7 @@
  */
 
 import { fetchJSON, CONFIG } from '../config/config.js';
+import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 import { mediaUrl, buildImageSlides } from '../utils/media.js';
 import { openProjetModal, initModalSlider, closeProjetModal } from '../modal/projet-modal.js';
@@ -97,6 +98,8 @@ export function initCardCarousel(thumbEl, slides) {
   }
 }
 
+const PROJETS_BATCH_SIZE = 6;
+
 export async function loadProjets() {
   try {
     const { data } = await fetchJSON(
@@ -107,22 +110,34 @@ export async function loadProjets() {
       '&populate[liens]=true' +
       '&populate[logo]=true'
     );
+    console.log('[CMS] projets reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('projets-container');
     if (!container) return;
     const f = CONFIG.FIELDS.projet;
 
     container.innerHTML = '';
-    data.forEach((proj, i) => {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = buildProjetCard(proj, i);
-      const newCard = tmp.firstElementChild;
-      container.appendChild(newCard);
-      initCardCarousel(newCard.querySelector('.project-thumb'), buildImageSlides(proj));
-      attachCardModal(newCard, proj);
-    });
+    let cursor = 0;
 
-    // Bande « Ils m'ont fait confiance » : reconstruire depuis les projets (×3 pour le marquee)
+    function renderNextBatch() {
+      const slice = data.slice(cursor, cursor + PROJETS_BATCH_SIZE);
+      const sentinel = container.querySelector('.lazy-sentinel');
+      slice.forEach((proj, i) => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildProjetCard(proj, i);
+        const newCard = tmp.firstElementChild;
+        container.insertBefore(newCard, sentinel); // sentinel === null au 1er lot → append normal
+        initCardCarousel(newCard.querySelector('.project-thumb'), buildImageSlides(proj));
+        attachCardModal(newCard, proj);
+      });
+      cursor += slice.length;
+      return cursor < data.length;
+    }
+
+    const hasMore = renderNextBatch(); // 1er lot visible immédiatement
+    if (hasMore) watchSentinel(ensureSentinel(container), renderNextBatch);
+
+    // Bande « Ils m'ont fait confiance » — inchangé, utilise déjà `data` complet
     const track = document.querySelector('#temoignages .partners-track');
     if (track) {
       const items = data.map(proj => {

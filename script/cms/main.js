@@ -15,6 +15,7 @@ import { loadPartenaires } from './components/partenaires.js';
 import { loadTemoignages } from './components/temoignages.js';
 import { loadArticles, loadArticleDetailSPA } from './components/blog.js';
 import { loadSocialPosts } from './components/social.js';
+import { initWhatsappModal } from './components/contact-modal.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
@@ -25,6 +26,7 @@ window.closeProjetModal = closeProjetModal;
 document.addEventListener('DOMContentLoaded', () => {
   // Ensure modal close/overlay handlers are wired
   initModalListeners();
+  initWhatsappModal();
 
   // AJOUTEZ CETTE LIGNE POUR DÉFINIR 'hash'
   const hash = window.location.hash; 

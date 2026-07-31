@@ -6,6 +6,7 @@ import { fetchJSON, CONFIG } from '../config/config.js';
 import { blocksToHTML } from '../utils/format.js';
 import { mediaUrl } from '../utils/media.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
+import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 
 export function buildServiceCard(s, index) {
   const f = CONFIG.FIELDS.service;
@@ -36,18 +37,33 @@ export function buildServiceCard(s, index) {
   </div>`;
 }
 
+const SERVICES_BATCH_SIZE = 6;
+
 export async function loadServices() {
   try {
-    const { data } = await fetchJSON('/api/services?populate[Image]=true&sort=Ordre:asc');
+    const { data } = await fetchJSON('/api/services?populate=*&sort=Ordre:asc');
+    console.log('[CMS] services reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const grid = document.querySelector('.services-grid');
     if (!grid) return;
+
     grid.innerHTML = '';
-    data.forEach((s, i) => {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = buildServiceCard(s, i);
-      grid.appendChild(tmp.firstElementChild);
-    });
+    let cursor = 0;
+
+    function renderNextBatch() {
+      const slice = data.slice(cursor, cursor + SERVICES_BATCH_SIZE);
+      const sentinel = grid.querySelector('.lazy-sentinel');
+      slice.forEach((s, i) => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildServiceCard(s, i);
+        grid.insertBefore(tmp.firstElementChild, sentinel);
+      });
+      cursor += slice.length;
+      return cursor < data.length;
+    }
+
+    const hasMore = renderNextBatch();
+    if (hasMore) watchSentinel(ensureSentinel(grid), renderNextBatch);
   } catch (e) {
     console.error('[CMS] services:', e.message);
   } finally { hideSkeleton('skeleton-services') }

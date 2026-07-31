@@ -75,6 +75,10 @@ export function buildTagChips(articles) {
     ).join('');
   chipsEl.hidden = false;
 
+  if (chipsEl.dataset.bound) return; // évite l'accumulation de listeners
+  chipsEl.dataset.bound = 'true';
+
+
   chipsEl.addEventListener('click', e => {
     const btn = e.target.closest('.tag-chip');
     if (!btn) return;
@@ -86,6 +90,8 @@ export function buildTagChips(articles) {
     });
   });
 }
+
+const ARTICLES_ROW2_BATCH = 4;
 
 export async function loadArticles() {
   try {
@@ -115,14 +121,26 @@ export async function loadArticles() {
     // Rangée secondaire : le reste
     if (row2) {
       row2.innerHTML = '';
-      rest.slice(1).forEach((article, i) => {
-        const tmp = document.createElement('div');
-        tmp.innerHTML = buildBlogArticleCard(article, i + 2);
-        const card = tmp.firstElementChild;
-        row2.appendChild(card);
-        attachArticleNavigation(card, article);
-      });
-      row2.style.display = rest.length > 1 ? '' : 'none';
+      const remaining = rest.slice(1);
+      row2.style.display = remaining.length > 1 ? '' : 'none';
+
+      let cursor = 0;
+      function renderNextBatch() {
+        const slice = remaining.slice(cursor, cursor + ARTICLES_ROW2_BATCH);
+        const sentinel = row2.querySelector('.lazy-sentinel');
+        slice.forEach((article, i) => {
+          const tmp = document.createElement('div');
+          tmp.innerHTML = buildBlogArticleCard(article, i);
+          const card = tmp.firstElementChild;
+          row2.insertBefore(card, sentinel);
+          attachArticleNavigation(card, article);
+        });
+        cursor += slice.length;
+        return cursor < remaining.length;
+      }
+
+      const hasMore = renderNextBatch();
+      if (hasMore) watchSentinel(ensureSentinel(row2), renderNextBatch);
     }
 
     buildTagChips(sorted);

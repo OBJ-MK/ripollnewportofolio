@@ -5,6 +5,7 @@
 import { fetchJSON, CONFIG } from '../config/config.js';
 import { escapeHTML } from '../utils/format.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
+import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 
 export const SOCIAL_PLATFORMS = {
   LinkedIn: { cls: 'linkedin', icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', btn: 'Voir sur LinkedIn ↗' },
@@ -20,7 +21,6 @@ export function buildSocialCard(post) {
   const dateTexte = escapeHTML(post[f.date_texte] || '');
   const lien = post[f.lien_externe] || '';
 
-  
   const viewBtn = lien
     ? `<a class="social-view-btn" href="${escapeHTML(lien)}" target="_blank" rel="noopener">${platform.btn}</a>`
     : '';
@@ -40,21 +40,41 @@ export function buildSocialCard(post) {
   </div>`;
 }
 
-export async function loadSocialPosts() {
-  try {
-    const { data } = await fetchJSON('/api/social-posts');
-    if (!data?.length) return; // collection vide → fallback HTML intact
-    const wall = document.getElementById('section-social');
-    if (!wall) return;
+const SOCIAL_PAGE_SIZE = 6;
 
-    wall.innerHTML = '';
-    data.forEach(post => {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = buildSocialCard(post);
-      wall.appendChild(tmp.firstElementChild);
-    });
-    window.dispatchEvent(new Event('resize'));
-  } catch (e) {
-    console.error('[CMS] social-posts:', e.message);
-  }finally { hideSkeleton('skeleton-view-blog') }
+export async function loadSocialPosts() {
+  const wall = document.getElementById('section-social');
+  if (!wall) return;
+  wall.innerHTML = '';
+
+  let page = 1;
+
+  async function renderNextPage() {
+    try {
+      const { data, meta } = await fetchJSON(
+        `/api/social-posts?pagination[page]=${page}&pagination[pageSize]=${SOCIAL_PAGE_SIZE}`
+      );
+      console.log('[CMS] social-posts reçus (page', page, '):', data?.length ?? 0);
+      if (page === 1 && !data?.length) return false; // collection vide → fallback HTML intact
+
+      const sentinel = wall.querySelector('.lazy-sentinel');
+      data.forEach(post => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = buildSocialCard(post);
+        wall.insertBefore(tmp.firstElementChild, sentinel);
+      });
+      window.dispatchEvent(new Event('resize'));
+
+      const hasMore = meta?.pagination && page < meta.pagination.pageCount;
+      page += 1;
+      return hasMore;
+    } catch (e) {
+      console.error('[CMS] social-posts:', e.message);
+      return false;
+    }
+  }
+
+  const hasMore = await renderNextPage();
+  if (hasMore) watchSentinel(ensureSentinel(wall), renderNextPage);
+  hideSkeleton('skeleton-view-blog');
 }

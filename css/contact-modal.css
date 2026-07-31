@@ -1,0 +1,176 @@
+/* css/contact-modal.css
+ * Role: modal "Contactez-moi sur WhatsApp" — reprend les tokens visuels
+ * déjà utilisés dans blog.css (navy #0b0d14, carte #131620, or #f5c518).
+ */
+
+.wa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 7, 12, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  font-family: 'Lexend', sans-serif;
+}
+
+.wa-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.wa-modal {
+  background: #131620;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 440px;
+  margin: 20px;
+  padding: 32px;
+  position: relative;
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.25s ease;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.wa-modal-overlay.open .wa-modal {
+  transform: translateY(0) scale(1);
+}
+
+.wa-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(238, 240, 248, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.wa-modal-close:hover {
+  color: #eef0f8;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.wa-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(37, 211, 102, 0.12);
+  color: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 18px;
+}
+
+.wa-modal h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #eef0f8;
+  margin-bottom: 8px;
+}
+
+.wa-modal h3 span {
+  color: #25d366;
+}
+
+.wa-modal-desc {
+  font-size: 13.5px;
+  color: rgba(238, 240, 248, 0.48);
+  font-weight: 300;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.wa-field {
+  margin-bottom: 16px;
+}
+
+.wa-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(238, 240, 248, 0.4);
+  margin-bottom: 8px;
+}
+
+.wa-field input,
+.wa-field textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  color: #eef0f8;
+  font-family: 'Lexend', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+}
+
+.wa-field input::placeholder,
+.wa-field textarea::placeholder {
+  color: rgba(238, 240, 248, 0.25);
+}
+
+.wa-field input:focus,
+.wa-field textarea:focus {
+  border-color: rgba(245, 197, 24, 0.4);
+}
+
+.wa-field textarea {
+  min-height: 96px;
+  line-height: 1.6;
+}
+
+.wa-modal-submit {
+  width: 100%;
+  background: #25d366;
+  border: none;
+  color: #05170c;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Lexend', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.wa-modal-submit:hover {
+  background: #2fe374;
+}
+
+.wa-modal-submit:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .wa-modal {
+    padding: 26px 22px;
+  }
+}
