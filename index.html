@@ -760,7 +760,7 @@
               Ce qui m'a frappé ? Leur capacité à déconstruire une image en moins de 3 minutes. <i
                 class="fa-solid fa-magnifying-glass"></i></p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur LinkedIn ↗</button>
             </div>
           </div>
@@ -777,7 +777,7 @@
               Paris. 4h du matin, lumière naturelle, des maraîchers qui font un travail incroyable. Ces gens méritent
               qu'on parle d'eux. <i class="fa-solid fa-seedling"></i></p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur Instagram ↗</button>
             </div>
           </div>
@@ -794,7 +794,7 @@
               rémunération des journalistes freelance en France en 2026. Chiffres, retours d'expérience, et ce qu'il
               faudrait vraiment changer. (1/12)</p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur X ↗</button>
             </div>
           </div>
@@ -811,7 +811,7 @@
               pas. Des chefs de rubrique qui me confient leur anxiété, des jeunes journalistes qui voient ça comme une
               opportunité. Le débat est loin d'être tranché.</p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur LinkedIn ↗</button>
             </div>
           </div>
@@ -828,7 +828,7 @@
               mon regard de journaliste. Je partage ma liste complète en story ce soir <i class="fa-solid fa-book"></i>
             </p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur Instagram ↗</button>
             </div>
           </div>
@@ -844,7 +844,7 @@
             <p class="social-content">Rappel : un bon titre ne résume pas l'article. Il donne envie de le lire. C'est
               tout. La différence entre les deux, c'est l'ensemble de la formation journalistique.</p>
             <div class="social-card-footer">
-              
+
               <button class="social-view-btn">Voir sur X ↗</button>
             </div>
           </div>
@@ -915,8 +915,7 @@
     <div class="footer-copy">© 2026 <em>Ripoll Darcia</em>. Tous droits réservés.</div>
     <div class="footer-links">
       <a href="/mentions-legales.html">Mentions légales</a>
-      <a href="https://ripolldarcia-backend.onrender.com/admin" target="_blank"
-          rel="noopener">Ripoll Darcia</a>
+      <a href="https://ripolldarcia-backend.onrender.com/admin" target="_blank" rel="noopener">Ripoll Darcia</a>
       <a href="/politique-de-confidentialite.html">Politique de confidentialité</a>
       <a href="#contact">Contact</a>
     </div>
@@ -950,9 +949,38 @@
     </div>
   </div>
 
+  <!-- ════════════ MODAL POSTE ════════════ -->
+<div id="poste-modal" class="projet-modal" role="dialog" aria-modal="true" aria-labelledby="poste-modal-titre" hidden>
+  <div class="modal-overlay" aria-hidden="true"></div>
+  <div class="modal-panel">
+    <button class="modal-close" aria-label="Fermer le modal">&#x2715;</button>
+
+    <div class="modal-content">
+      <div class="modal-meta">
+        <span class="modal-categorie" id="poste-modal-entreprise"></span>
+        <span class="poste-badge" id="poste-modal-statut" style="float:right"></span>
+      </div>
+      <h2 class="modal-titre" id="poste-modal-titre"></h2>
+      <div class="modal-tags" id="poste-modal-meta"></div>
+      <div class="modal-desc" id="poste-modal-desc"></div>
+
+      <div class="modal-liens" style="margin-top:24px;">
+        <button class="modal-lien-btn" id="poste-download-pdf" type="button">
+          <i class="fa-solid fa-file-pdf"></i>&nbsp; Télécharger en PDF
+        </button>
+        <button class="modal-lien-btn" id="poste-download-word" type="button">
+          <i class="fa-solid fa-file-word"></i>&nbsp; Télécharger en Word
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <script src="script/script.js"></script>
   <script src="script/caroussel.js"></script>
   <script src="script/vendor/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/docx@8/build/index.js"></script>
   <script type="module" src="script/cms/main.js" defer></script>
 </body>
 
