@@ -392,14 +392,13 @@
             </div>
 
             <div class="social-row">
-              <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" class="social-btn"
-                data-cms="apropo.LinkedIn">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                  <rect x="2" y="9" width="4" height="12"></rect>
-                  <circle cx="4" cy="4" r="2"></circle>
-                </svg>
+              <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" class="social-btn" data-cms="apropo.LinkedIn">
+                <i class="fa-brands fa-linkedin-in"></i>
                 LinkedIn
+              </a>
+              <a href="https://twitter.com/ripolldarcia" target="_blank" rel="noopener" class="social-btn" data-cms="apropo.Twitter">
+                <i class="fa-brands fa-twitter"></i>
+                Twitter
               </a>
               <button class="social-btn">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -495,21 +494,21 @@
 
             <div class="contact-info">
               <div class="contact-item">
-                <div class="contact-icon-wrap">📧</div>
+                <div class="contact-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
                 <div class="contact-item-text">
                   <strong>Email</strong>
                   <a href="mailto:ripollbis@gmail.com" data-cms="apropo.Email">ripollbis@gmail.com</a>
                 </div>
               </div>
               <div class="contact-item">
-                <div class="contact-icon-wrap">📍</div>
+                <div class="contact-icon-wrap"><i class="fa-solid fa-location-dot"></i></div>
                 <div class="contact-item-text">
                   <strong>Localisation</strong>
                   Pointe Noire, Congo — Remote possible
                 </div>
               </div>
               <div class="contact-item">
-                <div class="contact-icon-wrap">⏰</div>
+                <div class="contact-icon-wrap"><i class="fa-solid fa-clock"></i></div>
                 <div class="contact-item-text">
                   <strong>Disponibilité</strong>
                   Lun – Ven, 9h – 17h (CET)
@@ -616,7 +615,7 @@
           Instagram
         </button>
         <button class="filter-btn" onclick="setFilter('twitter', this)">
-          <span class="filter-dot" style="background:#1DA1F2"></span>
+          <span class="filter-dot" style="background:#02002c"></span>
           Twitter / X
         </button>
       </div>
@@ -861,7 +860,7 @@
         </div>
         <div class="newsletter-form">
           <input class="newsletter-input" type="email" placeholder="votre@email.com" />
-          <button class="newsletter-btn">S'abonner →</button>
+          <button class="newsletter-btn">OK</button>
         </div>
       </div>
 
@@ -911,13 +910,87 @@
   </main>
 
   <!-- ════════════ FOOTER BAR ════════════ -->
-  <footer class="footer-bar">
-    <div class="footer-copy">© 2026 <em>Ripoll Darcia</em>. Tous droits réservés.</div>
-    <div class="footer-links">
-      <a href="/mentions-legales.html">Mentions légales</a>
-      <a href="https://ripolldarcia-backend.onrender.com/admin" target="_blank" rel="noopener">Ripoll Darcia</a>
-      <a href="/politique-de-confidentialite.html">Politique de confidentialité</a>
-      <a href="#contact">Contact</a>
+  <footer class="site-footer">
+    <!-- ==========================================
+       PARTIE SUPÉRIEURE : Les 4 colonnes 
+       ========================================== -->
+    <div class="footer-top">
+
+      <!-- COLONNE 1 : Marque, Bio, Newsletter & Réseaux -->
+      <div class="footer-col-brand">
+        <div class="footer-profile">
+          <!-- Remplace par le chemin de ton image/logo -->
+          <img id="footer-photo" src="" alt="Ripoll Darcia" class="footer-avatar">
+          <span class="brand-name">RIPOLL DARCIA</span>
+        </div>
+
+        <p class="footer-bio" id="footer-bio">
+          
+        </p>
+
+        <div class="footer-newsletter">
+          <span class="newsletter-title">NEWSLETTER</span>
+          <form class="newsletter-form">
+            <input class="newsletter-input" type="email" placeholder="Votre email" required>
+            <button type="submit" class="newsletter-btn">OK</button>
+          </form>
+        </div>
+
+        <div class="footer-socials">
+          <!-- Icônes FontAwesome (à adapter selon tes classes existantes) -->
+          <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="https://twitter.com/ripolldarcia" target="_blank" rel="noopener" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+
+      <!-- COLONNE 2 : Navigation -->
+      <div class="footer-col-links">
+        <h4>NAVIGATION</h4>
+        <ul>
+          <li><a href="#services" onclick="navigateToSection('services', event)">Services</a></li>
+          <li><a href="#projects" onclick="navigateToSection('projects', event)">Projects</a></li>
+          <li><a href="#outils" onclick="navigateToSection('outils', event)">Outils</a></li>
+          <li><a href="#postes" onclick="navigateToSection('postes', event)">Postes</a></li>
+          <li><a href="#apropos" onclick="navigateToSection('apropos', event)">À propos</a></li>
+          <li><a href="#partenaires" onclick="navigateToSection('partenaires', event)">Partenaires</a></li>
+          <li><a href="#temoignages" onclick="navigateToSection('temoignages', event)">Témoignages</a></li>
+          <li><a href="#blog" onclick="event.preventDefault(); navigateTo('blog');">Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- COLONNE 3 : Services -->
+      <div class="footer-col-links">
+        <h4>SERVICES</h4>
+        <ul id="footer-services-list">
+          <!-- Les services dynamiques viendront se placer ici -->
+        </ul>
+      </div>
+
+      <!-- COLONNE 4 : Ressources -->
+      <div class="footer-col-links">
+        <h4>RESSOURCES</h4>
+        <ul>
+          <li><a href="#blog" onclick="event.preventDefault(); navigateTo('blog');">Blog</a></li>
+          <li><a href="#contact" onclick="event.preventDefault(); navigateTo('contact');">Me contacter</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ==========================================
+       PARTIE INFÉRIEURE : Légal & Copyright
+       ========================================== -->
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © 2026 <a href="https://ripolldarcia-backend.onrender.com/admin"target="_blank" rel="noopener noreferrer">RIPOLL DARCIA</a> · Congo, Pointe Noire
+      </div>
+      <div class="footer-legal">
+        <a href="">MENTIONS LÉGALES</a> ·
+        <a href="">POLITIQUE DE CONFIDENTIALITÉ</a>
+      </div>
+      <!-- Bouton pour le thème sombre/clair -->
+      <button class="theme-toggle" aria-label="Changer le thème">
+        <i class="fa-regular fa-sun"></i>
+      </button>
     </div>
   </footer>
 
