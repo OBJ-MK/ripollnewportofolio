@@ -10,7 +10,7 @@ import { loadServices } from '../components/services.js';
 import { loadOutils } from '../components/outils.js';
 import { loadPartenaires } from '../components/partenaires.js';
 import { loadTemoignages } from '../components/temoignages.js';
-import { loadArticles, loadArticleDetailSPA } from '../components/blog.js';
+import { loadArticles, loadArticleDetailSPA, loadPageBlog } from '../components/blog.js';
 import { loadSocialPosts } from '../components/social.js';
 
 
@@ -72,7 +72,10 @@ export function navigateTo(route, params = {}) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     // load blog resources
+    loadApropo();
+    loadPageBlog();
     loadArticles();
+    loadArticleDetailSPA();
     loadSocialPosts();
     history.pushState({ route: 'blog' }, '', '#blog');
   } 

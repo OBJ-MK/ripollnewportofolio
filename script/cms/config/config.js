@@ -5,7 +5,6 @@
 
 export const CONFIG = {
   STRAPI_URL: 'https://ripolldarcia-backend.onrender.com',
-  WHATSAPP_NUMBER: '242067869231',
   FIELDS: {
     hero: {
       Entete: 'Entete',           // remappé : était Titre — le schéma l'appelle Entete (richtext)
@@ -57,6 +56,9 @@ export const CONFIG = {
     pageBlog: {
       titre_principal: 'titre_principal',
       sous_titre: 'sous_titre',
+      image: 'image', // Single Media plat { url, formats } — bannière du blog-hero
+      annne_exp: 'annne_exp', // nombre d'années d'expérience (int)
+      abonner_reseaux: 'abonner_reseaux', // nombre de personnes abonnées aux réseaux (int)
     },
     socialPost: {
       plateforme: 'plateforme',   // enum : Instagram | Twitter | LinkedIn | Facebook

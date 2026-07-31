@@ -20,9 +20,29 @@
 }
 
 .blog-hero {
-  background: #0f1119;
+  position: relative;
+  background-color: #0f1119; /* Fallback si pas d'image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
-  padding: 64px 60px 48px;
+  padding: 24px 20px 28px;
+  overflow: hidden;
+}
+
+/* Voile sombre semi-transparent pour garder le texte lisible par-dessus l'image */
+.blog-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 13, 20, 0.82); /* Ajuste l'opacité ici si besoin */
+  z-index: 1;
+}
+
+/* S'assure que tout le contenu textuel reste au-dessus du voile */
+.blog-hero > * {
+  position: relative;
+  z-index: 2;
 }
 
 .blog-tag {
@@ -63,7 +83,7 @@
   font-weight: 300;
   max-width: 520px;
   line-height: 1.75;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 }
 
 .blog-stats {
@@ -132,7 +152,7 @@
 }
 
 .blog-content {
-  padding: 40px 30px;
+  padding: 40px 10px;
   max-width: 1260px;
   margin: 0 auto;
 }
