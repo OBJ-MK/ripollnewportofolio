@@ -5,6 +5,7 @@
 
 export const CONFIG = {
   STRAPI_URL: 'https://ripolldarcia-backend.onrender.com',
+  WHATSAPP_NUMBER: '242 06 786 9231',
   FIELDS: {
     hero: {
       Entete: 'Entete',           // remappé : était Titre — le schéma l'appelle Entete (richtext)

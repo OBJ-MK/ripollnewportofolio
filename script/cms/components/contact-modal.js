@@ -115,7 +115,7 @@ export function initWhatsappModal() {
   buildModal();
 
   document.addEventListener('click', (e) => {
-    const el = e.target.closest('button, a');
+    const el = e.target.closest('button, a, .apply-btn');
     if (!el) return;
     const texte = el.textContent.trim();
 

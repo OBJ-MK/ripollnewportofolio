@@ -13,22 +13,31 @@ import { loadTemoignages } from '../components/temoignages.js';
 import { loadArticles, loadArticleDetailSPA, loadPageBlog } from '../components/blog.js';
 import { loadSocialPosts } from '../components/social.js';
 
+// Liste centralisée de toutes les vues du site — évite d'oublier une vue
+// à masquer à chaque nouvel ajout (mentions légales, politique...).
+function getAllViews() {
+  return {
+    index: document.getElementById('view-index'),
+    blog: document.getElementById('view-blog'),
+    article: document.getElementById('view-article'),
+    mentionsLegales: document.getElementById('view-mentions-legales'),
+    politiqueConfidentialite: document.getElementById('view-politique-confidentialite'),
+  };
+}
 
+function hideAllViews(views) {
+  Object.values(views).forEach(view => { if (view) view.hidden = true; });
+}
 
 export function navigateToSection(sectionId, event) {
   if (event) event.preventDefault();
 
-  // 1. S'assurer qu'on affiche bien la vue Index / Portfolio
-  const indexView = document.getElementById('view-index');
-  const blogView = document.getElementById('view-blog');
-  const articleView = document.getElementById('view-article');
+  const views = getAllViews();
+  hideAllViews(views);
 
-  if (blogView) blogView.hidden = true;
-  if (articleView) articleView.hidden = true;
-
-  if (indexView) {
-    const wasHidden = indexView.hidden;
-    indexView.hidden = false;
+  if (views.index) {
+    const wasHidden = views.index.hidden;
+    views.index.hidden = false;
 
     // Si l'index était caché, charger les données Strapi si nécessaire
     if (wasHidden) {
@@ -56,40 +65,44 @@ export function navigateToSection(sectionId, event) {
 }
 
 export function navigateTo(route, params = {}) {
-  const indexView = document.getElementById('view-index');
-  const blogView = document.getElementById('view-blog');
-  const articleView = document.getElementById('view-article');
+  const views = getAllViews();
+  hideAllViews(views);
 
-  // 1. Masquer systématiquement toutes les vues
-  if (indexView) indexView.hidden = true;
-  if (blogView) blogView.hidden = true;
-  if (articleView) articleView.hidden = true;
-
-  // 2. Afficher la vue demandée et charger ses données
   if (route === 'blog') {
-    if (blogView) {
-      blogView.hidden = false;
+    if (views.blog) {
+      views.blog.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    // load blog resources
-    loadApropo();
     loadPageBlog();
     loadArticles();
-    loadArticleDetailSPA();
     loadSocialPosts();
     history.pushState({ route: 'blog' }, '', '#blog');
-  } 
+  }
   else if (route === 'article') {
-    if (articleView) {
-      articleView.hidden = false;
+    if (views.article) {
+      views.article.hidden = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     history.pushState({ route: 'article', slug: params.slug }, '', `#article?slug=${params.slug}`);
     if (params.slug) loadArticleDetailSPA(params.slug);
-  } 
+  }
+  else if (route === 'mentions-legales') {
+    if (views.mentionsLegales) {
+      views.mentionsLegales.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    history.pushState({ route: 'mentions-legales' }, '', '#mentions-legales');
+  }
+  else if (route === 'politique-confidentialite') {
+    if (views.politiqueConfidentialite) {
+      views.politiqueConfidentialite.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    history.pushState({ route: 'politique-confidentialite' }, '', '#politique-confidentialite');
+  }
   else {
-    if (indexView) {
-      indexView.hidden = false;
+    if (views.index) {
+      views.index.hidden = false;
     }
     history.pushState({ route: 'index' }, '', '#portfolio');
   }

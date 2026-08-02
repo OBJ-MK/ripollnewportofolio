@@ -655,18 +655,26 @@
 }
 
 .article-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: rgba(245, 197, 24, 0.8);
-  text-decoration: none;
-  margin-bottom: 32px;
-  transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #e5e0e5;
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    transition: color 0.2s;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: rgba(245, 197, 24, 0.8);
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .article-back:hover {
-  color: #f5c518;
+  color: #060606;
 }
 
 .article-detail-meta {

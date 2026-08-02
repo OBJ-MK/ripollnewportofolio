@@ -16,24 +16,19 @@ import { loadTemoignages } from './components/temoignages.js';
 import { loadArticles, loadArticleDetailSPA } from './components/blog.js';
 import { loadSocialPosts } from './components/social.js';
 import { initWhatsappModal } from './components/contact-modal.js';
-import { initPosteModalListeners } from './modal/poste-modal.js';
-import { initCvModalListeners } from './modal/cv-modal.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
 window.navigateToSection = navigateToSection;
 window.closeProjetModal = closeProjetModal;
-
+window.initWhatsappModal = initWhatsappModal;
 // Initialize once DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   // Ensure modal close/overlay handlers are wired
   initModalListeners();
   initWhatsappModal();
-  initPosteModalListeners(); 
-  initCvModalListeners();
 
-  // AJOUTEZ CETTE LIGNE POUR DÉFINIR 'hash'
-  const hash = window.location.hash; 
+  const hash = window.location.hash;
 
   if (hash.startsWith('#blog')) {
     navigateTo('blog');
@@ -48,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       navigateTo('blog');
     }
+  }
+  else if (hash.startsWith('#mentions-legales')) {
+    navigateTo('mentions-legales');
+  }
+  else if (hash.startsWith('#politique-confidentialite')) {
+    navigateTo('politique-confidentialite');
   }
   else {
     loadHero();
