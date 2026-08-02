@@ -11,7 +11,7 @@
    La sidebar mobile fonctionne déjà (`.side.open` est
    défini ici pour être actif dans cette plage aussi).
    ───────────────────────────────────────────────────── */
-@media screen and (min-width: 481px) and (max-width: 600px) {
+@media screen and (min-width: 481px) and (max-width: 730px) {
 
   .nav {
     padding: 15px 24px;
@@ -171,10 +171,19 @@
   }
 }
 
+@media screen and (min-width: 401px) and (max-width: 540px) {
+
+  .apply-btn {
+    padding: 4px 10px;
+    font-size: 10.5px;
+  }
+  
+}
+
 /* ─────────────────────────────────────────────────────
    TABLETTE 601–768px : nav visible
    ───────────────────────────────────────────────────── */
-@media screen and (min-width: 601px) and (max-width: 768px) {
+@media screen and (min-width: 731px) and (max-width: 768px) {
 
   /* ─── NAVBAR ─── */
   .nav {

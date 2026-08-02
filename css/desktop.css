@@ -3,6 +3,14 @@
    La grille hero passe en 2 colonnes à 1024px via
    tablette.css (769–1023 reste en 1 col centrée).
    ═══════════════════════════════════════════════════ */
+
+ @media screen and (min-width: 769px) and (max-width: 1153px)  {
+
+  .btn-ghost {
+    display: none;
+  }
+}
+
 @media (min-width: 769px) {
 
   /* La sidebar est toujours cachée : plus de hamburger visible */
@@ -14,6 +22,10 @@
   .nav-links,
   .nav-actions {
     display: flex;
+  }
+
+  .logo{
+    font-size: 16px;
   }
 
   /* Hamburger caché */
