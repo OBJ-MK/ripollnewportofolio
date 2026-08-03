@@ -1,0 +1,277 @@
+/* css/theme-light.css
+ * Role: mode clair, activé via [data-theme="light"] sur <html>.
+ * Chargé APRÈS style.css, blog.css et contact-modal.css pour gagner en
+ * spécificité/ordre de cascade.
+ *
+ * Deux niveaux de surcharge :
+ *  1. Les variables CSS de :root — inversent automatiquement tout ce qui,
+ *     dans style.css, utilise déjà var(--bg)/var(--text)/var(--border)/etc.
+ *  2. Des overrides explicites, sélecteur par sélecteur, pour tout ce qui
+ *     est codé en dur (#0b0d14, rgba(238,240,248,x), rgba(255,255,255,x)...)
+ *     dans blog.css, contact-modal.css et une partie de style.css — ces
+ *     valeurs-là n'utilisent pas les variables donc ne s'inversent pas
+ *     automatiquement.
+ */
+
+/* ═══════════════════════════════════════════════════
+   1. VARIABLES — inverse tout ce qui utilise var(--x)
+   ═══════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg: #f7f7fa;
+  --bg2: #ffffff;
+  --surface: #ffffff;
+  --surface2: #f0f1f5;
+  --border: rgba(11, 13, 20, 0.08);
+  --border-hover: rgba(11, 13, 20, 0.16);
+  /* --accent / --accent-hover / --accent-dim / --accent-dim2 / --green
+     restent identiques : couleur de marque, cohérente sur les deux thèmes */
+  --text: #0b0d14;
+  --muted: rgba(11, 13, 20, 0.6);
+  --muted2: rgba(11, 13, 20, 0.35);
+}
+
+/* ═══════════════════════════════════════════════════
+   2. STYLE.CSS — sélecteurs codés en dur (hors variables)
+   ═══════════════════════════════════════════════════ */
+
+[data-theme="light"] .herobgsvg {
+  background-color: rgba(234, 176, 89, 0.2);
+}
+
+[data-theme="light"] .nav {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="light"] .sideGauche {
+  background: rgba(255, 255, 255, 0.97);
+}
+
+[data-theme="light"] .sideDroite {
+  background-color: rgba(11, 13, 20, 0.05);
+}
+
+[data-theme="light"] .frame-badge {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme="light"] .btn-ghost:hover,
+[data-theme="light"] .sidebtn-ghost:hover {
+  border-color: rgba(11, 13, 20, 0.25);
+  background: rgba(11, 13, 20, 0.04);
+}
+
+[data-theme="light"] .cta-outline:hover {
+  border-color: rgba(11, 13, 20, 0.22);
+  background: rgba(11, 13, 20, 0.03);
+}
+
+[data-theme="light"] .tech-pill {
+  background: rgba(11, 13, 20, 0.03);
+}
+
+[data-theme="light"] .tag,
+[data-theme="light"] .badge-closed {
+  background: rgba(11, 13, 20, 0.04);
+}
+
+[data-theme="light"] .site-footer {
+  /* Le footer reste volontairement sombre en mode clair — on réinjecte donc
+     localement les valeurs sombres des variables, pour que tout son contenu
+     (déjà écrit avec var(--text)/var(--muted)/var(--border)) redevienne
+     lisible sur son fond sombre, sans affecter le reste du site. */
+  --text: #eef0f8;
+  --muted: rgba(238, 240, 248, 0.48);
+  --muted2: rgba(238, 240, 248, 0.25);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  background: #0b0d14;
+}
+
+[data-theme="light"] .footer-avatar {
+  background-color: #333; /* fond de secours dans le contexte sombre du footer */
+}
+
+[data-theme="light"] .footer-socials a:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Le champ newsletter du footer doit rester stylé "sombre" (comme dans le
+   thème par défaut), même si la règle générale .newsletter-input plus bas
+   dans ce fichier le passe en clair pour le contexte du blog — la
+   spécificité .site-footer .newsletter-input l'emporte ici. */
+[data-theme="light"] .site-footer .newsletter-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  color: #eef0f8;
+}
+
+[data-theme="light"] .site-footer .newsletter-input::placeholder {
+  color: rgba(238, 240, 248, 0.25);
+}
+
+[data-theme="light"] .modal-close {
+  background: rgba(11, 13, 20, 0.06);
+  border: 0.5px solid rgba(11, 13, 20, 0.1);
+}
+
+[data-theme="light"] .modal-desc code {
+  background: rgba(11, 13, 20, 0.06);
+}
+
+[data-theme="light"] .skeleton-overlay {
+  background: #f7f7fa;
+}
+
+/* .modal-slider reste volontairement sombre (#060810) dans les deux thèmes
+   — c'est le fond du carrousel d'images projet, pas du contenu textuel. */
+
+/* ═══════════════════════════════════════════════════
+   3. BLOG.CSS — sélecteurs codés en dur
+   ═══════════════════════════════════════════════════ */
+
+[data-theme="light"] .blog-page {
+  background: #f7f7fa;
+  color: #0b0d14;
+}
+
+[data-theme="light"] .blog-hero {
+  background-color: #ffffff;
+}
+
+.blog-hero h1 {
+    color:#ffffff;
+}
+
+
+[data-theme="light"] .filters-bar {
+  background: #f7f7fa;
+}
+
+[data-theme="light"] .filter-btn {
+  color: rgba(11, 13, 20, 0.55);
+  border: 0.5px solid rgba(11, 13, 20, 0.12);
+}
+
+[data-theme="light"] .section-label {
+  color: rgba(11, 13, 20, 0.4);
+}
+
+[data-theme="light"] .article-card,
+[data-theme="light"] .social-card {
+  background: #ffffff;
+  border-color: rgba(11, 13, 20, 0.08);
+}
+
+[data-theme="light"] .article-date,
+[data-theme="light"] .article-read,
+[data-theme="light"] .read-link,
+[data-theme="light"] .social-stat,
+[data-theme="light"] .social-view-btn {
+  color: rgba(11, 13, 20, 0.4);
+}
+
+[data-theme="light"] .social-view-btn {
+  border: 0.5px solid rgba(11, 13, 20, 0.1);
+}
+
+[data-theme="light"] .article-excerpt {
+  color: rgba(11, 13, 20, 0.55);
+}
+
+[data-theme="light"] .social-date {
+  color: rgba(11, 13, 20, 0.35);
+}
+
+[data-theme="light"] .social-content {
+  color: rgba(11, 13, 20, 0.8);
+}
+
+[data-theme="light"] .load-more-btn {
+  color: rgba(11, 13, 20, 0.55);
+  border: 0.5px solid rgba(11, 13, 20, 0.14);
+}
+
+[data-theme="light"] .newsletter-band {
+  background: #ffffff;
+  border-color: rgba(245, 197, 24, 0.25);
+}
+
+[data-theme="light"] .newsletter-left p {
+  color: rgba(11, 13, 20, 0.5);
+}
+
+[data-theme="light"] .newsletter-input {
+  background: rgba(11, 13, 20, 0.03);
+  border: 0.5px solid rgba(11, 13, 20, 0.12);
+  color: #0b0d14;
+}
+
+[data-theme="light"] .newsletter-input::placeholder {
+  color: rgba(11, 13, 20, 0.3);
+}
+
+[data-theme="light"] .article-detail-body {
+  color: rgba(11, 13, 20, 0.85);
+}
+
+[data-theme="light"] .article-detail-body h2,
+[data-theme="light"] .article-detail-body h3,
+[data-theme="light"] .article-detail-body h4 {
+  color: #0b0d14;
+}
+
+[data-theme="light"] .article-detail-body blockquote {
+  color: rgba(11, 13, 20, 0.7);
+}
+
+[data-theme="light"] .article-detail-body pre {
+  background: rgba(11, 13, 20, 0.04);
+  border: 0.5px solid rgba(11, 13, 20, 0.08);
+}
+
+[data-theme="light"] #article-notfound p {
+  color: rgba(11, 13, 20, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════
+   4. CONTACT-MODAL.CSS — sélecteurs codés en dur
+   ═══════════════════════════════════════════════════ */
+
+[data-theme="light"] .wa-modal {
+  background: #ffffff;
+  border-color: rgba(11, 13, 20, 0.08);
+}
+
+[data-theme="light"] .wa-modal-close {
+  color: rgba(11, 13, 20, 0.5);
+  border: 0.5px solid rgba(11, 13, 20, 0.1);
+}
+
+[data-theme="light"] .wa-modal-close:hover {
+  color: #0b0d14;
+  border-color: rgba(11, 13, 20, 0.2);
+}
+
+[data-theme="light"] .wa-modal h3 {
+  color: #0b0d14;
+}
+
+[data-theme="light"] .wa-modal-desc {
+  color: rgba(11, 13, 20, 0.55);
+}
+
+[data-theme="light"] .wa-field label {
+  color: rgba(11, 13, 20, 0.45);
+}
+
+[data-theme="light"] .wa-field input,
+[data-theme="light"] .wa-field textarea {
+  background: rgba(11, 13, 20, 0.03);
+  border: 0.5px solid rgba(11, 13, 20, 0.12);
+  color: #0b0d14;
+}
+
+[data-theme="light"] .wa-field input::placeholder,
+[data-theme="light"] .wa-field textarea::placeholder {
+  color: rgba(11, 13, 20, 0.3);
+}

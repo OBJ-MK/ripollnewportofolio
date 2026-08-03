@@ -12,6 +12,7 @@ import { loadPartenaires } from '../components/partenaires.js';
 import { loadTemoignages } from '../components/temoignages.js';
 import { loadArticles, loadArticleDetailSPA, loadPageBlog } from '../components/blog.js';
 import { loadSocialPosts } from '../components/social.js';
+import { loadFooterServices, loadFooterApropo } from '../components/loadFooter.js';
 
 // Liste centralisée de toutes les vues du site — évite d'oublier une vue
 // à masquer à chaque nouvel ajout (mentions légales, politique...).
@@ -76,6 +77,8 @@ export function navigateTo(route, params = {}) {
     loadPageBlog();
     loadArticles();
     loadSocialPosts();
+    loadFooterServices();
+    loadFooterApropo();
     history.pushState({ route: 'blog' }, '', '#blog');
   }
   else if (route === 'article') {

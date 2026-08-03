@@ -41,10 +41,13 @@
   <meta name="twitter:image" content="https://ripolldarcia.netlify.app/assets/image/og-cover.jpg">
 
   <!-- Favicons -->
-  <link rel="icon" type="image/svg+xml" href="assets/image/favicon.svg">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/image/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/image/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/image/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="assets/image/android-chrome-192x192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="assets/image/android-chrome-512x512.png">
+
 
   <!-- Données structurées Schema.org (Person & Organization) -->
   <script type="application/ld+json">
@@ -66,6 +69,8 @@
   <link rel="preload" href="assets/fonts/lexend-v26-latin-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/lexend-v26-latin-800.woff2" as="font" type="font/woff2" crossorigin>
 
+  <script src="script/theme.js"></script> <!-- ← ajouter ici, avant les <link> CSS -->
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/contact-modal.css">
@@ -73,8 +78,8 @@
   <link rel="stylesheet" href="css/telephone.css">
   <link rel="stylesheet" href="css/tablette.css">
   <link rel="stylesheet" href="css/desktop.css">
+  <link rel="stylesheet" href="css/light.css"> <!-- ← ajouter en dernier, après tous les autres CSS -->
   <link rel="stylesheet" href="assets/icons/css/all.min.css">
-
   <!-- Netlify Identity (Si nécessaire) -->
   <!-- <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" id="script-netlify-identity"></script> -->
 </head>
@@ -154,7 +159,7 @@
       <div class="hero-bg">
         <div class="glow glow-gold"></div>
         <div class="glow glow-blue"></div>
-        <svg viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <svg class="herobgsvg" viewBox="0 0 1400 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
           <polygon points="780,0 1080,0 940,190" fill="rgba(245,197,24,0.03)"></polygon>
           <polygon points="1080,0 1400,0 1400,280 1080,140" fill="rgba(245,197,24,0.04)"></polygon>
           <polygon points="1180,180 1400,80 1400,380" fill="rgba(245,197,24,0.025)"></polygon>

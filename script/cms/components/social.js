@@ -29,7 +29,7 @@ export function buildSocialCard(post) {
     <div class="social-card-header">
       <div class="social-platform">
         <div class="platform-icon"><i class="${platform.icon}"></i></div>
-        <span style="color:rgba(238,240,248,0.7)">${platform.label}</span>
+        <span style="color:rgba(61, 62, 62, 0.7)">${platform.label}</span>
       </div>
       <span class="social-date">${dateTexte}</span>
     </div>
