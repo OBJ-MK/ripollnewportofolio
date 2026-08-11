@@ -22,6 +22,8 @@
       ? `<img src="${imgUrl}" alt="${titre}" loading="${index === 0 ? 'eager' : 'lazy'}" style="width:100%;height:100%;object-fit:cover;">`
       : `<div class="article-thumb-bg" style="background:linear-gradient(135deg,#0f1a2e,#1a2a4a)"><i class="fa-solid fa-newspaper"></i></div>`;
     const badge = featured ? `<span class="article-type-badge">À la une</span>` : '';
+    // trier par ordre alphabétique pour un affichage cohérent
+    tags.sort((a, b) => a.localeCompare(b));
     const tagsHtml = tags.map(t => `<span class="article-tag">${escapeHTML(t)}</span>`).join('');
 
     return `<div class="article-card fade-in visible${featured ? ' featured' : ''}"
@@ -56,7 +58,7 @@
     const tagChips = document.getElementById('tag-chips'); // ← ajouter
 
     const showArticles = type === 'all' || type === 'article';
-    const showSocial = type === 'all' || type === 'linkedin' || type === 'instagram' || type === 'twitter';
+    const showSocial = type === 'all' || type === 'linkedin' || type === 'twitter';
 
     const toggleVisibility = (el, show) => {
       if (!el) return;
@@ -134,7 +136,7 @@
     });
   }
 
-  const ARTICLES_ROW2_BATCH = 4;
+  const ARTICLES_ROW2_BATCH = 6;
 
   /* ── Fetch & hydratation : Page blog (en-tête) ─────────────
   * Réintégré depuis l'ancien legacy/cms.js (monolithique), adapté aux
