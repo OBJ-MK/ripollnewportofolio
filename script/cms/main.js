@@ -17,6 +17,8 @@ import { loadArticles, loadArticleDetailSPA } from './components/blog.js';
 import { loadSocialPosts } from './components/social.js';
 import { initWhatsappModal } from './components/contact-modal.js';
 import { initPosteModalListeners } from './modal/poste-modal.js';
+import { initContactForm } from './components/contact.js';
+import { initNewsletterForm } from './components/newsletter.js';
 
 // Expose functions expected by inline HTML handlers
 window.navigateTo = navigateTo;
@@ -30,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initModalListeners();
   initWhatsappModal();
   initPosteModalListeners();
+  initContactForm();
+  initNewsletterForm();
 
   const hash = window.location.hash;
 
