@@ -17,7 +17,7 @@ export function buildBlogArticleCard(article, index, { featured = false } = {}) 
   const tags = articleTags(article);
   const imgUrl = mediaUrl(article[f.image_couverture]?.formats?.medium, { width: 500 })
     || mediaUrl(article[f.image_couverture], { width: 500 });
-  const href = `#article?slug=${slug}`;
+  const href = `/blog/${slug}`;
 
   const thumbContent = imgUrl
     ? `<img src="${imgUrl}" alt="${titre}" loading="${index === 0 ? 'eager' : 'lazy'}" style="width:100%;height:100%;object-fit:cover;">`
@@ -40,8 +40,7 @@ export function buildBlogArticleCard(article, index, { featured = false } = {}) 
         <p class="article-excerpt">${resume}</p>
         <div class="article-footer">
           <div class="article-tags">${tagsHtml}</div>
-          <a href="#article?slug=${slug}" class="read-link" onclick="event.preventDefault(); navigateTo('article', { slug: '${slug}' });">Lire →</a>
-        </div>
+          <a href="/blog/${slug}" class="read-link" onclick="event.preventDefault(); navigateTo('article', { slug: '${slug}' });">Lire →</a>        </div>
       </div>
     </div>`;
 }
@@ -171,10 +170,10 @@ export async function loadPageBlog() {
     // Stats : nombre d'articles en parcourant les articles récupérés (Strapi v5 : collection dans data)
     const { data: articles } = await fetchJSON('/api/blog-articles');
     const numArticles = Array.isArray(articles) ? articles.length : 0;
-    const blogStatsArticles = document.getElementById('article-stat-num');  
-    if ( blogStatsArticles) blogStatsArticles.textContent = numArticles;
-    
-    
+    const blogStatsArticles = document.getElementById('article-stat-num');
+    if (blogStatsArticles) blogStatsArticles.textContent = numArticles;
+
+
 
     // Années d'expérience
     const blogStatsExp = document.getElementById('annee-exp-stat-num');
