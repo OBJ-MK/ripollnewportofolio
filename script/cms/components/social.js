@@ -6,6 +6,7 @@ import { fetchJSON, CONFIG } from '../config/config.js';
 import { escapeHTML } from '../utils/format.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
+import { getCached, setCached } from '../utils/cache.js';
 
 export const SOCIAL_PLATFORMS = {
   LinkedIn: { cls: 'linkedin', icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', btn: 'Voir sur LinkedIn ↗' },
@@ -51,11 +52,19 @@ export async function loadSocialPosts() {
 
   async function renderNextPage() {
     try {
-      const { data, meta } = await fetchJSON(
-        `/api/social-posts?pagination[page]=${page}&pagination[pageSize]=${SOCIAL_PAGE_SIZE}`
-      );
+      const cacheKey = `cms:social:page:${page}`;
+      let result = getCached(cacheKey);
+
+      if (!result) {
+        result = await fetchJSON(
+          `/api/social-posts?pagination[page]=${page}&pagination[pageSize]=${SOCIAL_PAGE_SIZE}`
+        );
+        setCached(cacheKey, result);
+      }
+
+      const { data, meta } = result;
       console.log('[CMS] social-posts reçus (page', page, '):', data?.length ?? 0);
-      if (page === 1 && !data?.length) return false; // collection vide → fallback HTML intact
+      if (page === 1 && !data?.length) return false;
 
       const sentinel = wall.querySelector('.lazy-sentinel');
       data.forEach(post => {
