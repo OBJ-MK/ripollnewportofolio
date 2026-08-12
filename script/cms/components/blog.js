@@ -137,8 +137,6 @@ export function buildTagChips(articles) {
   });
 }
 
-const ARTICLES_ROW2_BATCH = 6;
-
 /* ── Fetch & hydratation : Page blog (en-tête) ─────────────
 * Réintégré depuis l'ancien legacy/cms.js (monolithique), adapté aux
 * imports du système en composants — logique inchangée. */
@@ -170,6 +168,14 @@ export async function loadPageBlog() {
       blogHero.style.backgroundImage = `url(${imageUrl})`;
     }
 
+    // Stats : nombre d'articles en parcourant les articles récupérés (Strapi v5 : collection dans data)
+    const { data: articles } = await fetchJSON('/api/blog-articles');
+    const numArticles = Array.isArray(articles) ? articles.length : 0;
+    const blogStatsArticles = document.getElementById('article-stat-num');  
+    if ( blogStatsArticles) blogStatsArticles.textContent = numArticles;
+    
+    
+
     // Années d'expérience
     const blogStatsExp = document.getElementById('annee-exp-stat-num');
     if (blogStatsExp && attrs[f.annne_exp] != null) {
@@ -188,6 +194,9 @@ export async function loadPageBlog() {
   }
 }
 
+const ARTICLES_ROW2_INITIAL = 4; // + 2 en vedette = 6 articles visibles au chargement
+const ARTICLES_ROW2_BATCH = 6;   // révélés à chaque clic sur "Voir plus"
+
 export async function loadArticles() {
   try {
     const cacheKey = 'cms:blog-articles';
@@ -205,6 +214,12 @@ export async function loadArticles() {
     const row2 = document.getElementById('articles-row2');
     const f = CONFIG.FIELDS.blogArticle;
 
+    // Nombre d'articles dans la base
+    const blogStatsCount = document.getElementById('article-stat-num');
+    if (blogStatsCount) {
+      blogStatsCount.textContent = data.length;
+    }
+
     // Tri : date_publication décroissante ; mis_en_avant prioritaire en tête
     const sorted = [...data].sort((a, b) =>
       new Date(b[f.date_publication] || 0) - new Date(a[f.date_publication] || 0));
@@ -221,33 +236,42 @@ export async function loadArticles() {
       attachArticleNavigation(card, article);
     });
 
-    // Rangée secondaire : le reste
+    // Rangée secondaire : le reste, avec bouton "Voir plus"
     if (row2) {
       row2.innerHTML = '';
       const remaining = rest.slice(1);
-      row2.style.display = remaining.length > 1 ? '' : 'none';
+      // Fix : afficher dès qu'il y a AU MOINS 1 article restant (pas > 1)
+      row2.style.display = remaining.length > 0 ? '' : 'none';
 
-      let cursor = 0;
-      function renderNextBatch() {
-        const slice = remaining.slice(cursor, cursor + ARTICLES_ROW2_BATCH);
-        const sentinel = row2.querySelector('.lazy-sentinel');
-        slice.forEach((article, i) => {
-          const tmp = document.createElement('div');
-          tmp.innerHTML = buildBlogArticleCard(article, i);
-          const card = tmp.firstElementChild;
-          row2.insertBefore(card, sentinel);
-          attachArticleNavigation(card, article);
-        });
-        cursor += slice.length;
-        return cursor < remaining.length;
+      if (remaining.length > 0) {
+        let cursor = 0;
+
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'filter-btn';
+        moreBtn.style.cssText = 'grid-column:1 / -1;justify-self:center;margin-top:16px;';
+        moreBtn.textContent = "Voir plus d'articles";
+        row2.appendChild(moreBtn);
+
+        function renderNextBatch(count) {
+          const slice = remaining.slice(cursor, cursor + count);
+          slice.forEach((article, i) => {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = buildBlogArticleCard(article, i);
+            const card = tmp.firstElementChild;
+            row2.insertBefore(card, moreBtn); // toujours avant le bouton
+            attachArticleNavigation(card, article);
+          });
+          cursor += slice.length;
+          const hasMore = cursor < remaining.length;
+          moreBtn.style.display = hasMore ? '' : 'none';
+        }
+
+        renderNextBatch(ARTICLES_ROW2_INITIAL);
+        moreBtn.addEventListener('click', () => renderNextBatch(ARTICLES_ROW2_BATCH));
       }
-
-      const hasMore = renderNextBatch();
-      if (hasMore) watchSentinel(ensureSentinel(row2), renderNextBatch);
     }
 
     buildTagChips(sorted);
-    // Le carrousel mobile (caroussel.js) se réinitialise sur resize
     window.dispatchEvent(new Event('resize'));
   } catch (e) {
     console.error('[CMS] blog-articles:', e.message);

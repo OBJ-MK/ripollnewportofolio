@@ -27,10 +27,11 @@ export function buildProjetCard(proj, index) {
     : `<svg ...>...</svg>`;
 
   // Logo rond — petit, 80px suffit largement
+  // Logo rond (optionnel)
+  const logoField = attrs[f.logo];
   const logoSrc = logoField
-    ? (mediaUrl(logoField.formats?.thumbnail, { width: 100 }) || mediaUrl(logoField, { width: 100 }))
+    ? (mediaUrl(logoField.formats?.thumbnail, { width: 80 }) || mediaUrl(logoField, { width: 80 }))
     : null;
-
   const logoHtml = logoSrc
     ? `<div class="project-logo"><img src="${logoSrc}" alt="${titre}" loading="lazy"></div>`
     : '';

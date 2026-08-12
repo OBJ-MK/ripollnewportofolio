@@ -592,13 +592,14 @@
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     gap: 16px;
-    padding: 0 24px 20px;
+    padding: 0 24px 0px;
     margin: 0 -24px;
     grid-template-columns: unset !important;
   }
 
   .articles-row {
     margin-bottom: -25px;
+    margin-top: 1.5rem;
   }
 
   .articles-featured::-webkit-scrollbar,
