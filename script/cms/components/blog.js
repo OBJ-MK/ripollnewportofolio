@@ -274,7 +274,7 @@ export async function loadArticles() {
     window.dispatchEvent(new Event('resize'));
   } catch (e) {
     console.error('[CMS] blog-articles:', e.message);
-  } finally { hideSkeleton('skeleton-view-article') }
+  } finally { hideSkeleton('skeleton-view-blog') }
 }
 
 export async function loadArticleDetailSPA(slug) {
@@ -361,6 +361,8 @@ export async function loadArticleDetailSPA(slug) {
 
   } catch (e) {
     console.error('[CMS] Erreur lors du rendu du détail de l\'article :', e);
+  } finally {
+    hideSkeleton('skeleton-view-article');           // ← ligne ajoutée
   }
 }
 
