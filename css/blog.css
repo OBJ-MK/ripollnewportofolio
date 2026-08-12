@@ -822,3 +822,11 @@
   border: 1px solid;
   cursor: pointer;
 }
+
+#article-contenu img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 24px 0;
+  display: block;
+}
