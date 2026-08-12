@@ -1,8 +1,7 @@
 # Fichier de configuration pour Netlify
 
 [build]
-  # Commande à exécuter lors du déploiement
-  command = "npm run build"
+
   # Le dossier à publier une fois la commande terminée
   publish = "."
 
