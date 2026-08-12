@@ -228,20 +228,21 @@ body {
 }
 
 .btn-ghost {
-  background: transparent;
-  border: 0.5px solid var(--border-hover);
-  color: var(--text);
-  padding: 7px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-family: var(--font-body);
-  cursor: pointer;
-  transition: all 0.2s;
+    background: var(--accent);
+    border: 0.5px solid var(--accent-hover);
+    color: var(--bg);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .btn-ghost:hover {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--accent-hover);
   background: rgba(255, 255, 255, 0.04);
+  color: var(--accent-hover);
 }
 
 .btn-accent {
