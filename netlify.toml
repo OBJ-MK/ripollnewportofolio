@@ -1,0 +1,20 @@
+# Fichier de configuration pour Netlify
+
+[build]
+  # Commande à exécuter lors du déploiement
+  command = "npm run build"
+  # Le dossier à publier une fois la commande terminée
+  publish = "."
+
+# Redirection du sous-domaine netlify.app vers le domaine primaire
+[[redirects]]
+  from = "https://ripolldarcia.netlify.app/*"
+  to = "https://ripolldarcia.com/:splat"
+  status = 301
+  force = true
+
+# Fallback SPA : toute route inconnue renvoie index.html (nécessaire pour /blog/:slug, /mentions-legales, etc.)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
