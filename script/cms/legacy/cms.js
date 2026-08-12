@@ -4,7 +4,7 @@
  */
 
 const CONFIG = {
-  STRAPI_URL: 'https://ripolldarcia-backend.onrender.com',
+  STRAPI_URL: 'https://api.ripolldarcia.com',
   FIELDS: {
     hero: {
       Entete: 'Entete',           // remappé : était Titre — le schéma l'appelle Entete (richtext)

@@ -4,7 +4,7 @@
  */
 
 export const CONFIG = {
-  STRAPI_URL: 'https://ripolldarcia-backend.onrender.com',
+  STRAPI_URL: 'https://api.ripolldarcia.com',
   WHATSAPP_NUMBER: '242 06 786 9231',
   FIELDS: {
     hero: {

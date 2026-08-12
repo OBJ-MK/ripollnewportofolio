@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Two-repo project: a **static frontend** (`ripollnewdesign/`) deployed on Netlify, and a **Strapi v5 backend** (`ripolldarcia-backend/`) deployed on Railway with a Neon PostgreSQL database.
 
-- Frontend URL: `https://ripolldarcia.netlify.app`
-- Backend API: `https://ripolldarcia-backend.onrender.com`
-- Backend admin: `https://ripolldarcia-backend.onrender.com/admin`
+- Frontend URL: `https://ripolldarcia.com`
+- Backend API: `https://api.ripolldarcia.com`
+- Backend admin: `https://api.ripolldarcia.com/admin`
 
 There is **no build step** on the frontend. Edit files and open `index.html` directly in a browser, or serve the folder with any static server (e.g. `npx serve .` from `ripollnewdesign/`).
 

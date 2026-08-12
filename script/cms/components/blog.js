@@ -273,7 +273,7 @@
       const f = CONFIG?.FIELDS?.blogArticle || {};
 
       // 1. Récupération dynamique de toutes les clés d'attributs
-      const titre = attr[f.titre] || attr.titre || attr.title || attr.name || 'Article sans titre';
+      const titre = attr[f.titre] || attr.titre || attr.Titre || attr.name || 'Article sans titre';
       const contenu = attr[f.contenu] || attr.contenu || attr.content || '';
       const dateRaw = attr[f.date_publication] || attr.date_publication || attr.publishedAt;
       const date = dateRaw ? new Date(dateRaw).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
