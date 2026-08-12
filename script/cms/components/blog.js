@@ -15,8 +15,8 @@ export function buildBlogArticleCard(article, index, { featured = false } = {}) 
   const slug = encodeURIComponent(article[f.slug] || '');
   const date = formatDateFR(article[f.date_publication]);
   const tags = articleTags(article);
-  const imgUrl = mediaUrl(article[f.image_couverture]?.formats?.medium)
-    || mediaUrl(article[f.image_couverture]);
+  const imgUrl = mediaUrl(article[f.image_couverture]?.formats?.medium, { width: 500 })
+    || mediaUrl(article[f.image_couverture], { width: 500 });
   const href = `#article?slug=${slug}`;
 
   const thumbContent = imgUrl
@@ -289,14 +289,8 @@ export async function loadArticleDetailSPA(slug) {
     const tags = attr[f.tags] || attr.tags || [];
 
     // Image de couverture
-    const coverData = attr.image_couverture;
-    let coverUrl = '';
-    if (coverData) {
-      coverUrl = coverData.url
-        || coverData.data?.attributes?.url
-        || (Array.isArray(coverData) && coverData[0]?.url)
-        || '';
-    }
+    const coverField = attr.image_couverture;
+    const coverUrl = mediaUrl(Array.isArray(coverField) ? coverField[0] : coverField, { width: 900 });
     if (coverUrl && coverUrl.startsWith('/')) {
       coverUrl = (CONFIG?.API_URL || '') + coverUrl;
     }

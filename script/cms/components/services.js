@@ -15,7 +15,7 @@ export function buildServiceCard(s, index) {
   const descHtml = Array.isArray(desc) ? blocksToHTML(desc) : (desc ? `<p>${desc}</p>` : '');
   const imgField = s[f.Image];
   const imgSrc = imgField
-    ? (mediaUrl(imgField.formats?.small) || mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+    ? (mediaUrl(imgField.formats?.small, { width: 100 }) || mediaUrl(imgField.formats?.thumbnail, { width: 100 }) || mediaUrl(imgField, { width: 100 }))
     : null;
   const iconHtml = imgSrc
     ? `<div class="service-icon"><img src="${imgSrc}" alt="${titre}" loading="lazy"></div>`
@@ -28,7 +28,7 @@ export function buildServiceCard(s, index) {
     }).filter(Boolean).join('')}</div>`
     : '';
 
-    const lien = titre.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  const lien = titre.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
 
   return `<div id="${lien}" class="service-card fade-in visible" style="transition-delay:${index * 0.1}s">
     ${iconHtml}

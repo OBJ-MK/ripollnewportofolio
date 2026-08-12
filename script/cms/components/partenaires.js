@@ -13,7 +13,7 @@ export function buildPartenaireCard(partenaire, index) {
   const desc = attrs[f.Description] || '';
   const imgField = attrs[f.Image];
   const imgSrc = imgField
-    ? (mediaUrl(imgField.formats?.thumbnail) || mediaUrl(imgField))
+    ? (mediaUrl(imgField.formats?.thumbnail, { width: 100 }) || mediaUrl(imgField, { width: 100 }))
     : null;
   const iconHtml = imgSrc
     ? `<div class="service-icon has-image"><img src="${imgSrc}" alt="${nom}" loading="lazy"></div>`

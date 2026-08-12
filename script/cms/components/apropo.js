@@ -53,14 +53,18 @@ export async function loadApropo() {
     }
 
     // Photo : Strapi v5 media plat { url, ... }
-    const photoUrl = mediaUrl(attrs[f.Photo]);
+    const photoUrl = mediaUrl(attrs[f.Photo], { width: 400 });
     if (photoUrl) {
       const avatar = document.querySelector('.avatar-placeholder');
       if (avatar) {
         const img = document.createElement('img');
         const footerPhoto = document.getElementById('footer-photo');
-        if (footerPhoto) footerPhoto.src = photoUrl;
+        if (footerPhoto) {
+          footerPhoto.src = mediaUrl(attrs[f.Photo], { width: 80 }); // footer = petit avatar
+          footerPhoto.loading = 'lazy';
+        }
         img.src = photoUrl;
+        img.loading = 'lazy'; // section "À propos" est loin sous le hero
         img.alt = 'Photo de profil';
         img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
         avatar.replaceWith(img);

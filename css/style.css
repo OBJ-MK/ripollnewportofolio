@@ -2562,3 +2562,62 @@ body {
   overflow: hidden;
 }
 
+/* css/outils-dynamic.css
+ * Role: micro-interactions pour la section Outils — hover plus marqué +
+ * apparition en cascade au scroll. Tout est basé sur transform/opacity
+ * (accéléré GPU), l'IntersectionObserver ne tourne qu'une fois par carte
+ * puis se déconnecte : aucun coût en continu.
+ */
+
+/* ─── Survol des cartes outil : plus marqué que l'actuel ─── */
+.tool-item {
+  position: relative;
+}
+
+.tool-item:hover {
+  border-color: rgba(245, 197, 24, 0.35);
+  background: var(--surface2);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(245, 197, 24, 0.1);
+}
+
+.tool-icon {
+  transition: transform 0.25s ease;
+}
+
+.tool-item:hover .tool-icon {
+  transform: scale(1.1);
+}
+
+.tool-item:hover .tool-name {
+  color: var(--text);
+}
+
+.tool-name {
+  transition: color 0.25s ease;
+}
+
+/* ─── Apparition en cascade au scroll ───────────────────────
+ * Chaque .tool-item démarre invisible (classe fade-in seule), et reçoit
+ * .visible via JS (voir outils.js) quand la grille entre dans l'écran.
+ * Le délai progressif est posé en JS via transitionDelay inline, propre
+ * à chaque carte selon son index. */
+.tool-item.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s ease,
+  background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.tool-item.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-item.fade-in {
+    opacity: 1;
+    transform: none;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+}

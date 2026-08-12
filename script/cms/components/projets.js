@@ -20,15 +20,17 @@ export function buildProjetCard(proj, index) {
     .map(s => `<span class="stack-badge">${s.nom || s.name || s}</span>`).join('');
   // Couverture : 1re image de Image[] (Multiple Media)
   const imageArr = Array.isArray(attrs[f.Image]) ? attrs[f.Image] : [];
-  const firstImgUrl = mediaUrl(imageArr[0] || null);
+  // Fix : eager seulement pour la 1re carte, comme dans blog.js
+  const firstImgUrl = mediaUrl(imageArr[0] || null, { width: 500 });
   const thumbContent = firstImgUrl
-    ? `<img src="${firstImgUrl}" alt="${titre}" loading="eager" style="width:100%;height:100%;object-fit:cover;">`
-    : `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><rect width="300" height="180" fill="rgba(245,197,24,0.03)"/><text x="150" y="100" text-anchor="middle" fill="rgba(245,197,24,0.3)" font-size="14">${titre}</text></svg>`;
-  // Logo rond (optionnel)
-  const logoField = attrs[f.logo];
+    ? `<img src="${firstImgUrl}" alt="${titre}" loading="${index === 0 ? 'eager' : 'lazy'}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<svg ...>...</svg>`;
+
+  // Logo rond — petit, 80px suffit largement
   const logoSrc = logoField
-    ? (mediaUrl(logoField.formats?.thumbnail) || mediaUrl(logoField))
+    ? (mediaUrl(logoField.formats?.thumbnail, { width: 100 }) || mediaUrl(logoField, { width: 100 }))
     : null;
+
   const logoHtml = logoSrc
     ? `<div class="project-logo"><img src="${logoSrc}" alt="${titre}" loading="lazy"></div>`
     : '';
@@ -142,7 +144,7 @@ export async function loadProjets() {
     if (track) {
       const items = data.map(proj => {
         const lf = proj[f.logo];
-        const src = lf ? (mediaUrl(lf.formats?.thumbnail) || mediaUrl(lf)) : null;
+        const src = lf ? (mediaUrl(lf.formats?.thumbnail, { width: 120 }) || mediaUrl(lf, { width: 120 })) : null;
         const titre = (proj[f.Titre] || '').trim();
         const imgHtml = src ? `<img src="${src}" alt="" loading="lazy">` : '';
         const hasLogo = src ? ' has-logo' : '';
