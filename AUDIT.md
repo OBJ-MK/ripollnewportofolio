@@ -257,7 +257,7 @@ Gravité : **Faible** — fonctionnel, commentaires à corriger.
 Gravité : N/A ✅
 
 **[B-CONF-03] CORS config**  
-`config/middlewares.js:26-34` → Origines autorisées : `https://ripolldarcia.netlify.app`, `localhost:3000`, `localhost:5173`, `localhost:1337`. Cohérent.  
+`config/middlewares.js:26-34` → Origines autorisées : `https://ripolldarcia.com`, `localhost:3000`, `localhost:5173`, `localhost:1337`. Cohérent.  
 ⚠ Le wildcard `*` n'est PAS utilisé — bien.  
 Gravité : N/A ✅
 
