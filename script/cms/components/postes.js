@@ -49,7 +49,7 @@ function attachPosteModal(card, poste) {
   if (applyBtn) {
     applyBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      openCvModal();
+      openCvModal(poste);
     });
   }
 
@@ -68,7 +68,7 @@ function attachPosteModal(card, poste) {
 
 export async function loadPostes() {
   try {
-    const { data } = await fetchJSON('/api/postes');
+    const { data } = await fetchJSON('/api/postes?sort=order:asc&populate=cv_specifique');
     console.log('[CMS] postes reçus:', data?.length ?? 0);
     if (!data?.length) return;
     const container = document.getElementById('postes-container');
@@ -83,7 +83,7 @@ export async function loadPostes() {
       attachPosteModal(card, poste);
     });
 
-    revealGrid('#postes-container', ':scope > .poste-card'); 
+    revealGrid('#postes-container', ':scope > .poste-card');
   } catch (e) {
     console.error('[CMS] postes:', e.message);
   } finally { hideSkeleton('skeleton-postes') }
