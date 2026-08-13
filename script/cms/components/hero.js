@@ -4,6 +4,7 @@
 
 import { fetchJSON, CONFIG } from '../config/config.js';
 import { hydrate, hideSkeleton } from '../utils/dom-helpers.js';
+import { playHeroEntrance, animateCounters } from '../utils/animations.js';
 
 export async function loadHero() {
   try {
@@ -33,6 +34,8 @@ export async function loadHero() {
     if (attrs[f.statExperience] != null) hydrate('hero.statExperience', attrs[f.statExperience] + ' ans');
     if (attrs[f.statSatisfaction] != null) hydrate('hero.statSatisfaction', String(attrs[f.statSatisfaction]) + '%');
     hideSkeleton('skeleton-hero');
+    playHeroEntrance();
+    animateCounters('.hero-stats');
   } catch (e) {
     console.error('[CMS] hero:', e.message);
   } finally {

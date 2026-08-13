@@ -8,6 +8,8 @@ import { escapeHTML } from '../utils/format.js';
 import { mediaUrl, formatDateFR, articleTags } from '../utils/media.js';
 import { getCached, setCached } from '../utils/cache.js';
 
+import { revealGrid, animateCounters, refreshScrollTrigger, fadeInView } from '../utils/animations.js';
+
 export function buildBlogArticleCard(article, index, { featured = false } = {}) {
   const f = CONFIG.FIELDS.blogArticle;
   const titre = escapeHTML(article[f.Titre] || '');
@@ -187,6 +189,7 @@ export async function loadPageBlog() {
       blogStatsAbonnes.textContent = parseInt(attrs[f.abonner_reseaux], 10);
     }
 
+     animateCounters('.blog-stats');
   } catch (e) {
     // 404 attendu tant que le single type n'est pas publié — fallback HTML conservé
     console.error('[CMS] page-blog:', e.message);
@@ -235,6 +238,8 @@ export async function loadArticles() {
       attachArticleNavigation(card, article);
     });
 
+    revealGrid('#section-articles', ':scope > .article-card');
+
     // Rangée secondaire : le reste, avec bouton "Voir plus"
     if (row2) {
       row2.innerHTML = '';
@@ -261,6 +266,12 @@ export async function loadArticles() {
             attachArticleNavigation(card, article);
           });
           cursor += slice.length;
+
+          revealGrid('#articles-row2', ':scope > .article-card:not([data-revealed])');   // ← ajouter
+          row2.querySelectorAll('.article-card').forEach(c => c.setAttribute('data-revealed', ''));  // ← ajouter
+          refreshScrollTrigger();   // ← ajouter
+
+
           const hasMore = cursor < remaining.length;
           moreBtn.style.display = hasMore ? '' : 'none';
         }
@@ -357,7 +368,10 @@ export async function loadArticleDetailSPA(slug) {
 
     // 4. Affichage de la vue
     if (elNotFound) elNotFound.hidden = true;
-    if (elArticle) elArticle.hidden = false;
+    if (elArticle) {
+      elArticle.hidden = false;
+      fadeInView(elArticle);   // ← ajouté : fondu d'entrée du détail d'article
+    }
 
   } catch (e) {
     console.error('[CMS] Erreur lors du rendu du détail de l\'article :', e);

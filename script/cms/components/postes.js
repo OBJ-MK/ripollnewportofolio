@@ -7,6 +7,9 @@ import { hideSkeleton } from '../utils/dom-helpers.js';
 import { openPosteModal } from '../modal/poste-modal.js';
 import { openCvModal } from '../modal/cv-modal.js';
 
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+
+
 export function buildPosteCard(poste, index) {
   const f = CONFIG.FIELDS.poste;
   const attrs = poste;
@@ -79,6 +82,8 @@ export async function loadPostes() {
       container.appendChild(card);
       attachPosteModal(card, poste);
     });
+
+    revealGrid('#postes-container', ':scope > .poste-card'); 
   } catch (e) {
     console.error('[CMS] postes:', e.message);
   } finally { hideSkeleton('skeleton-postes') }

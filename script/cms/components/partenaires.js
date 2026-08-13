@@ -6,6 +6,8 @@ import { fetchJSON, CONFIG } from '../config/config.js';
 import { mediaUrl } from '../utils/media.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+
 export function buildPartenaireCard(partenaire, index) {
   const f = CONFIG.FIELDS.partenaire;
   const attrs = partenaire;
@@ -40,6 +42,8 @@ export async function loadPartenaires() {
       tmp.innerHTML = buildPartenaireCard(partenaire, i);
       container.appendChild(tmp.firstElementChild);
     });
+
+    revealGrid('#partenaires-container', ':scope > .partenaires-card');   // ← ajouter
   } catch (e) {
     console.error('[CMS] partenaires:', e.message);
   } finally { hideSkeleton('skeleton-partenaires') }

@@ -6,6 +6,8 @@ import { fetchJSON, CONFIG } from '../config/config.js';
 import { mediaUrl } from '../utils/media.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+
 export function buildTemoignageCard(t, index) {
   const f = CONFIG.FIELDS.temoignage;
   const citation = t[f.Citation] || '';
@@ -53,6 +55,8 @@ export async function loadTemoignages() {
       tmp.innerHTML = buildTemoignageCard(t, i);
       grid.appendChild(tmp.firstElementChild);
     });
+
+    revealGrid('#temoignages .testimonial-grid', ':scope > .testimonial-card');   // ← ajouter
   } catch (e) {
     console.error('[CMS] temoignages:', e.message);
   } finally { hideSkeleton('skeleton-temoignages') }

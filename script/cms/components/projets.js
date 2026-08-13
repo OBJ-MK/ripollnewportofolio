@@ -8,6 +8,11 @@ import { hideSkeleton } from '../utils/dom-helpers.js';
 import { mediaUrl, buildImageSlides } from '../utils/media.js';
 import { openProjetModal, initModalSlider, closeProjetModal } from '../modal/projet-modal.js';
 
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+// ... juste après avoir inséré toutes les cartes dans le DOM :
+revealGrid('.mon-conteneur', ':scope > .ma-carte');
+refreshScrollTrigger();
+
 export function buildProjetCard(proj, index) {
   const f = CONFIG.FIELDS.projet;
   // Strapi v5 : champs plats
@@ -134,6 +139,11 @@ export async function loadProjets() {
         attachCardModal(newCard, proj);
       });
       cursor += slice.length;
+
+      revealGrid('#projets-container', ':scope > .project-card:not([data-revealed])');   // ← ajouter
+      container.querySelectorAll('.project-card').forEach(c => c.setAttribute('data-revealed', ''));  // ← ajouter
+      refreshScrollTrigger();   // ← ajouter
+
       return cursor < data.length;
     }
 

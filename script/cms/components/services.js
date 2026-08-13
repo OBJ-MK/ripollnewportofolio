@@ -8,6 +8,8 @@ import { mediaUrl } from '../utils/media.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+
 export function buildServiceCard(s, index) {
   const f = CONFIG.FIELDS.service;
   const titre = s[f.Titre] || '';
@@ -70,6 +72,11 @@ export async function loadServices() {
         grid.insertBefore(tmp.firstElementChild, sentinel);
       });
       cursor += slice.length;
+
+      revealGrid('.services-grid', ':scope > .service-card:not([data-revealed])');   // ← ajouter
+      grid.querySelectorAll('.service-card').forEach(c => c.setAttribute('data-revealed', ''));  // ← marque comme traité
+      refreshScrollTrigger();   // ← ajouter
+
       return cursor < data.length;
     }
 
@@ -77,7 +84,6 @@ export async function loadServices() {
 
     const hasMore = renderNextBatch();
     if (hasMore) watchSentinel(ensureSentinel(grid), renderNextBatch);
-
   } catch (e) {
     console.error('[CMS] services:', e.message);
   } finally { hideSkeleton('skeleton-services') }

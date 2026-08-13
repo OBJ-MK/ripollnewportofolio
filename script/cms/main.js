@@ -10,6 +10,7 @@ import { initPosteModalListeners } from './modal/poste-modal.js';
 import { initContactForm } from './components/contact.js';
 import { initNewsletterForm } from './components/newsletter.js';
 import { initCvModalListeners } from './modal/cv-modal.js';
+import { initGSAP } from './utils/animations.js';
 
 
 // Expose functions expected by inline HTML handlers
@@ -20,6 +21,7 @@ window.closeProjetModal = closeProjetModal;
 
 // Initialize once DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  initGSAP(); // doit tourner avant tout composant qui utilise gsap/ScrollTrigger
   initModalListeners();
   initWhatsappModal();
   initPosteModalListeners();

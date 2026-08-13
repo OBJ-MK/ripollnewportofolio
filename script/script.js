@@ -1,15 +1,6 @@
-// ─── FADE-IN ON SCROLL ───
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.12 });
-
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
 // ─── SIDEBAR MOBILE ───
+// (L'ancien observer ".fade-in" a été retiré : la révélation au scroll
+// passe désormais par le système GSAP centralisé, voir utils/animations.js)
 const sidebar = document.querySelector('.side');
 const hamburgerBtn = document.querySelector('.logo > div:first-child');
 const closeTrigger = document.querySelector('.sideDroite');

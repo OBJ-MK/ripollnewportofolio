@@ -7,6 +7,8 @@ import { escapeHTML } from '../utils/format.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 import { getCached, setCached } from '../utils/cache.js';
+import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';   // ← ajouter
+
 
 export const SOCIAL_PLATFORMS = {
   LinkedIn: { cls: 'linkedin', icon: 'fa-brands fa-linkedin-in', label: 'LinkedIn', btn: 'Voir sur LinkedIn ↗' },
@@ -73,6 +75,10 @@ export async function loadSocialPosts() {
         wall.insertBefore(tmp.firstElementChild, sentinel);
       });
       window.dispatchEvent(new Event('resize'));
+
+      revealGrid('#section-social', ':scope > .social-card:not([data-revealed])');   // ← ajouter
+      wall.querySelectorAll('.social-card').forEach(c => c.setAttribute('data-revealed', ''));  // ← ajouter
+      refreshScrollTrigger();   // ← ajouter
 
       const hasMore = meta?.pagination && page < meta.pagination.pageCount;
       page += 1;
