@@ -55,7 +55,7 @@ export function playHeroEntrance() {
   if (targets.badge) tl.from(targets.badge, { opacity: 0, y: 16, duration: 0.65 });
   if (targets.title) tl.from(targets.title, { opacity: 0, y: 24, duration: 0.75 }, '-=0.25');
   if (targets.desc) tl.from(targets.desc, { opacity: 0, y: 18, duration: 0.65 }, '-=0.35');
-  if (targets.btns) tl.from(targets.btns.children, { opacity: 0, y: 14, duration: 0.65, stagger: 0.08 }, '-=0.3');
+  if (targets.btns) tl.from(targets.btns.children, { opacity: 1, y: 14, duration: 0.65, stagger: 0.08 }, '-=0.3');
   if (targets.stats) tl.from(targets.stats.children, { opacity: 0, y: 14, duration: 0.65, stagger: 0.08 }, '-=0.3');
   if (targets.card) tl.from(targets.card, { opacity: 0, x: 30, duration: 0.85 }, '-=0.6');
 }
