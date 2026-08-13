@@ -140,17 +140,37 @@ export async function loadProjets() {
     const hasMore = renderNextBatch(); // 1er lot visible immédiatement
     if (hasMore) watchSentinel(ensureSentinel(container), renderNextBatch);
 
-    // Bande « Ils m'ont fait confiance » — inchangé, utilise déjà `data` complet
+    // Bande « Ils m'ont fait confiance » — fusionne les logos des projets
+    // ET les logos indépendants ajoutés via le content-type logo-partenaire
+    // (permet d'ajouter une marque sans créer un projet complet).
     const track = document.querySelector('#temoignages .partners-track');
     if (track) {
-      const items = data.map(proj => {
+      const projectItems = data.map(proj => {
         const lf = proj[f.logo];
         const src = lf ? (mediaUrl(lf.formats?.thumbnail, { width: 120 }) || mediaUrl(lf, { width: 120 })) : null;
         const titre = (proj[f.Titre] || '').trim();
         const imgHtml = src ? `<img src="${src}" alt="" loading="lazy">` : '';
         const hasLogo = src ? ' has-logo' : '';
-        return `<div class="partner-logo${hasLogo}">${imgHtml}${titre}</div>`;
-      });
+        return { src, html: `<div class="partner-logo${hasLogo}">${imgHtml}${titre}</div>` };
+      }).filter(item => item.src); // on ignore les projets sans logo dans la bande
+
+      let logoPartenaireItems = [];
+      try {
+        const lp = CONFIG.FIELDS.logoPartenaire;
+        const { data: logos } = await fetchJSON('/api/logo-partenaires?populate[logo]=true&sort=ordre:asc');
+        logoPartenaireItems = (logos || []).map(item => {
+          const lf = item[lp.logo];
+          const src = lf ? (mediaUrl(lf.formats?.thumbnail, { width: 120 }) || mediaUrl(lf, { width: 120 })) : null;
+          const nom = (item[lp.nom] || '').trim();
+          const imgHtml = src ? `<img src="${src}" alt="${nom}" loading="lazy">` : '';
+          const hasLogo = src ? ' has-logo' : '';
+          return { src, html: `<div class="partner-logo${hasLogo}">${imgHtml}${nom}</div>` };
+        }).filter(item => item.src);
+      } catch (e) {
+        console.error('[CMS] logo-partenaires:', e.message);
+      }
+
+      const items = [...projectItems, ...logoPartenaireItems].map(item => item.html);
       track.innerHTML = [...items, ...items, ...items].join('');
     }
   } catch (e) {

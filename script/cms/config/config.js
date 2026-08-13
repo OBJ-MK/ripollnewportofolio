@@ -55,6 +55,11 @@ export const CONFIG = {
     blogTag: {
       nom: 'nom',
     },
+    logoPartenaire: {
+      nom: 'nom',
+      logo: 'logo',
+      ordre: 'ordre',
+    },
     pageBlog: {
       titre_principal: 'titre_principal',
       sous_titre: 'sous_titre',
