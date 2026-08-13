@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Sitemap: https://ripolldarcia.netlify.app/sitemap.xml
+
+Sitemap: https://ripolldarcia.com/sitemap.xml

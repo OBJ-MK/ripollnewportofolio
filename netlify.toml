@@ -12,6 +12,12 @@
   status = 301
   force = true
 
+# Sitemap dynamique généré via Netlify Function (doit être AVANT le fallback SPA ci-dessous)
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+
 # Fallback SPA : toute route inconnue renvoie index.html (nécessaire pour /blog/:slug, /mentions-legales, etc.)
 [[redirects]]
   from = "/*"
