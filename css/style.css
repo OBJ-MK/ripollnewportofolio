@@ -618,6 +618,10 @@ body {
   margin-bottom: 20px;
 }
 
+.tech-grid .tech-pill:last-child {
+  grid-column: 1 / -1;
+}
+
 .tech-pill {
   background: rgba(255, 255, 255, 0.03);
   border: 0.5px solid var(--border);
