@@ -202,15 +202,15 @@
               <div class="stat-lbl">D'expérience</div>
             </div>
             <div>
-              <div class="stat-num" >+10</div>
+              <div class="stat-num">+10</div>
               <div class="stat-lbl">Marques accompagnées</div>
             </div>
             <div>
-              <div class="stat-num" >+15</div>
+              <div class="stat-num">+15</div>
               <div class="stat-lbl">Projets</div>
             </div>
             <div>
-              <div class="stat-num" >+98%</div>
+              <div class="stat-num">+98%</div>
               <div class="stat-lbl">Clients satisfaits</div>
             </div>
           </div>
@@ -858,6 +858,21 @@
           <h1 id="article-titre"></h1>
           <div class="article-cover" id="article-cover" hidden></div>
           <div class="article-detail-body" id="article-contenu"></div>
+          <div class="share-buttons">
+            <button data-share="facebook" aria-label="Partager sur Facebook">Facebook</button>
+            <button data-share="linkedin" aria-label="Partager sur LinkedIn">LinkedIn</button>
+            <button data-share="twitter" aria-label="Partager sur X">X</button>
+            <button data-share="whatsapp" aria-label="Partager sur WhatsApp">WhatsApp</button>
+            <button data-share="copy" aria-label="Copier le lien">Copier le lien</button>
+          </div>
+          <form id="comment-form">
+            <input type="text" name="author_name" placeholder="Nom" required maxlength="100">
+            <input type="email" name="author_email" placeholder="Email (non publié)" required>
+            <textarea name="content" placeholder="Votre commentaire" required maxlength="2000"></textarea>
+            <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+            <button type="submit">Publier</button>
+          </form>
+          <div id="comments-list"></div>
         </article>
 
         <div id="article-notfound" hidden>
@@ -888,11 +903,11 @@
           <p>E-mail : <strong>ripollbis@gmail.com</strong></p>
 
           <h2>2. Hébergeur</h2>
-          <p>Nom : 
-            <ul>
-              <li><strong>Render</strong></li>
-              <li><strong>Netlify</strong></li>
-            </ul>
+          <p>Nom :
+          <ul>
+            <li><strong>Render</strong></li>
+            <li><strong>Netlify</strong></li>
+          </ul>
           </p>
 
           <h2>3. Propriété intellectuelle</h2>

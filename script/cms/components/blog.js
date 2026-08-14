@@ -8,6 +8,7 @@ import { escapeHTML } from '../utils/format.js';
 import { mediaUrl, formatDateFR, articleTags } from '../utils/media.js';
 import { getCached, setCached } from '../utils/cache.js';
 
+import { initShareButtons } from './share.js';
 import { revealGrid, animateCounters, refreshScrollTrigger, fadeInView } from '../utils/animations.js';
 
 export function buildBlogArticleCard(article, index, { featured = false } = {}) {
@@ -189,7 +190,7 @@ export async function loadPageBlog() {
       blogStatsAbonnes.textContent = parseInt(attrs[f.abonner_reseaux], 10);
     }
 
-     animateCounters('.blog-stats');
+    animateCounters('.blog-stats');
   } catch (e) {
     // 404 attendu tant que le single type n'est pas publié — fallback HTML conservé
     console.error('[CMS] page-blog:', e.message);
@@ -365,6 +366,11 @@ export async function loadArticleDetailSPA(slug) {
         elContenu.innerHTML = contenu;
       }
     }
+
+    initShareButtons(document.querySelector('.share-buttons'), {
+      title: article.titre, // adapte au nom réel du champ
+      url: window.location.href
+    });
 
     // 4. Affichage de la vue
     if (elNotFound) elNotFound.hidden = true;
