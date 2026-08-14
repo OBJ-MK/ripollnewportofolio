@@ -1442,7 +1442,15 @@ body {
   scroll-snap-align: start;
 }
 
+@property --testi-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .testimonial-card {
+  position: relative;
+  isolation: isolate;
   background: var(--surface);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-lg);
@@ -1453,6 +1461,41 @@ body {
 .testimonial-card:hover {
   border-color: rgba(245, 197, 24, 0.15);
   transform: translateY(-2px);
+}
+
+/* Bordure en dégradé doré, invisible au repos, qui apparaît et se met à
+ * tourner uniquement au survol (contrairement aux cartes contact où elle
+ * tourne en continu). Repart de 0° à chaque nouveau survol. */
+.testimonial-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--testi-angle),
+    var(--accent) 0deg,
+    var(--accent-hover) 50deg,
+    transparent 130deg,
+    transparent 230deg,
+    var(--accent) 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.testimonial-card:hover::after {
+  opacity: 1;
+  animation: testi-border-spin 3s linear infinite;
+}
+
+@keyframes testi-border-spin {
+  to { --testi-angle: 360deg; }
 }
 
 .testi-stars {
@@ -2140,6 +2183,11 @@ body {
   /* La carte horaires reste fixe, sans glow ni balayage lumineux */
   .hero-card,
   .hero-card::before {
+    animation: none;
+  }
+
+  /* La bordure des témoignages reste visible mais statique au survol */
+  .testimonial-card:hover::after {
     animation: none;
   }
 
