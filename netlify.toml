@@ -5,6 +5,15 @@
   # Le dossier à publier une fois la commande terminée
   publish = "."
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://ripolldarcia.com; font-src 'self'; connect-src 'self' https://api.ripolldarcia.com https://www.clarity.ms https://c.clarity.ms; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
 # Redirection du sous-domaine netlify.app vers le domaine primaire
 [[redirects]]
   from = "https://ripolldarcia.netlify.app/*"
@@ -23,3 +32,4 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
