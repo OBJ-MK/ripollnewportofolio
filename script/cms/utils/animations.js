@@ -71,11 +71,16 @@ export function animateCounters(containerSelector) {
 
   nums.forEach((el) => {
     const raw = el.textContent.trim();
-    const match = raw.match(/^(\d+(?:[.,]\d+)?)/);
+    // Capture un signe optionnel (+ ou -) séparément du nombre, pour ne
+    // jamais le perdre : "+6 ans" échouait avant car le ^\d exigeait que
+    // le texte commence par un chiffre, alors qu'il commence par "+".
+    const match = raw.match(/^([+-]?)(\d+(?:[.,]\d+)?)/);
     if (!match) return; // pas de nombre en tête (ex: texte libre) → on laisse tel quel
-    const targetValue = parseFloat(match[1].replace(',', '.'));
-    const suffix = raw.slice(match[1].length); // "+", " ans", "%", "k"...
-    const decimals = match[1].includes(',') || match[1].includes('.') ? 1 : 0;
+    const prefix = match[1] || '';
+    const numStr = match[2];
+    const targetValue = parseFloat(numStr.replace(',', '.'));
+    const suffix = raw.slice(match[0].length); // " ans", "%", "k"...
+    const decimals = numStr.includes(',') || numStr.includes('.') ? 1 : 0;
 
     if (REDUCED_MOTION || typeof gsap === 'undefined') {
       el.textContent = raw;
@@ -88,7 +93,7 @@ export function animateCounters(containerSelector) {
       duration: 1.55,
       ease: 'power2.out',
       onUpdate: () => {
-        el.textContent = proxy.val.toFixed(decimals) + suffix;
+        el.textContent = prefix + proxy.val.toFixed(decimals) + suffix;
       },
       onComplete: () => {
         el.textContent = raw; // valeur exacte garantie à la fin, pas d'arrondi résiduel
@@ -166,4 +171,3 @@ export function fadeInView(el) {
   if (typeof gsap === 'undefined' || REDUCED_MOTION) return;
   gsap.fromTo(el, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.65, ease: 'power2.out' });
 }
-
