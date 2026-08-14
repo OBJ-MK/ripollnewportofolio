@@ -9,6 +9,8 @@ import { mediaUrl, formatDateFR, articleTags } from '../utils/media.js';
 import { getCached, setCached } from '../utils/cache.js';
 
 import { initShareButtons } from './share.js';
+import { initLikeButton } from './like.js';
+import { loadComments, initCommentForm } from './comments.js';
 import { revealGrid, animateCounters, refreshScrollTrigger, fadeInView } from '../utils/animations.js';
 
 export function buildBlogArticleCard(article, index, { featured = false } = {}) {
@@ -367,10 +369,28 @@ export async function loadArticleDetailSPA(slug) {
       }
     }
 
+    const articleId = article.documentId;
+
     initShareButtons(document.querySelector('.share-buttons'), {
-      title: article.titre, // adapte au nom réel du champ
+      title: titre,
       url: window.location.href
     });
+
+    const elLikeBtn = document.getElementById('article-like-btn');
+    if (elLikeBtn && articleId) {
+      initLikeButton(elLikeBtn, articleId, article.likes || 0);
+    }
+
+    const elCommentsList = document.getElementById('comments-list');
+    const elCommentForm = document.getElementById('comment-form');
+    if (articleId) {
+      if (elCommentsList) loadComments(articleId, elCommentsList);
+      if (elCommentForm) {
+        initCommentForm(elCommentForm, articleId, () => {
+          if (elCommentsList) loadComments(articleId, elCommentsList);
+        });
+      }
+    }
 
     // 4. Affichage de la vue
     if (elNotFound) elNotFound.hidden = true;

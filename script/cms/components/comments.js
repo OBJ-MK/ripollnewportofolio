@@ -1,8 +1,8 @@
-import { STRAPI_URL } from '../../config.js'; // adapte le chemin réel
+import { apiUrl } from '../config/config.js';
 
 export async function loadComments(articleId, container) {
   const res = await fetch(
-    `${STRAPI_URL}/api/comments?filters[blog_article][documentId][$eq]=${articleId}&sort=createdAt:desc`
+    apiUrl(`/api/comments?filters[blog_article][documentId][$eq]=${articleId}&sort=createdAt:desc`)
   );
   const { data } = await res.json();
 
@@ -30,7 +30,7 @@ export function initCommentForm(form, articleId, onSuccess) {
     };
 
     try {
-      const res = await fetch(`${STRAPI_URL}/api/comments`, {
+      const res = await fetch(apiUrl('/api/comments'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data: payload })

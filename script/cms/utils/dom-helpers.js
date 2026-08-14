@@ -48,3 +48,28 @@ export function getFocusables(container) {
     'button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
   )).filter(el => el.offsetParent !== null);
 }
+
+
+let toastTimer = null;
+
+/**
+ * Affiche un petit toast en bas de l'écran (pas de alert()).
+ * Réutilise un seul élément DOM, créé au premier appel.
+ */
+export function showToast(message, duration = 2200) {
+  let toast = document.getElementById('cms-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cms-toast';
+    toast.className = 'cms-toast';
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.classList.add('visible');
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, duration);
+}

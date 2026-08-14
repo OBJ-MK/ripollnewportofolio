@@ -1,6 +1,5 @@
 // script/cms/components/share.js
-
-import { STRAPI_URL } from '../../config.js'; // adapte le chemin réel
+import { showToast } from '../utils/dom-helpers.js';
 
 const SHARE_URLS = {
   facebook: (url) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
@@ -9,7 +8,10 @@ const SHARE_URLS = {
   whatsapp: (url, title) => `https://wa.me/?text=${encodeURIComponent(title + ' - ' + url)}`,
 };
 
-export function initShareButtons(container, { title, url }) {
+export function initShareButtons(originalContainer, { title, url }) {
+  const container = originalContainer.cloneNode(true);
+  originalContainer.replaceWith(container);
+
   const shareUrl = url || window.location.href;
 
   container.querySelectorAll('[data-share]').forEach(btn => {
@@ -17,9 +19,19 @@ export function initShareButtons(container, { title, url }) {
 
     if (network === 'copy') {
       btn.addEventListener('click', async () => {
-        await navigator.clipboard.writeText(shareUrl);
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 2000);
+        if (!navigator.clipboard) {
+          showToast('Copie indisponible sur cette page (nécessite HTTPS).');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          btn.classList.add('copied');
+          showToast('Lien copié !');
+          setTimeout(() => btn.classList.remove('copied'), 2000);
+        } catch (err) {
+          console.error('Erreur copie du lien:', err);
+          showToast('Impossible de copier le lien.');
+        }
       });
       return;
     }

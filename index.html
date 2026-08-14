@@ -858,21 +858,33 @@
           <h1 id="article-titre"></h1>
           <div class="article-cover" id="article-cover" hidden></div>
           <div class="article-detail-body" id="article-contenu"></div>
-          <div class="share-buttons">
-            <button data-share="facebook" aria-label="Partager sur Facebook">Facebook</button>
-            <button data-share="linkedin" aria-label="Partager sur LinkedIn">LinkedIn</button>
-            <button data-share="twitter" aria-label="Partager sur X">X</button>
-            <button data-share="whatsapp" aria-label="Partager sur WhatsApp">WhatsApp</button>
-            <button data-share="copy" aria-label="Copier le lien">Copier le lien</button>
+          <div class="article-actions">
+            <button id="article-like-btn" class="like-btn" aria-label="Aimer cet article">
+              <i class="fa-regular fa-heart"></i>
+              <span class="like-count">0</span>
+            </button>
+            <div class="share-buttons">
+              <button data-share="facebook" aria-label="Partager sur Facebook"><i class="fa-brands fa-facebook-f"></i></button>
+              <button data-share="linkedin" aria-label="Partager sur LinkedIn"><i class="fa-brands fa-linkedin-in"></i></button>
+              <button data-share="twitter" aria-label="Partager sur X"><i class="fa-brands fa-x-twitter"></i></button>
+              <button data-share="whatsapp" aria-label="Partager sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+              <button data-share="copy" aria-label="Copier le lien"><i class="fa-solid fa-link"></i></button>
+            </div>
           </div>
-          <form id="comment-form">
-            <input type="text" name="author_name" placeholder="Nom" required maxlength="100">
-            <input type="email" name="author_email" placeholder="Email (non publié)" required>
-            <textarea name="content" placeholder="Votre commentaire" required maxlength="2000"></textarea>
-            <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
-            <button type="submit">Publier</button>
-          </form>
-          <div id="comments-list"></div>
+
+          <section class="comments-section">
+            <h3 class="comments-title">Commentaires</h3>
+            <form id="comment-form" class="comment-form">
+              <div class="comment-form-row">
+                <input type="text" name="author_name" placeholder="Nom" required maxlength="100">
+                <input type="email" name="author_email" placeholder="Email (non publié)" required>
+              </div>
+              <textarea name="content" placeholder="Votre commentaire" required maxlength="2000"></textarea>
+              <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+              <button type="submit" class="comment-submit-btn">Publier</button>
+            </form>
+            <div id="comments-list" class="comments-list"></div>
+          </section>
         </article>
 
         <div id="article-notfound" hidden>
