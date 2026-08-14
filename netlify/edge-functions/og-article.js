@@ -94,8 +94,22 @@ export default async (request, context) => {
     // Si Strapi ne répond pas, on retombe sur la page normale plus bas
   }
 
-  // On récupère la page de base (index.html via le fallback SPA)
-  const originResponse = await context.next();
+  // Important : les robots de preview (Facebook en tête) envoient souvent un
+  // header "Range" pour ne récupérer qu'un morceau de la page. Si on laisse
+  // passer ce header vers l'origine, celle-ci répond en 206 Partial Content
+  // avec un corps tronqué. On finissait alors par renvoyer un statut 206
+  // incohérent avec un corps HTML complet réécrit -> réponse invalide que
+  // Facebook rejette silencieusement (et retombe sur les tags par défaut).
+  // On retire donc Range/If-Range avant de transmettre la requête.
+  const forwardHeaders = new Headers(request.headers);
+  forwardHeaders.delete('range');
+  forwardHeaders.delete('if-range');
+  const forwardRequest = new Request(request.url, {
+    method: request.method,
+    headers: forwardHeaders,
+  });
+
+  const originResponse = await context.next(forwardRequest);
 
   if (!article) return originResponse;
 
@@ -116,10 +130,16 @@ export default async (request, context) => {
 
   const headers = new Headers(originResponse.headers);
   headers.set('content-type', 'text/html; charset=utf-8');
-  headers.delete('content-length'); // la taille du body a changé
+  headers.delete('content-length');   // la taille du body a changé
+  headers.delete('content-range');    // on renvoie toujours le document complet
+  headers.delete('accept-ranges');
+  // Cette réponse est spécifique au User-Agent (bot) : on interdit toute
+  // mise en cache partagée pour éviter qu'un vrai visiteur ne la reçoive.
+  headers.set('cache-control', 'private, no-store');
+  headers.set('vary', 'User-Agent');
 
   return new Response(rewritten, {
-    status: originResponse.status,
+    status: 200, // toujours un document complet, jamais un 206
     headers,
   });
 };
