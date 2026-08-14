@@ -9,17 +9,12 @@ function setLikedIcon(btn, liked) {
 }
 
 export function initLikeButton(originalBtn, articleId, currentLikes) {
-  // Clone le bouton pour repartir sans aucun ancien écouteur "click"
   const btn = originalBtn.cloneNode(true);
   originalBtn.replaceWith(btn);
 
   const likedKey = `cms:liked:${articleId}`;
   const alreadyLiked = !!localStorage.getItem(likedKey);
 
-  // Réinitialisation explicite de l'état pour CET article précis.
-  // Important : cloneNode(true) recopie aussi l'attribut "disabled",
-  // donc sans ce reset, un like sur l'article A laissait le bouton
-  // désactivé pour tous les articles suivants (B, C, ...).
   btn.disabled = alreadyLiked;
   btn.classList.toggle('liked', alreadyLiked);
   setLikedIcon(btn, alreadyLiked);
@@ -29,7 +24,16 @@ export function initLikeButton(originalBtn, articleId, currentLikes) {
     if (btn.disabled) return;
     if (localStorage.getItem(likedKey)) return;
 
+    const countEl = btn.querySelector('.like-count');
+    const previousCount = parseInt(countEl.textContent, 10) || 0;
+
+    // --- Mise à jour optimiste : on affiche le résultat attendu
+    // immédiatement, sans attendre la réponse du serveur.
     btn.disabled = true;
+    btn.classList.add('is-liking');
+    btn.classList.add('liked');
+    setLikedIcon(btn, true);
+    countEl.textContent = previousCount + 1;
 
     try {
       const res = await fetch(apiUrl(`/api/blog-articles/${articleId}/like`), {
@@ -37,13 +41,20 @@ export function initLikeButton(originalBtn, articleId, currentLikes) {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      btn.querySelector('.like-count').textContent = data.likes;
-      btn.classList.add('liked');
-      setLikedIcon(btn, true);
+
+      // On remplace la valeur optimiste par la vraie valeur du serveur
+      // (au cas où d'autres visiteurs auraient liké entre-temps).
+      countEl.textContent = data.likes;
       localStorage.setItem(likedKey, '1');
     } catch (err) {
       console.error('Erreur like:', err);
+      // Rollback : on annule l'incrément visuel et l'état "liked"
+      countEl.textContent = previousCount;
+      btn.classList.remove('liked');
+      setLikedIcon(btn, false);
       btn.disabled = false;
+    } finally {
+      btn.classList.remove('is-liking');
     }
   });
 }

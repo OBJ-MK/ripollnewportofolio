@@ -891,6 +891,20 @@
   transform: scale(1.1);
 }
 
+.like-btn.is-liking {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.like-btn.is-liking .like-count {
+  animation: like-pulse 0.7s ease-in-out infinite;
+}
+
+@keyframes like-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
 .share-buttons {
   display: flex;
   gap: 10px;
