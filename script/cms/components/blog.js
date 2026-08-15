@@ -327,7 +327,7 @@ export async function loadArticleDetailSPA(slug) {
 
     // Image de couverture
     const coverField = attr.image_couverture;
-    const coverUrl = mediaUrl(Array.isArray(coverField) ? coverField[0] : coverField, { width: 900 });
+    let coverUrl = mediaUrl(Array.isArray(coverField) ? coverField[0] : coverField, { width: 900 });
     if (coverUrl && coverUrl.startsWith('/')) {
       coverUrl = (CONFIG?.API_URL || '') + coverUrl;
     }
