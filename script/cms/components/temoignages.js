@@ -7,6 +7,7 @@ import { mediaUrl } from '../utils/media.js';
 import { hideSkeleton } from '../utils/dom-helpers.js';
 
 import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
+import { setupReadMore } from '../utils/read-more.js';
 
 export function buildTemoignageCard(t, index) {
   const f = CONFIG.FIELDS.temoignage;
@@ -57,6 +58,10 @@ export async function loadTemoignages() {
     });
 
     revealGrid('#temoignages .testimonial-grid', ':scope > .testimonial-card');   // ← ajouter
+    setupReadMore('#temoignages .testimonial-grid', '.testi-quote', {
+      moreLabel: 'Lire l’avis complet',
+      lessLabel: 'Réduire',
+    });
   } catch (e) {
     console.error('[CMS] temoignages:', e.message);
   } finally { hideSkeleton('skeleton-temoignages') }

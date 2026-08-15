@@ -838,6 +838,26 @@ body {
   line-height: 1.7;
   margin-bottom: 20px;
   font-weight: 400;
+  /* Clamp à 3 lignes par défaut : voir .read-more-toggle pour le bouton
+   * qui retire cette limite (ajouté en JS seulement si le texte déborde
+   * réellement). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.service-desc.is-expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.service-desc p {
+  margin: 0;
+}
+
+.service-card .read-more-toggle {
+  margin: -12px 0 16px;
 }
 
 .service-tags {
@@ -855,6 +875,32 @@ body {
   border: 0.5px solid var(--border);
   color: var(--muted);
   letter-spacing: 0.03em;
+}
+
+/* ─── Bouton "Voir plus / Voir moins" (témoignages & services) ───
+ * Injecté en JS uniquement quand le texte est réellement tronqué par le
+ * clamp — jamais affiché sur un avis/service déjà assez court. */
+.read-more-toggle {
+  display: none; /* activé en JS via style.display quand nécessaire */
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.read-more-toggle:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.read-more-toggle:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 /* ─── PROJECTS ─── */
@@ -949,6 +995,12 @@ body {
   line-height: 1.65;
   margin-bottom: 16px;
   font-weight: 400;
+  /* Clamp à 3 lignes pour harmoniser la hauteur des cartes : le détail
+   * complet reste accessible via la modale déjà en place au clic. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .project-footer {
@@ -1154,6 +1206,12 @@ body {
   line-height: 1.7;
   margin-bottom: 18px;
   font-weight: 400;
+  /* Clamp à 3 lignes pour harmoniser la hauteur des cartes : le détail
+   * complet reste accessible via la modale déjà en place au clic. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .poste-footer {
@@ -1560,6 +1618,22 @@ body {
   margin-bottom: 20px;
   font-style: italic;
   font-weight: 400;
+  /* Clamp à 4 lignes par défaut : voir .read-more-toggle pour le bouton
+   * qui retire cette limite (ajouté en JS seulement si le texte déborde
+   * réellement — pas de bouton inutile sur un avis déjà court). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+}
+
+.testi-quote.is-expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.testimonial-card .read-more-toggle {
+  margin: -8px 0 20px;
 }
 
 .testi-author {
