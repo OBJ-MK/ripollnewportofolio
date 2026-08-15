@@ -531,7 +531,7 @@
           </div>
 
           <div class="fade-in visible" style="transition-delay: 0.15s;">
-            <form name="contact">
+            <form name="contact" method="post">
               <p hidden><label>Ne pas remplir : <input name="bot-field"></label></p>
               <div class="contact-form">
                 <div class="form-row">
@@ -877,7 +877,7 @@
 
           <section class="comments-section">
             <h3 class="comments-title">Commentaires</h3>
-            <form id="comment-form" class="comment-form">
+            <form id="comment-form" class="comment-form" method="post">
               <div class="comment-form-row">
                 <input type="text" name="author_name" placeholder="Nom" required maxlength="100">
                 <input type="email" name="author_email" placeholder="Email (non publié)" required>
@@ -1049,7 +1049,7 @@
 
         <div class="footer-newsletter">
           <span class="newsletter-title">NEWSLETTER</span>
-          <form class="newsletter-form">
+          <form class="newsletter-form" method="post">
             <input class="newsletter-input" type="email" placeholder="Votre email" required>
             <button type="submit" class="newsletter-btn">OK</button>
           </form>
