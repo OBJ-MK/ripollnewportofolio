@@ -776,6 +776,17 @@ body {
   position: relative;
   overflow: hidden;
   cursor: default;
+  /* Colonne flex : quel que soit le nombre de lignes réellement utilisées
+   * par la description (1, 2 ou 3, dans la limite du clamp), le bouton
+   * reste ancré en bas de la carte via margin-top:auto ci-dessous — donc
+   * aligné avec celui des cartes voisines dans la même rangée. */
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card .apply-btn {
+  margin-top: auto;
+  align-self: flex-start;
 }
 
 .service-card::after {
@@ -921,6 +932,12 @@ body {
   overflow: hidden;
   transition: all 0.3s;
   cursor: pointer;
+  /* La miniature garde sa hauteur fixe (180px) ; le corps prend tout
+   * l'espace restant et pousse son footer (tags + lien) en bas — donc
+   * aligné avec les cartes voisines même si la description fait 1 ou 3
+   * lignes une fois clampée. */
+  display: flex;
+  flex-direction: column;
 }
 
 .project-card:hover {
@@ -966,6 +983,9 @@ body {
 
 .project-body {
   padding: 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .project-card.has-logo .project-body {
@@ -1007,6 +1027,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: auto;
 }
 
 .project-stack {
@@ -1151,6 +1172,15 @@ body {
   padding: 28px;
   transition: all 0.3s;
   position: relative;
+  /* Même logique que .service-card : le footer (badges méta + bouton
+   * Postuler) reste ancré en bas quelle que soit la longueur réelle de
+   * la description, pour s'aligner avec les cartes voisines. */
+  display: flex;
+  flex-direction: column;
+}
+
+.poste-footer {
+  margin-top: auto;
 }
 
 .poste-card:hover {
@@ -1562,6 +1592,15 @@ body {
   border-radius: var(--radius-lg);
   padding: 28px;
   transition: all 0.3s;
+  /* Même logique que .service-card/.poste-card : la photo+nom de l'auteur
+   * reste ancrée en bas quelle que soit la longueur réelle de la citation
+   * (1 à 4 lignes selon le clamp), pour s'aligner avec les cartes voisines. */
+  display: flex;
+  flex-direction: column;
+}
+
+.testi-author {
+  margin-top: auto;
 }
 
 .testimonial-card:hover {
