@@ -1,0 +1,17 @@
+# Ripoll Darcia
+
+> Professionnel de la communication (Community Management, stratégie digitale,
+> création de contenus) basé à Pointe-Noire, Congo. Site vitrine présentant
+> services, projets réalisés, offres de mission freelance et un blog.
+
+## Pages principales
+
+- [Accueil](https://ripolldarcia.com/) : présentation, services, projets, avis clients.
+- [Blog](https://ripolldarcia.com/blog) : articles sur la communication digitale et les médias en Afrique.
+- Contact : ripollbis@gmail.com
+
+## Notes pour les agents
+
+- Le site est une application monopage (SPA) : le contenu des articles de
+  blog est chargé dynamiquement en JavaScript sous /blog/:slug.
+- Sitemap complet : https://ripolldarcia.com/sitemap.xml

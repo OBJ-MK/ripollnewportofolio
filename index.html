@@ -79,7 +79,13 @@
   <link rel="stylesheet" href="/css/tablette.css">
   <link rel="stylesheet" href="/css/desktop.css">
   <link rel="stylesheet" href="/css/light.css"> <!-- ← ajouter en dernier, après tous les autres CSS -->
-  <link rel="stylesheet" href="/assets/icons/css/all.min.css">
+  <!-- Chargement non-bloquant : le navigateur télécharge le CSS en tâche de
+       fond (comme s'il était pour l'impression, donc pas prioritaire pour le
+       premier rendu), puis on le "active" une fois chargé. Gain direct sur
+       le rendu initial, surtout sur mobile où ce fichier (92KB) retardait
+       l'affichage. Le <noscript> garantit l'icône même sans JS. -->
+  <link rel="stylesheet" href="/assets/icons/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/assets/icons/css/all.min.css"></noscript>
   <!-- Netlify Identity (Si nécessaire) -->
   <!-- <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" id="script-netlify-identity"></script> -->
 </head>
@@ -218,7 +224,7 @@
 
         <!-- À VALIDER PAR LE CLIENT -->
         <div class="hero-card">
-          <div class="card-head">Horaires et Disponibilités</div>
+          <div class="card-head">Horaires d'ouverture</div>
           <div class="tech-grid">
             <div class="tech-pill on">Lundi <br> 08h - 18h</div>
             <div class="tech-pill on">Mardi <br> 08h - 18h</div>
@@ -230,7 +236,7 @@
           </div>
           <div class="avail">
             <span class="avail-dot"></span>
-            Prêt à collaborer
+            Disponible dès maintenant
           </div>
         </div>
       </div>
@@ -521,9 +527,11 @@
               <div class="contact-item">
                 <div class="contact-icon-wrap"><i class="fa-solid fa-clock"></i></div>
                 <div class="contact-item-text">
-                  <strong>Disponibilités</strong>
-                  Lun – Ven, 8h – 19h (UTC) <br>
-                  Sam, 8h – 12h (UTC)
+                  <strong>Disponibilité</strong>
+                  <div class="contact-hours">
+                    <span>Lun – Ven <b>8h – 19h</b> (UTC)</span>
+                    <span>Sam <b>8h – 12h</b> (UTC)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -531,7 +539,7 @@
           </div>
 
           <div class="fade-in visible" style="transition-delay: 0.15s;">
-            <form name="contact" method="post">
+            <form name="contact">
               <p hidden><label>Ne pas remplir : <input name="bot-field"></label></p>
               <div class="contact-form">
                 <div class="form-row">
@@ -864,20 +872,17 @@
               <span class="like-count">0</span>
             </button>
             <div class="share-buttons">
-              <button data-share="facebook" aria-label="Partager sur Facebook"><i
-                  class="fa-brands fa-facebook-f"></i></button>
-              <button data-share="linkedin" aria-label="Partager sur LinkedIn"><i
-                  class="fa-brands fa-linkedin-in"></i></button>
+              <button data-share="facebook" aria-label="Partager sur Facebook"><i class="fa-brands fa-facebook-f"></i></button>
+              <button data-share="linkedin" aria-label="Partager sur LinkedIn"><i class="fa-brands fa-linkedin-in"></i></button>
               <button data-share="twitter" aria-label="Partager sur X"><i class="fa-brands fa-x-twitter"></i></button>
-              <button data-share="whatsapp" aria-label="Partager sur WhatsApp"><i
-                  class="fa-brands fa-whatsapp"></i></button>
+              <button data-share="whatsapp" aria-label="Partager sur WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
               <button data-share="copy" aria-label="Copier le lien"><i class="fa-solid fa-link"></i></button>
             </div>
           </div>
 
           <section class="comments-section">
             <h3 class="comments-title">Commentaires</h3>
-            <form id="comment-form" class="comment-form" method="post">
+            <form id="comment-form" class="comment-form">
               <div class="comment-form-row">
                 <input type="text" name="author_name" placeholder="Nom" required maxlength="100">
                 <input type="email" name="author_email" placeholder="Email (non publié)" required>
@@ -1049,7 +1054,7 @@
 
         <div class="footer-newsletter">
           <span class="newsletter-title">NEWSLETTER</span>
-          <form class="newsletter-form" method="post">
+          <form class="newsletter-form">
             <input class="newsletter-input" type="email" placeholder="Votre email" required>
             <button type="submit" class="newsletter-btn">OK</button>
           </form>
@@ -1194,13 +1199,17 @@
     </div>
   </div>
 
-  <script src="/script/script.js"></script>
-  <script src="/script/caroussel.js"></script>
-  <script src="/script/vendor/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
-    integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- defer : les 5 scripts se téléchargent en PARALLÈLE dès que le
+       navigateur les rencontre, au lieu de se bloquer les uns les autres en
+       série (chacun devait finir de télécharger + s'exécuter avant que le
+       suivant démarre). L'ordre d'exécution relatif est garanti identique
+       par le navigateur, donc aucun risque de casser une dépendance entre
+       eux — seul le téléchargement devient parallèle. -->
+  <script src="/script/script.js" defer></script>
+  <script src="/script/caroussel.js" defer></script>
+  <script src="/script/vendor/marked.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script type="module" src="/script/cms/main.js" defer></script>
 </body>
 

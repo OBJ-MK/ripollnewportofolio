@@ -15,7 +15,16 @@
   var root = document.documentElement;
 
   // 1. Applique immédiatement le thème sauvegardé (avant le premier rendu)
-  var saved = localStorage.getItem(STORAGE_KEY);
+  // Protégé par try/catch : ce script tourne en tout premier, avant tout le
+  // reste du site. Si localStorage lève une exception (navigation privée
+  // stricte, webview restreint type in-app browser), ça ne doit jamais
+  // empêcher le reste de la page de se charger.
+  var saved = null;
+  try {
+    saved = localStorage.getItem(STORAGE_KEY);
+  } catch (e) {
+    // Stockage indisponible : on continue simplement en thème par défaut
+  }
   if (saved === 'light') {
     root.setAttribute('data-theme', 'light');
   }
@@ -33,10 +42,10 @@
   function toggleTheme(btn) {
     if (isLight()) {
       root.removeAttribute('data-theme');
-      localStorage.setItem(STORAGE_KEY, 'dark');
+      try { localStorage.setItem(STORAGE_KEY, 'dark'); } catch (e) {}
     } else {
       root.setAttribute('data-theme', 'light');
-      localStorage.setItem(STORAGE_KEY, 'light');
+      try { localStorage.setItem(STORAGE_KEY, 'light'); } catch (e) {}
     }
     updateIcon(btn);
   }
