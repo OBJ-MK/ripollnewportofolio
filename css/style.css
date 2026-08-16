@@ -63,7 +63,7 @@
   --accent-dim: rgba(245, 197, 24, 0.1);
   --accent-dim2: rgba(245, 197, 24, 0.06);
   --text: #eef0f8;
-  --muted: rgba(238, 240, 248, 0.48);
+  --muted: rgba(238, 240, 248, 0.58); /* 0.48 -> 0.58 : contraste WCAG AA (4.5:1) insuffisant sur certains fonds (float-chip, footer) */
   --muted2: rgba(238, 240, 248, 0.25);
   --green: #4ade80;
   --font-display: "Lexend", sans-serif;
@@ -470,19 +470,19 @@ body {
 }
 
 .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgb(32 121 2 / 10%);
-    border: 0.5px solid rgb(75 245 24 / 22%);
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 11px;
-    color: var(--green);
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin-bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-dim);
+  border: 0.5px solid rgba(245, 197, 24, 0.22);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
 .pulse-dot {
@@ -2118,11 +2118,12 @@ body {
   transition: color 0.2s ease;
 }
 
-.site-footer h4 {
+.site-footer h3 {
   font-size: 13px;
   letter-spacing: 1px;
   margin-bottom: 20px;
   color: var(--text);
+  font-weight: 700;
   /* Ou #ffffff selon ton thème */
 }
 

@@ -1,8 +1,17 @@
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Préconnexion aux origines critiques : établit la connexion (DNS +
+       TLS) en avance, avant même que le navigateur découvre la ressource
+       qui en a besoin. Limité à 4 max comme recommandé. -->
+  <link rel="preconnect" href="https://api.ripolldarcia.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://res.cloudinary.com">
+  <link rel="preconnect" href="https://www.clarity.ms">
 
   <title>Ripoll Darcia — Professionel de la communication</title>
   <meta name="description"
@@ -408,7 +417,7 @@
 
             <div class="social-row">
               <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" class="social-btn"
-                data-cms="apropo.LinkedIn">
+                data-cms="apropo.LinkedIn" aria-label="Voir la publication associée sur LinkedIn">
                 <i class="fa-brands fa-linkedin-in"></i>
                 LinkedIn
               </a>
@@ -1062,7 +1071,7 @@
 
         <div class="footer-socials">
           <!-- Icônes FontAwesome (à adapter selon tes classes existantes) -->
-          <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" aria-label="LinkedIn"><i
+          <a href="https://linkedin.com/in/ripolldarcia" target="_blank" rel="noopener" aria-label="Profil LinkedIn de Ripoll Darcia"><i
               class="fa-brands fa-linkedin-in"></i></a>
           <a href="https://twitter.com/ripolldarcia" target="_blank" rel="noopener" aria-label="X (Twitter)"><i
               class="fa-brands fa-x-twitter"></i></a>
@@ -1071,7 +1080,7 @@
 
       <!-- COLONNE 2 : Navigation -->
       <div class="footer-col-links">
-        <h4>NAVIGATION</h4>
+        <h3>NAVIGATION</h3>
         <ul>
           <li><a href="#services" onclick="navigateToSection('services', event)">Services</a></li>
           <li><a href="#projects" onclick="navigateToSection('projects', event)">Projects</a></li>
@@ -1086,7 +1095,7 @@
 
       <!-- COLONNE 3 : Services -->
       <div class="footer-col-links">
-        <h4>SERVICES</h4>
+        <h3>SERVICES</h3>
         <ul id="footer-services-list">
           <!-- Les services dynamiques viendront se placer ici -->
         </ul>
@@ -1094,7 +1103,7 @@
 
       <!-- COLONNE 4 : Ressources -->
       <div class="footer-col-links">
-        <h4>RESSOURCES</h4>
+        <h3>RESSOURCES</h3>
         <ul>
           <li><a href="#blog" onclick="event.preventDefault(); navigateTo('blog');">Blog</a></li>
           <li><a href="#contact" onclick="event.preventDefault(); navigateTo('contact');">Me contacter</a></li>
