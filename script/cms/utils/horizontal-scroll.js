@@ -38,6 +38,20 @@ function teardown(grid) {
   }
 }
 
+function refreshOnImagesLoaded(grid) {
+  const imgs = Array.from(grid.querySelectorAll('img')).filter((img) => !img.complete);
+  if (!imgs.length) return;
+  let remaining = imgs.length;
+  const onDone = () => {
+    remaining -= 1;
+    if (remaining <= 0 && typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+  };
+  imgs.forEach((img) => {
+    img.addEventListener('load', onDone, { once: true });
+    img.addEventListener('error', onDone, { once: true });
+  });
+}
+
 export function initServicesHorizontalScroll() {
   if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
   if (REDUCED_MOTION) return;
@@ -71,8 +85,6 @@ export function initServicesHorizontalScroll() {
 
     currentST = ScrollTrigger.create({
       trigger: pinWrap,
-      // "top+=80" : décale le déclenchement pour compenser la navbar sticky
-      // (~72-80px). À ajuster si besoin une fois testé en réel.
       start: 'top top+=80',
       end: () => `+=${distance}`,
       pin: true,
@@ -80,6 +92,11 @@ export function initServicesHorizontalScroll() {
       invalidateOnRefresh: true,
       animation: gsap.to(grid, { x: -distance, ease: 'none' }),
     });
+
+    // Les images en loading="lazy" peuvent finir de charger après ce calcul
+    // de distance → scrollWidth change sans que le pin soit recalculé. On
+    // rafraîchit ScrollTrigger dès qu'elles ont fini.
+    refreshOnImagesLoaded(grid);
   }
 
   setup();

@@ -29,15 +29,23 @@ function hideAllViews(views) {
   Object.values(views).forEach(view => { if (view) view.hidden = true; });
 }
 
+// APRÈS
 function loadIndexData() {
-  loadHero();
+  const heroReady = loadHero();
   loadApropo();
   loadProjets();
   loadPostes();
-  loadServices();
+  const servicesReady = loadServices();
   loadOutils();
   loadPartenaires();
   loadTemoignages();
+
+  // Seuls hero + services conditionnent la position du contenu ciblé par une
+  // ancre (#services est juste après le hero). On attend uniquement ceux-là
+  // avant d'autoriser un scroll vers une ancre — pas la peine de bloquer sur
+  // les postes, outils, partenaires, témoignages qui ne changent rien à
+  // cette position.
+  return Promise.allSettled([heroReady, servicesReady]);
 }
 
 export function navigateToSection(sectionId, event) {
@@ -128,12 +136,34 @@ export function handleInitialRoute() {
     navigateTo('politique-confidentialite');
   }
   else {
-    loadIndexData();
+    const dataReady = loadIndexData();
     navigateTo('index');
     const targetId = hash ? hash.slice(1) : '';
     if (targetId) {
       const target = document.getElementById(targetId);
-      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 400);
+      if (target) {
+        dataReady.then(() => {
+          // requestAnimationFrame : laisse le navigateur peindre les cartes
+          // fraîchement injectées (et le pin GSAP qu'elles déclenchent) avant
+          // de démarrer le scroll — sinon on scrolle vers une cible dont la
+          // géométrie est encore en train de se stabiliser.
+          requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: 'smooth' });
+
+            // Filet de sécurité : si malgré tout le pin (ou toute position
+            // ScrollTrigger) a été mesuré avant la fin réelle du scroll natif,
+            // on recalcule tout une fois le scroll effectivement stabilisé.
+            const refreshAfterScroll = () => {
+              if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+            };
+            if ('onscrollend' in window) {
+              window.addEventListener('scrollend', refreshAfterScroll, { once: true });
+            } else {
+              setTimeout(refreshAfterScroll, 700); // fallback Safari/Firefox (pas de scrollend)
+            }
+          });
+        });
+      }
     }
   }
 }
