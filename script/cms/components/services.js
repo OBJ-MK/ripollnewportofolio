@@ -9,7 +9,6 @@ import { hideSkeleton } from '../utils/dom-helpers.js';
 import { watchSentinel, ensureSentinel } from '../utils/lazy-load.js';
 
 import { revealGrid, refreshScrollTrigger } from '../utils/animations.js';
-import { initServicesHorizontalScroll } from '../utils/horizontal-scroll.js';
 import { setupReadMore } from '../utils/read-more.js';
 
 export function buildServiceCard(s, index) {
@@ -78,7 +77,6 @@ export async function loadServices() {
       revealGrid('.services-grid', ':scope > .service-card:not([data-revealed])');   // ← ajouter
       grid.querySelectorAll('.service-card').forEach(c => c.setAttribute('data-revealed', ''));  // ← marque comme traité
       refreshScrollTrigger();   // ← ajouter
-      initServicesHorizontalScroll(); // active/recalcule le pin horizontal (desktop uniquement)
       setupReadMore('.services-grid', '.service-desc', { moreLabel: 'Voir plus', lessLabel: 'Voir moins' });
 
       return cursor < data.length;

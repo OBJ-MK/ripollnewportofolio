@@ -719,54 +719,6 @@ body {
   gap: 20px;
 }
 
-/* ─── Scroll horizontal pinné (section Services, desktop uniquement) ───
- * Ces classes ne sont ajoutées qu'au runtime par horizontal-scroll.js,
- * jamais présentes dans le HTML statique. Le CSS ci-dessous n'a donc
- * aucun effet tant que le JS ne l'active pas — zéro risque pour le
- * layout existant si le script échoue à charger ou est désactivé. */
-@media (min-width: 1024px) {
-  .services-hscroll-pin {
-    position: relative;
-    overflow: hidden;
-    /* Sort du conteneur centré à 1200px (.section-inner) pour occuper
-     * toute la largeur de l'écran. Sans ça, la section a l'air encadrée/
-     * coupée au milieu de la page plutôt que fondue avec le reste. */
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    /* Fondu progressif sur les bords : les cartes qui entrent/sortent
-     * s'estompent au lieu d'être coupées net par overflow:hidden. */
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      black 120px,
-      black calc(100% - 120px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      black 120px,
-      black calc(100% - 120px),
-      transparent 100%
-    );
-  }
-
-  .services-grid.services-hscroll-track {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-    will-change: transform;
-    /* Espace de respiration aux deux bouts, cohérent avec le fondu ci-dessus
-     * et avec le padding standard des sections (60px). */
-    padding: 0 60px;
-  }
-
-  .services-hscroll-track .service-card {
-    flex: 0 0 380px;
-  }
-}
-
 .service-card {
   background: var(--surface);
   border: 0.5px solid var(--border);
